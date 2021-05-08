@@ -98,19 +98,27 @@
 </template>
 
 <script>
+    import { mapGetters } from 'vuex'
     import axios from "axios";
     import betPostions from "../json/betPosition.json";
     import images from "../json/images.json";
     import words from "../json/words.json";
+    import { SERVER_ADDR, SERVER_PORT } from "../../config";
 
     export default {
         name: "Board",
+          props: [
+              "ws"
+          ],
         data: () => {
             return {
+                gameStatus: {},
+                ip: "",
+                baseURI: "https://" + SERVER_ADDR + ":" + SERVER_PORT,
                 box_width:1200,
                 ip: "",
-                baseURI: "http://localhost:4444",
                 showResultText: false,
+                maxWager: 0,
                 resultSum: null,
                 resultSumText: null,
                 mouseStartPos: {x: 0, y: 0},
@@ -339,6 +347,68 @@
                     "5+5+5": [2, 12],
                     "6+6+6": [2, 13],
                 },
+            };
+        },
+        computed: {
+            ...mapGetters({
+                walletState: 'walletState',
+            }),
+        },
+        
+        created() {
+            this.ws.onmessage = (evt) => {
+            var received_msg = evt.data
+            this.gameStatus = JSON.parse(received_msg)
+            if (this.gameStatus.pastRecords) {
+                this.maxWager = this.gameStatus.maxWager
+                this.gameTime = Math.ceil(this.gameStatus.time /10) * 10
+                //pridect whether paint start image or not and time setting
+                const jitter = this.gameTime;
+                if (this.gameStatus.pastRecords.length > 0) {
+                if (jitter < 36000) {
+                    this.gameStatus.pastRecords.shift()
+                    this.resultList = this.gameStatus.pastRecords
+                } else {
+                    this.resultList = this.gameStatus.pastRecords
+                }
+                }
+                
+                if (jitter > 2000 && jitter < 34000) {
+                var time = 34 - jitter / 1000;
+                if (time <= 30)
+                    this.timer = time
+                else
+                    this.timer = 30
+                //starterimage only can be shown below 10secs
+                if (this.timer > 10) {
+                    this.startGame = {
+                        x: window.innerWidth / 2 - 296,
+                        y: 90,
+                        w: 592,
+                        h: 517,
+                    };
+
+                    this.moveStartGame(window.innerWidth / 2 - 200, 174, 400, 500);
+                    setTimeout(() => {
+                    this.moveStartGame(window.innerWidth / 2 - 225, 152, 450, 500);
+                    setTimeout(() => {
+                        this.moveStartGame(window.innerWidth / 2 - 200, 174, 400, 500);
+                        setTimeout(() => {
+                        this.moveStartGame(window.innerWidth / 2 - 225, 152, 450, 500);
+                        setTimeout(() => {
+                            this.moveStartGame(window.innerWidth / 2, 348.5, 0, 200);
+                            this.status = true
+                        }, 500);
+                        }, 500);
+                    }, 500);
+                    }, 500);
+                }
+                } 
+            } else {
+                //max wager for each client
+                this.maxWager = this.gameStatus.maxWager
+                this.gameTime = Math.ceil(this.gameStatus.time /10) * 10
+                    }
             };
         },
         mounted() {
@@ -594,7 +664,7 @@
 
                     case 36000:
                         this.status = false;
-                        this.resultDices = this.getRandomDices(3);
+                        this.resultDices = this.getRandomDices();
                         this.result = this.getResult(this.resultDices);
 
                         this.moveDicePan(this.box_width / 2 - 125, 310, 250, 150);
@@ -751,6 +821,7 @@
                                         this.rewardCredits.push({
                                             credit: bet.credit,
                                             value: bet.value,
+                                            rate: bet.rate,
                                             avatar: bet.avatar,
                                             area: bet.area,
                                             name: bet.name,
@@ -786,6 +857,17 @@
                                         item.time = 0;
                                     });
 
+                                    var rewardAmount = 0
+                                    this.rewardCredits.forEach(element => {
+                                    rewardAmount += element.rate * element.value
+                                    
+                                    });
+                                    
+                                    if (this.walletState.walletAddress !== "Connect Wallet" && this.walletState.walletAddress !== ""){
+                                    var moveAmount = thrownAmount - rewardAmount
+                                    var obj = {moveAmount: moveAmount, walletAddress: this.walletState.walletAddress}
+                                    this.ws.send(JSON.stringify(obj))
+                                    }
                                     setTimeout(() => {
                                         this.rewardCredits = [];
                                         this.realBets = [];
@@ -945,6 +1027,8 @@
             },
             bet() {
                 if (this.status) {
+                    if (this.maxWager > 0)
+                        console.log('this is a max wager', this.maxWager)
                     this.realBets = this.realBets.concat(this.thrownCredits);
                     this.thrownCredits = [];
                 }
@@ -1303,6 +1387,7 @@
                                 avatar: this.credits[this.selectedCredit],
                                 area: position.id,
                                 name: position.name,
+                                rate: position.rate,
                                 time: 0,
                                 startPos: this.throwPosition,
                                 endPos: endPos,
@@ -1405,12 +1490,8 @@
                     this.action = 0;
                 }
             },
-            getRandomDices(count) {
-                var dices = [];
-                for (let i = 0; i < count; i++) {
-                    dices.push(Math.floor(Math.random() * 6 + 1));
-                }
-                return dices;
+            getRandomDices() {
+                return this.gameStatus.dices;
             },
             getResult(dices) {
                 let result = [];
