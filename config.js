@@ -1063,10 +1063,22 @@ export const DICE_ABI = [
 	}
 ]
 
+export const CUSTOM_NETWORK = {
+	chainId: "0xfa2", //decodes to 344435
+	chainName: "Fantom testnet",
+	rpcUrls: ["https://rpc.testnet.fantom.network/"],
+	nativeCurrency: {
+		name: "FTM",
+		symbol: "FTM",
+		decimals: 18,
+	},
+	blockExplorerUrls: [
+		"https://ftmscan.com/",
+	],
+};
+
 export const DICE_ADDRESS = "0x6228965Ca30d5897474B7a32091C16C7F89915f2"
 
 export const SERVER_URL = "dice.game"
 
 export const SERVER_PORT = "3000"
-
-export const CHAIN_ID = "0xfa2" //fantom testnet chain id
