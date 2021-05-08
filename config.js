@@ -1,4 +1,4 @@
-export const DICEABI = [
+export const DICE_ABI = [
 	{
 		"constant": false,
 		"inputs": [
