@@ -10,7 +10,8 @@
             "br": 8,
             "bl": 8
         },
-        "name": "Small"
+        "name": "Small",
+        "rate": 2
     },
     {
         "id": 1,
@@ -19,7 +20,8 @@
         "w": 117,
         "h": 61,
         "radius": 8,
-        "name": "Odd"
+        "name": "Odd",
+        "rate": 2
     },
     {
         "id": 2,
@@ -28,7 +30,8 @@
         "w": 117,
         "h": 61,
         "radius": 8,
-        "name": "Triple All"
+        "name": "Triple All",
+        "rate": 24
     },
     {
         "id": 3,
@@ -37,7 +40,8 @@
         "w": 117,
         "h": 61,
         "radius": 8,
-        "name": "Even"
+        "name": "Even",
+        "rate": 2
     },
     {
         "id": 4,
@@ -51,7 +55,8 @@
             "br": 8,
             "bl": 8
         },
-        "name": "Big"
+        "name": "Big",
+        "rate": 2
     },
     {
         "id": 5,
@@ -60,7 +65,8 @@
         "w": 53,
         "h": 65,
         "radius": 8,
-        "name": "Double 1"
+        "name": "Double 1",
+        "rate": 8
     },
     {
         "id": 6,
@@ -69,7 +75,8 @@
         "w": 53,
         "h": 65,
         "radius": 8,
-        "name": "Double 2"
+        "name": "Double 2",
+        "rate": 8
     },
     {
         "id": 7,
@@ -78,7 +85,8 @@
         "w": 53,
         "h": 65,
         "radius": 8,
-        "name": "Double 3"
+        "name": "Double 3",
+        "rate": 8
     },
     {
         "id": 8,
@@ -87,7 +95,8 @@
         "w": 53,
         "h": 65,
         "radius": 8,
-        "name": "Triple 1"
+        "name": "Triple 1",
+        "rate": 150
     },
     {
         "id": 9,
@@ -96,7 +105,8 @@
         "w": 53,
         "h": 65,
         "radius": 8,
-        "name": "Triple 2"
+        "name": "Triple 2",
+        "rate": 150
     },
     {
         "id": 10,
@@ -105,7 +115,8 @@
         "w": 53,
         "h": 65,
         "radius": 8,
-        "name": "Triple 3"
+        "name": "Triple 3",
+        "rate": 150
     },
     {
         "id": 11,
@@ -114,7 +125,8 @@
         "w": 53,
         "h": 65,
         "radius": 8,
-        "name": "Triple 4"
+        "name": "Triple 4",
+        "rate": 150
     },
     {
         "id": 12,
@@ -123,7 +135,8 @@
         "w": 53,
         "h": 65,
         "radius": 8,
-        "name": "Triple 5"
+        "name": "Triple 5",
+        "rate": 150
     },
     {
         "id": 13,
@@ -132,7 +145,8 @@
         "w": 53,
         "h": 65,
         "radius": 8,
-        "name": "Triple 6"
+        "name": "Triple 6",
+        "rate": 150
     },
     {
         "id": 14,
@@ -141,7 +155,8 @@
         "w": 53,
         "h": 65,
         "radius": 8,
-        "name": "Double 4"
+        "name": "Double 4",
+        "rate": 8
     },
     {
         "id": 15,
@@ -150,7 +165,8 @@
         "w": 53,
         "h": 65,
         "radius": 8,
-        "name": "Double 5"
+        "name": "Double 5",
+        "rate": 8
     },
     {
         "id": 16,
@@ -159,7 +175,8 @@
         "w": 53,
         "h": 65,
         "radius": 8,
-        "name": "Double 6"
+        "name": "Double 6",
+        "rate": 8
     },
     {
         "id": 17,
@@ -168,7 +185,8 @@
         "w": 46.16,
         "h": 56,
         "radius": 8,
-        "name": "Dice Total 4"
+        "name": "Dice Total 4",
+        "rate": 50
     },
     {
         "id": 18,
@@ -177,7 +195,8 @@
         "w": 46.16,
         "h": 56,
         "radius": 8,
-        "name": "Dice Total 5"
+        "name": "Dice Total 5",
+        "rate": 18
     },
     {
         "id": 19,
@@ -186,7 +205,8 @@
         "w": 46.16,
         "h": 56,
         "radius": 8,
-        "name": "Dice Total 6"
+        "name": "Dice Total 6",
+        "rate": 14
     },
     {
         "id": 20,
@@ -195,7 +215,8 @@
         "w": 46.16,
         "h": 56,
         "radius": 8,
-        "name": "Dice Total 7"
+        "name": "Dice Total 7",
+        "rate": 12
     },
     {
         "id": 21,
@@ -204,7 +225,8 @@
         "w": 46.16,
         "h": 56,
         "radius": 8,
-        "name": "Dice Total 8"
+        "name": "Dice Total 8",
+        "rate": 8
     },
     {
         "id": 22,
@@ -213,7 +235,8 @@
         "w": 46.16,
         "h": 56,
         "radius": 8,
-        "name": "Dice Total 9"
+        "name": "Dice Total 9",
+        "rate": 6
     },
     {
         "id": 23,
@@ -222,7 +245,8 @@
         "w": 46.16,
         "h": 56,
         "radius": 8,
-        "name": "Dice Total 10"
+        "name": "Dice Total 10",
+        "rate": 6
     },
     {
         "id": 24,
@@ -231,7 +255,8 @@
         "w": 46.16,
         "h": 56,
         "radius": 8,
-        "name": "Dice Total 11"
+        "name": "Dice Total 11",
+        "rate": 6
     },
     {
         "id": 25,
@@ -240,7 +265,8 @@
         "w": 46.16,
         "h": 56,
         "radius": 8,
-        "name": "Dice Total 12"
+        "name": "Dice Total 12",
+        "rate": 6
     },
     {
         "id": 26,
@@ -249,7 +275,8 @@
         "w": 46.16,
         "h": 56,
         "radius": 8,
-        "name": "Dice Total 13"
+        "name": "Dice Total 13",
+        "rate": 8
     },
     {
         "id": 27,
@@ -258,7 +285,8 @@
         "w": 46.16,
         "h": 56,
         "radius": 8,
-        "name": "Dice Total 14"
+        "name": "Dice Total 14",
+        "rate": 12
     },
     {
         "id": 28,
@@ -267,7 +295,8 @@
         "w": 46.16,
         "h": 56,
         "radius": 8,
-        "name": "Dice Total 15"
+        "name": "Dice Total 15",
+        "rate": 14
     },
     {
         "id": 29,
@@ -276,7 +305,8 @@
         "w": 46.16,
         "h": 56,
         "radius": 8,
-        "name": "Dice Total 16"
+        "name": "Dice Total 16",
+        "rate": 18
     },
     {
         "id": 30,
@@ -285,7 +315,8 @@
         "w": 46.16,
         "h": 56,
         "radius": 8,
-        "name": "Dice Total 17"
+        "name": "Dice Total 17",
+        "rate": 50
     },
     {
         "id": 31,
@@ -294,7 +325,8 @@
         "w": 42,
         "h": 78,
         "radius": 8,
-        "name": "Combination 1 2"
+        "name": "Combination 1 2",
+        "rate": 5
     },
     {
         "id": 32,
@@ -303,7 +335,8 @@
         "w": 42,
         "h": 78,
         "radius": 8,
-        "name": "Combination 1 3"
+        "name": "Combination 1 3",
+        "rate": 5
     },
     {
         "id": 33,
@@ -312,7 +345,8 @@
         "w": 42,
         "h": 78,
         "radius": 8,
-        "name": "Combination 1 4"
+        "name": "Combination 1 4",
+        "rate": 5
     },
     {
         "id": 34,
@@ -321,7 +355,8 @@
         "w": 42,
         "h": 78,
         "radius": 8,
-        "name": "Combination 1 5"
+        "name": "Combination 1 5",
+        "rate": 5
     },
     {
         "id": 35,
@@ -330,7 +365,8 @@
         "w": 42,
         "h": 78,
         "radius": 8,
-        "name": "Combination 1 6"
+        "name": "Combination 1 6",
+        "rate": 5
     },
     {
         "id": 36,
@@ -339,7 +375,8 @@
         "w": 42,
         "h": 78,
         "radius": 8,
-        "name": "Combination 2 3"
+        "name": "Combination 2 3",
+        "rate": 5
     },
     {
         "id": 37,
@@ -348,7 +385,8 @@
         "w": 42,
         "h": 78,
         "radius": 8,
-        "name": "Combination 2 4"
+        "name": "Combination 2 4",
+        "rate": 5
     },
     {
         "id": 38,
@@ -357,7 +395,8 @@
         "w": 42,
         "h": 78,
         "radius": 8,
-        "name": "Combination 2 5"
+        "name": "Combination 2 5",
+        "rate": 5
     },
     {
         "id": 39,
@@ -366,7 +405,8 @@
         "w": 42,
         "h": 78,
         "radius": 8,
-        "name": "Combination 2 6"
+        "name": "Combination 2 6",
+        "rate": 5
     },
     {
         "id": 40,
@@ -375,7 +415,8 @@
         "w": 42,
         "h": 78,
         "radius": 8,
-        "name": "Combination 3 4"
+        "name": "Combination 3 4",
+        "rate": 5
     },
     {
         "id": 41,
@@ -384,7 +425,8 @@
         "w": 42,
         "h": 78,
         "radius": 8,
-        "name": "Combination 3 5"
+        "name": "Combination 3 5",
+        "rate": 5
     },
     {
         "id": 42,
@@ -393,7 +435,8 @@
         "w": 42,
         "h": 78,
         "radius": 8,
-        "name": "Combination 3 6"
+        "name": "Combination 3 6",
+        "rate": 5
     },
     {
         "id": 43,
@@ -402,7 +445,8 @@
         "w": 42,
         "h": 78,
         "radius": 8,
-        "name": "Combination 4 5"
+        "name": "Combination 4 5",
+        "rate": 5
     },
     {
         "id": 44,
@@ -411,7 +455,8 @@
         "w": 42,
         "h": 78,
         "radius": 8,
-        "name": "Combination 4 6"
+        "name": "Combination 4 6",
+        "rate": 5
     },
     {
         "id": 45,
@@ -420,7 +465,8 @@
         "w": 42,
         "h": 78,
         "radius": 8,
-        "name": "Combination 5 6"
+        "name": "Combination 5 6",
+        "rate": 5
     },
     {
         "id": 46,
@@ -434,7 +480,8 @@
             "br": 8,
             "bl": 26
         },
-        "name": "Single 1"
+        "name": "Single 1",
+        "rate": 2
     },
     {
         "id": 47,
@@ -443,7 +490,8 @@
         "w": 122,
         "h": 39,
         "radius": 8,
-        "name": "Single 2"
+        "name": "Single 2",
+        "rate": 2
     },
     {
         "id": 48,
@@ -452,7 +500,8 @@
         "w": 121,
         "h": 39,
         "radius": 8,
-        "name": "Single 3"
+        "name": "Single 3",
+        "rate": 2
     },
     {
         "id": 49,
@@ -461,7 +510,8 @@
         "w": 121,
         "h": 39,
         "radius": 8,
-        "name": "Single 4"
+        "name": "Single 4",
+        "rate": 2
     },
     {
         "id": 50,
@@ -470,7 +520,8 @@
         "w": 122,
         "h": 39,
         "radius": 8,
-        "name": "Single 5"
+        "name": "Single 5",
+        "rate": 2
     },
     {
         "id": 51,
@@ -484,6 +535,7 @@
             "br": 26,
             "bl": 8
         },
-        "name": "Single 6"
+        "name": "Single 6",
+        "rate": 2
     }
 ]
