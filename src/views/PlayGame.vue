@@ -480,7 +480,8 @@
                 if (this.timer) this.timer -= 0.01;
 
                 let timePoint = this.gameTime % 45000;
-                this.ctx.width = this.box_width;
+                if (this.ctx)
+                    this.ctx.width = this.box_width;
 
                 switch (timePoint) {
                     case 0:
@@ -759,6 +760,7 @@
                                 this.moveResultDiceOne(this.box_width / 2 - 50, 98, 30, 150);
                                 this.moveResultDiceTwo(this.box_width / 2 + 20, 95, 30, 150);
                                 this.moveResultDiceThree(this.box_width / 2 - 5, 108, 30, 150);
+                                this.resultList = [this.resultDices].concat(this.resultList);
                             }, 1000);
                         }, 300);
 
@@ -906,6 +908,12 @@
                 this.gameTime += 10;
             }, 10);
         },
+
+        destroyed() {
+            console.log('this is destroyed.')
+            this.ctx = null
+        },
+
         methods: {
             getMyIp() {
                 axios.get("https://api.ipify.org?format=json").then((res) => {
@@ -954,6 +962,8 @@
                 }
             },
             drawResultText(ctx) {
+                if (!ctx)
+                    return;
                 if (this.showResultText) {
                     ctx.fillStyle = "#906942";
                     ctx.fillRect(this.box_width / 2 + 90, 345, 100, 100);
@@ -1008,6 +1018,8 @@
                 }, 10);
             },
             drawResultBoard(ctx) {
+                if (!ctx)
+                    return;
                 var grd = ctx.createLinearGradient(0, 0, this.box_width, 0);
                 grd.addColorStop(0, "#00000000");
                 grd.addColorStop(0.3, "RGBA(246, 179, 9, 0.8)");
@@ -1060,6 +1072,8 @@
                 return `./imgs/${image}.png`;
             },
             drawStopBetting(ctx) {
+                if (!ctx)
+                    return;
                 ctx.drawImage(
                     this.$refs["stopBetting"],
                     this.stopBetting.x,
@@ -1069,6 +1083,8 @@
                 );
             },
             drawStartGame(ctx) {
+                if (!ctx)
+                    return;
                 ctx.drawImage(
                     this.$refs["startGame"],
                     this.startGame.x,
@@ -1078,6 +1094,8 @@
                 );
             },
             drawThrowDices(ctx) {
+                if (!ctx)
+                    return;
                 ctx.drawImage(
                     this.$refs["throwDiceOne"],
                     this.throwDiceOne.x,
@@ -1221,6 +1239,8 @@
                 }, 10);
             },
             drawResultBoardDices(ctx) {
+                if (!ctx)
+                    return;
                 if (this.resultDices) {
                     const obj = {1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five", 6: "Six"};
                     ctx.drawImage(
@@ -1247,6 +1267,8 @@
                 }
             },
             drawResultDices(ctx) {
+                if (!ctx)
+                    return;
                 if (this.resultDiceOne) {
                     const obj = {1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five", 6: "Six"};
                     ctx.drawImage(
@@ -1542,6 +1564,8 @@
                 return result;
             },
             drawText(ctx, text, x, y, font = "bold 12px Roboto", color = "#C4C4C4") {
+                if (!ctx)
+                    return;
                 ctx.fillStyle = color;
                 ctx.textAlign = "center";
                 ctx.fillStyle = color;
@@ -1549,6 +1573,8 @@
                 ctx.fillText(text, x, y);
             },
             drawLine(ctx, startPos, endPos, color = "#FFF", width = 1) {
+                if (!ctx)
+                    return;
                 ctx.beginPath();
                 ctx.lineWidth = width;
                 ctx.strokeStyle = color;
@@ -1558,6 +1584,8 @@
                 ctx.closePath();
             },
             drawRoundedRect(ctx, x, y, width, height, fill = null, stroke = null, radius = 5) {
+                if (!ctx)
+                    return;
                 if (fill) ctx.fillStyle = fill;
                 if (stroke) {
                     ctx.strokeStyle = stroke.color;
@@ -1586,6 +1614,8 @@
                 if (stroke) ctx.stroke();
             },
             drawOval(ctx, x, y, w, h, fill = null, stroke = null) {
+                if (!ctx)
+                    return;
                 let kappa = 0.5522848,
                     ox = (w / 2) * kappa,
                     oy = (h / 2) * kappa,
@@ -1611,6 +1641,8 @@
                 }
             },
             drawBetCredits(ctx) {
+                if (!ctx)
+                    return;
                 const centerPosition = {x: this.box_width / 2 - 45, y: 905};
                 const radius = 250;
                 Object.keys(this.betCredits).map((key) => {
@@ -1624,6 +1656,8 @@
                 });
             },
             drawBetPositions(ctx) {
+                if (!ctx)
+                    return;
                 this.betPostions.map((item) => {
                     this.drawRoundedRect(
                         ctx,
@@ -1639,6 +1673,8 @@
                 });
             },
             drawBoard(ctx) {
+                if (!ctx)
+                    return;
                 ctx.clearRect(0, 0, this.box_width, 790);
                 this.drawRoundedRect(ctx, 45, 75, this.box_width - 90, 660, "#383D54", null, 80);
                 this.drawRoundedRect(
@@ -1781,15 +1817,21 @@
                 this.drawResultText(this.ctx);
             },
             drawDicePan(ctx, x, y, w, h) {
+                if (!ctx)
+                    return;
                 ctx.drawImage(this.$refs["dicePan"], x, y, w, h);
             },
             drawDiceCup(ctx, x, y, w, h) {
+                if (!ctx)
+                    return;
                 ctx.drawImage(this.$refs["diceCup"], x, y, w, h);
                 ctx.save();
                 ctx.rotate(0.01);
                 ctx.restore();
             },
             drawDistance(ctx, text, startPos, endPos) {
+                if (!ctx)
+                    return;
                 this.drawText(
                     ctx,
                     text,
