@@ -113,9 +113,7 @@ export default {
   name: "Board",
   data: () => {
     return {
-      ws: new WebSocket(
-        "wss://" + SERVER_URL + ":" + SERVER_PORT + "/connect/"
-      ),
+      ws: null,
       gameStatus: {},
       ip: "",
       confirmed: false,
@@ -357,12 +355,14 @@ export default {
   computed: {
     ...mapGetters({
       appState: "appState",
-      
     }),
   },
 
   created() {
     if ("WebSocket" in window) {
+      this.ws = new WebSocket(
+        "wss://" + SERVER_URL + ":" + SERVER_PORT + "/connect/"
+      )
       this.ws.onopen = () => {
         this.ws.send("connect request");
       };
@@ -443,7 +443,6 @@ export default {
 
     this.creditTable = this.$refs.creditTable;
     this.ws.onmessage = (evt) => {
-      console.log(evt.data)
       var received_msg = evt.data;
       this.gameStatus = JSON.parse(received_msg);
       if (this.gameStatus.pastRecords) {
@@ -913,15 +912,12 @@ export default {
                       rewardAmount += element.rate * element.value;
                     });
 
-                      
-                      console.log(this.confirmed, rewardAmount)
                     if (
                       this.appState.walletAddress !== "Connect Wallet" &&
                       this.appState.walletAddress !== "" &&
                       this.confirmed === true &&
                       rewardAmount > 0
                     ) {
-                      console.log(this.confirmed, this.rewardAmount, "contracting....")
                       this.confirmed = false;
                       this.appState.diceContract.methods
                         .getBet(
@@ -989,9 +985,14 @@ export default {
   },
 
   methods: {
-    ...mapMutations([
-      'getBalance'
-    ]),
+    ...mapMutations(["chageState", "getBalance"]),
+    alertMessage(msg, show = true) {
+      var msgState = {
+        alertMsg: msg,
+        alert: show
+      };
+      this.chageState(msgState);
+    },
 
     getMyIp() {
       axios.get("https://api.ipify.org?format=json").then((res) => {
@@ -1116,14 +1117,12 @@ export default {
     bet() {
       var thrownAmount = this.getSumThrownCredits();
       if (this.gameTime % 45000 > 29000) {
-        console.log('time', this.gameTime)
-        alert('time is too short to confrim transaction')
+        var msg = 'time is too short to confrim transaction'
+        this.alertMessage(msg)
         return
       }
 
       if (this.status && this.gameTime) {
-        if (this.maxWager > 0)
-          console.log("this is a max wager", this.maxWager);
         this.realBets = this.realBets.concat(this.thrownCredits);
         this.thrownCredits = [];
 
@@ -1132,7 +1131,8 @@ export default {
           this.appState.walletAddress !== ""
         ) {
           if (thrownAmount > this.maxWager) {
-            alert('it is bigger that maxwager')
+            var msg = 'it is bigger that maxwager'
+            this.alertMessage(msg)
             return
           }
           this.getBalance()

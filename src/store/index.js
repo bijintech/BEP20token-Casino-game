@@ -10,21 +10,39 @@ export default new Vuex.Store({
     walletAddress: 'Connect Wallet',
     bscConnect: false,
     tokenBalance: 0.0,
-    bnbBalance: 0.0
+    bnbBalance: 0.0,
+    alertMsg: '',
+    alert: false
   },
 
   getters: {
     appState: state => state,
     tokenBalance: state => state.tokenBalance,
     bnbBalance: state => state.bnbBalance,
+    alertMsg: state => state.alertMsg,
+    alert: state => state.alert
   },
 
   mutations: {
     chageState(state, appState) {
-      state.web3 = appState.web3
+      if (appState.web3)
+        state.web3 = appState.web3
+
+      if (appState.walletAddress)
       state.walletAddress = appState.walletAddress
+
+      if (appState.bscConnect)
       state.bscConnect = appState.bscConnect
+
+      if (appState.diceContract)
       state.diceContract = appState.diceContract
+
+      if (appState.alertMsg !== "" && appState.alertMsg) {
+        state.alertMsg = appState.alertMsg
+        state.alert = true
+      } else if (appState.alert === false) {
+        state.alert = false
+      }
     },
 
     getBalance(state) {

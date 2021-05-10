@@ -79,19 +79,19 @@
     </v-app-bar>
     <v-main>
       <router-view />
-      <v-dialog v-model="alert" width="500">
+      <v-dialog v-model="dialog" width="500">
         <v-card class="rounded-xl card" color="background" flat>
           <v-app-bar flat color="rgba(0, 0, 0, 0)">
             <v-toolbar-title class="title white--text pl-0">
               Settings
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn icon @click="alert = false">
+            <v-btn icon @click="alertMessage('', false)">
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-app-bar>
           <v-card-text>
-            {{ alertMessage }}
+            {{ alertMsg }}
           </v-card-text>
         </v-card>
       </v-dialog>
@@ -99,7 +99,7 @@
   </v-app>
 </template>
 <script>
-import {mapMutations} from "vuex";
+import {mapMutations, mapGetters} from "vuex";
 import Web3 from "web3";
 import {DICE_ADDRESS, DICE_ABI, CUSTOM_NETWORK, SERVER_URL, SERVER_PORT} from "../../config";
 
@@ -130,8 +130,6 @@ export default {
         { title: "Twitter", link: "https://t.me/dicegameofficial" },
       ],
     },
-    alert: false,
-    alertMessage: "",
     web3: new Web3(Web3.givenProvider),
     diceContract: null,
     walletAddress: "Connect Wallet",
@@ -148,6 +146,11 @@ export default {
         );
       else return "Connect Wallet";
     },
+
+    ...mapGetters({
+      alertMsg: "alertMsg",
+      dialog: "alert"
+    }),
   },
   async created() {
     if (this.$vuetify.breakpoint.width > 600) {
@@ -165,9 +168,9 @@ export default {
     } else if (window.web3) {
       this.web3 = new Web3(web3.currentProvider);
     } else {
-      this.alertMessage =
+      var msg =
         "Non-Web3 browser detected. You should consider trying MetaMask.";
-      this.alert = true;
+      this.alertMessage(msg)
       return;
     }
 
@@ -179,9 +182,9 @@ export default {
 
     window.ethereum.on("chainChanged", (chainId) => {
       if (chainId !== CUSTOM_NETWORK.chainId) {
-        this.alertMessage =
+        var msg =
           "It's a wrong network, not " + CUSTOM_NETWORK.chainName;
-        this.alert = true;
+        this.alertMessage(msg)
         this.bscConnect = false;
       } else {
         this.bscConnect = true;
@@ -234,10 +237,17 @@ export default {
       };
       this.chageState(walletState);
     },
+    alertMessage(msg, show = true) {
+      var msgState = {
+        alertMsg: msg,
+        alert: show
+      };
+      this.chageState(msgState);
+    },
     async connectWallet() {
       if (typeof window.ethereum === "undefined") {
-        this.alertMessage = "MetaMask is not installed. You should install it.";
-        this.alert = true;
+        var msg = "MetaMask is not installed. You should install it.";
+        this.alertMessage(msg)
       }
 
       if (this.walletAddress !== "Connect Wallet") {
@@ -248,9 +258,9 @@ export default {
 
       const chainId = await this.getChainId();
       if (chainId !== CUSTOM_NETWORK.chainId) {
-        this.alertMessage =
+        var msg =
           "It's a wrong network, not " + CUSTOM_NETWORK.chainName;
-        this.alert = true;
+        this.alertMessage(msg)
         this.bscConnect = false;
         return;
       }
