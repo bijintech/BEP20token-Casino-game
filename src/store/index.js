@@ -14,17 +14,17 @@ export default new Vuex.Store({
   },
 
   getters: {
-    walletState: state => state,
+    appState: state => state,
     tokenBalance: state => state.tokenBalance,
     bnbBalance: state => state.bnbBalance,
   },
 
   mutations: {
-    chageWalletState(state, walletState) {
-      state.walletAddress = walletState.walletAddress
-      state.web3 = walletState.web3
-      state.bscConnect = walletState.bscConnect
-      state.diceContract = walletState.diceContract
+    chageState(state, appState) {
+      state.web3 = appState.web3
+      state.walletAddress = appState.walletAddress
+      state.bscConnect = appState.bscConnect
+      state.diceContract = appState.diceContract
     },
 
     getBalance(state) {

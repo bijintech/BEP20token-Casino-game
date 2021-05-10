@@ -99,9 +99,9 @@
   </v-app>
 </template>
 <script>
-import { mapMutations, mapGetters } from "vuex";
+import {mapMutations} from "vuex";
 import Web3 from "web3";
-import { DICE_ADDRESS, DICE_ABI, CHAIN_ID, CUSTOM_NETWORK } from "../../config";
+import {DICE_ADDRESS, DICE_ABI, CUSTOM_NETWORK, SERVER_URL, SERVER_PORT} from "../../config";
 
 export default {
   data: () => ({
@@ -224,7 +224,7 @@ export default {
       });
   },
   methods: {
-    ...mapMutations(["chageWalletState", "getBalance"]),
+    ...mapMutations(["chageState", "getBalance"]),
     changeWalletInfo() {
       var walletState = {
         web3: this.web3,
@@ -232,7 +232,7 @@ export default {
         bscConnect: this.bscConnect,
         diceContract: this.diceContract,
       };
-      this.chageWalletState(walletState);
+      this.chageState(walletState);
     },
     async connectWallet() {
       if (typeof window.ethereum === "undefined") {
