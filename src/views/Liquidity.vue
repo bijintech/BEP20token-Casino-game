@@ -38,7 +38,7 @@
               >
                 <div>FTM</div>
                 <div style="display: flex; justify-content: space-between">
-                  <span><input type="number" Placeholder="0.0" v-model="bnbAmount"  @keyup="keyUpEvent('bnb')"></span>
+                  <span class="form-control"><input type="number" class="form-control" Placeholder="0.0" v-model="bnbAmount"  @keyup="keyUpEvent('bnb')"></span>
                   <span style="display: flex"
                     ><v-img
                       width="25"
@@ -66,7 +66,7 @@
               >
                 <div>DICE</div>
                 <div style="display: flex; justify-content: space-between">
-                  <span><input type="number" Placeholder="0.0" v-model="diceAmount"  @keyup="keyUpEvent('dice')"></span>
+                  <span class="form-control"><input type="number" class="form-control" Placeholder="0.0" v-model="diceAmount"  @keyup="keyUpEvent('dice')"></span>
                   <span style="display: flex"
                     ><v-img
                       width="25"
@@ -205,7 +205,7 @@ export default {
       }
 
       if (this.bnbAmount > this.bnbBalance) {
-        this.alertMessage('insufficient bnb for liquidity pool')
+        this.alertMessage('insufficient fmt for liquidity pool')
         return
       }
     
@@ -228,7 +228,7 @@ export default {
         });
       } else {
         if (this.bnbAmount < Math.pow(10, -4))
-          this.alertMessage('bnb amount to exchange is too low ')
+          this.alertMessage('fmt amount to exchange is too low ')
         
         if (this.diceAmount < (Math.pow(10, -4) * this.diceReserve / this.bnbReserve))
           this.alertMessage('diceAmount to exchange is too low')
@@ -267,7 +267,7 @@ export default {
         if (this.bnbAmount > this.bnbBalance) {
           this.bnbAmount = 0
           this.diceAmount = 0
-          this.alertMessage('insufficient bnb balance')
+          this.alertMessage('insufficient fmt balance')
         } else {
           this.diceAmount = this.diceReserve / this.bnbReserve * this.bnbAmount
           if (this.diceAmount > this.tokenBalance) {
@@ -335,5 +335,10 @@ export default {
   .items__item {
     max-width: 90%;
   }
+}
+
+.form-control {
+  color: white;
+  width: 100%;
 }
 </style>

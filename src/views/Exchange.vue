@@ -41,7 +41,7 @@
               >
                 <div>From</div>
                 <div style="display: flex; justify-content: space-between">
-                  <span
+                  <span class="form-control"
                     ><input
                       class="form-control"
                       id="ex1"
@@ -82,7 +82,7 @@
               >
                 <div>To</div>
                 <div style="display: flex; justify-content: space-between">
-                  <span
+                  <span class="form-control"
                     ><input
                       class="form-control"
                       id="ex1"
@@ -229,7 +229,7 @@ export default {
       }
 
       if (this.swapMode === 0 && this.inputAmount > this.bnbBalance) {
-        this.alertMessage("insufficient bnb for swap");
+        this.alertMessage("insufficient fmt for swap");
         return;
       }
 
@@ -246,14 +246,14 @@ export default {
 
       if (this.outputAmount > this.bnbReserve && this.swapMode === 1) {
         this.alertMessage(
-          "bnb amounts you wanna swap are more than bnbs in liquidity pool"
+          "fmt amounts you wanna swap are more than fmts in liquidity pool"
         );
         return;
       }
 
       if (this.inputAmount > this.bnbReserve && this.swapMode === 0) {
         this.alertMessage(
-          "bnb amounts you selected are more than bnbs in liquidity pool"
+          "fmt amounts you selected are more than fmts in liquidity pool"
         );
         return;
       }
@@ -341,7 +341,7 @@ export default {
           this.outputAmount = 0;
           let str =
             "insufficient " +
-            (this.swapMode === 0 ? "bnb" : "token") +
+            (this.swapMode === 0 ? "fmt" : "token") +
             " balance";
           this.alertMessage(str);
         } else {
@@ -375,7 +375,7 @@ export default {
           this.outputAmount = 0;
           let str =
             "insufficient " +
-            (this.swapMode === 0 ? "token" : "bnb") +
+            (this.swapMode === 0 ? "token" : "fmt") +
             " balance";
           this.alertMessage(str);
         } else {
@@ -449,5 +449,10 @@ export default {
   .items__item {
     max-width: 90%;
   }
+}
+
+.form-control {
+  color: white;
+  width: 100%;
 }
 </style>
