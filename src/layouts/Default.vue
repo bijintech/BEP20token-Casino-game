@@ -83,7 +83,7 @@
         <v-card class="rounded-xl card" color="background" flat>
           <v-app-bar flat color="rgba(0, 0, 0, 0)">
             <v-toolbar-title class="title white--text pl-0">
-              Settings
+              Alert
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn icon @click="alertMessage('', false)">

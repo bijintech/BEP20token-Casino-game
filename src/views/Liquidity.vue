@@ -38,7 +38,7 @@
               >
                 <div>FTM</div>
                 <div style="display: flex; justify-content: space-between">
-                  <span>0.0</span>
+                  <span><input type="number" Placeholder="0.0" v-model="bnbAmount"  @keyup="keyUpEvent('bnb')"></span>
                   <span style="display: flex"
                     ><v-img
                       width="25"
@@ -66,7 +66,7 @@
               >
                 <div>DICE</div>
                 <div style="display: flex; justify-content: space-between">
-                  <span>0.0</span>
+                  <span><input type="number" Placeholder="0.0" v-model="diceAmount"  @keyup="keyUpEvent('dice')"></span>
                   <span style="display: flex"
                     ><v-img
                       width="25"
@@ -102,8 +102,8 @@
                 color="#01659c"
                 elevation="0"
                 block
-                @click="dialog = true"
-                >Unlock Wallet
+                @click="liquidity()"
+                >Add Liquidity
               </v-btn>
             </v-list-item>
           </v-list>
@@ -114,7 +114,7 @@
       <v-card class="rounded-xl card" color="background" flat>
         <v-app-bar flat color="rgba(0, 0, 0, 0)">
           <v-toolbar-title class="title white--text pl-0">
-            Liquidity Settings
+            Alert
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn icon @click="dialog = false">
@@ -122,13 +122,7 @@
           </v-btn>
         </v-app-bar>
         <v-card-text>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
+          {{alertMsg}}
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -136,15 +130,169 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex'
+
 export default {
+  name: "AddLiquidity",
+
   data() {
     return {
       from: { id: 1, name: "user1" },
       to: { id: 1, name: "user2" },
       dialog: false,
-    };
+      alertMsg: "",
+      bnbAmount: 0.0,
+      diceAmount: 0.0,
+      bnbReserve: -1,
+      diceReserve: -1,
+    }
   },
-};
+
+  computed: {
+    ...mapGetters({
+      appState: 'appState',
+      tokenBalance: 'tokenBalance',
+      bnbBalance: 'bnbBalance'
+    }),
+  },
+
+  mounted() {
+    this.appState.diceContract.methods.getReserves().call(
+    ).then((res) => {
+      this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
+      this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+    })
+  },
+
+  methods: {
+    ...mapMutations([
+      'callTokenBalance',
+      'getBalance'
+    ]),
+
+    getSharePercent() {
+      this.appState.diceContract.methods.getLiquidity(this.appState.walletAddress).call(
+      ).then((myPool) => {
+        this.appState.diceContract.methods.getTotalLiquidity().call(
+        ).then((totalPool) => {
+          var myPer = myPool * 100 / totalPool
+          var str = 'Your liquidity share pool ' + myPer.toFixed(2) + '%'
+          this.alertMessage(str)
+        })
+      })
+    },
+
+    liquidity() {
+     
+      if (this.appState.walletAddress === 'Connect Wallet') {
+        this.alertMessage("connect wallet!!!!")
+        return
+      }
+
+      this.bnbAmount = Number(this.bnbAmount)
+      this.diceAmount = Number(this.diceAmount)
+      this.bnbAmount = this.bnbAmount.toFixed(4)
+      this.diceAmount = this.diceAmount.toFixed(0)
+      
+      if (this.bnbAmount <= 0 || this.diceAmount <= 0) {
+        alethis.alertMessagert('amount can not be same or under 0')
+        return
+      }
+      
+      if (this.bnbReserve < 0 || this.diceReserve < 0) {
+        this.alertMessage('reserve received not yet from net')
+        return
+      }
+
+      if (this.bnbAmount > this.bnbBalance) {
+        this.alertMessage('insufficient bnb for liquidity pool')
+        return
+      }
+    
+      if (this.diceAmount > this.tokenBalance) {
+        this.alertMessage('insufficient token for liquidity pool')
+      }
+      //decimal : 8,  1wei : 1000000000000000000
+      if (this.bnbReserve === 0 && this.diceReserve === 0) {
+        this.alertMessage('adding first liquidity......')
+        this.appState.diceContract.methods.addLiquidityETH(this.diceAmount * 100000000, 1, 1, this.appState.walletAddress).send({ from: this.walletState.walletAddress, value: Math.pow(10, 18) * this.bnbAmount }
+        ).then(() => {
+          this.getBalance()
+          this.appState.diceContract.methods.getReserves().call(
+          ).then((res) => {
+            this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
+            this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+          });
+
+          this.getSharePercent()
+        });
+      } else {
+        if (this.bnbAmount < Math.pow(10, -4))
+          this.alertMessage('bnb amount to exchange is too low ')
+        
+        if (this.diceAmount < (Math.pow(10, -4) * this.diceReserve / this.bnbReserve))
+          this.alertMessage('diceAmount to exchange is too low')
+
+        this.appState.diceContract.methods.addLiquidityETH(this.diceAmount * 100000000, 1, 1, this.appState.walletAddress).send({ from: this.appState.walletAddress, value: Math.pow(10, 18) * this.bnbAmount }
+        ).then(() => {
+          this.getBalance()
+          this.appState.diceContract.methods.getReserves().call(
+          ).then((res) => {
+            this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);:q
+            this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+          });
+
+          this.getSharePercent()
+        });
+      }
+    },
+
+    keyUpEvent(token) {
+      if (this.appState.walletAddress === 'Connect Wallet') {
+        this.bnbAmount = 0
+        this.diceAmount = 0
+        this.alertMessage("connect wallet!!!!")
+        return
+      }
+
+      if (this.bnbReserve < 0 || this.diceReserve < 0) {
+        this.alertMessage('reserve received not yet from net')
+        return
+      }
+
+      if (this.bnbReserve === 0 || this.diceReserve === 0)
+        return
+
+      if (token === "bnb") {
+        if (this.bnbAmount > this.bnbBalance) {
+          this.bnbAmount = 0
+          this.diceAmount = 0
+          this.alertMessage('insufficient bnb balance')
+        } else {
+          this.diceAmount = this.diceReserve / this.bnbReserve * this.bnbAmount
+          if (this.diceAmount > this.tokenBalance) {
+            this.diceAmount = this.tokenBalance
+          }
+        }
+      } else if (token === "dice") {
+        if (this.diceAmount > this.tokenBalance) {
+          this.bnbAmount = 0
+          this.diceAmount = 0
+          this.alertMessage('insufficient token balance')
+        } else {
+          this.bnbAmount = this.bnbReserve / this.diceReserve * this.diceAmount
+          if (this.bnbAmount > this.bnbBalance) {
+            this.bnbAmount = this.bnbBalance
+          }
+        }
+      }
+    },
+    alertMessage(msg) {
+        this.alertMsg = msg
+        this.dialog = true
+    }
+  }
+}
 </script>
 
 <style scoped>
