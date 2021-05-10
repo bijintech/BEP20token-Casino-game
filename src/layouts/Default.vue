@@ -99,9 +99,15 @@
   </v-app>
 </template>
 <script>
-import {mapMutations, mapGetters} from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 import Web3 from "web3";
-import {DICE_ADDRESS, DICE_ABI, CUSTOM_NETWORK, SERVER_URL, SERVER_PORT} from "../../config";
+import {
+  DICE_ADDRESS,
+  DICE_ABI,
+  CUSTOM_NETWORK,
+  SERVER_URL,
+  SERVER_PORT,
+} from "../../config";
 
 export default {
   data: () => ({
@@ -149,7 +155,7 @@ export default {
 
     ...mapGetters({
       alertMsg: "alertMsg",
-      dialog: "alert"
+      dialog: "alert",
     }),
   },
   async created() {
@@ -170,7 +176,7 @@ export default {
     } else {
       var msg =
         "Non-Web3 browser detected. You should consider trying MetaMask.";
-      this.alertMessage(msg)
+      this.alertMessage(msg);
       return;
     }
 
@@ -182,9 +188,8 @@ export default {
 
     window.ethereum.on("chainChanged", (chainId) => {
       if (chainId !== CUSTOM_NETWORK.chainId) {
-        var msg =
-          "It's a wrong network, not " + CUSTOM_NETWORK.chainName;
-        this.alertMessage(msg)
+        var msg = "It's a wrong network, not " + CUSTOM_NETWORK.chainName;
+        this.alertMessage(msg);
         this.bscConnect = false;
       } else {
         this.bscConnect = true;
@@ -240,14 +245,14 @@ export default {
     alertMessage(msg, show = true) {
       var msgState = {
         alertMsg: msg,
-        alert: show
+        alert: show,
       };
       this.chageState(msgState);
     },
     async connectWallet() {
       if (typeof window.ethereum === "undefined") {
         var msg = "MetaMask is not installed. You should install it.";
-        this.alertMessage(msg)
+        this.alertMessage(msg);
       }
 
       if (this.walletAddress !== "Connect Wallet") {
@@ -258,9 +263,8 @@ export default {
 
       const chainId = await this.getChainId();
       if (chainId !== CUSTOM_NETWORK.chainId) {
-        var msg =
-          "It's a wrong network, not " + CUSTOM_NETWORK.chainName;
-        this.alertMessage(msg)
+        var msg = "It's a wrong network, not " + CUSTOM_NETWORK.chainName;
+        this.alertMessage(msg);
         this.bscConnect = false;
         return;
       }
