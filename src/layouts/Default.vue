@@ -66,11 +66,13 @@
     <v-app-bar app clipped-left color="background">
       <v-app-bar-nav-icon @click.stop="drawerTigger"></v-app-bar-nav-icon>
       <v-toolbar-title v-if="$vuetify.breakpoint.width > 600">
-        <v-img
-          :src="$vuetify.theme.isDark ? logo.light : logo.dark"
-          alt="logo"
-          width="160px"
-        />
+        <router-link to="/" style="text-decoration: none; color: inherit;">
+          <v-img
+            :src="$vuetify.theme.isDark ? logo.light : logo.dark"
+            alt="logo"
+            width="160px"
+          />
+        </router-link>
       </v-toolbar-title>
       <v-spacer />
       <v-btn rounded color="primary" @click="connectWallet()" small>{{
