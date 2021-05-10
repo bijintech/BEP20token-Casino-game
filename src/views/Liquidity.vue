@@ -25,11 +25,11 @@
                     <v-list color="transparent" class="my-6">
                         <v-list-item style="width: 100%" class="my-2">
                             <div class="px-3 py-2 rounded-lg" style="width: 100%; background-color: #dddddd20;">
-                                <div>Form</div>
+                                <div>FTM</div>
                                 <div style="display: flex; justify-content: space-between;">
                                     <span>0.0</span>
                                     <span style="display: flex;"><v-img width="25" class="mr-2"
-                                                                        :src="require('../assets/DICE-COIN.png')"/> DICE</span>
+                                                                        :src="require('../assets/fantom-ftm.png')"/> FTM</span>
                                 </div>
                             </div>
                         </v-list-item>
@@ -41,7 +41,7 @@
                         </v-list-item>
                         <v-list-item style="width: 100%" class="my-2">
                             <div class="px-3 py-2 rounded-lg" style="width: 100%; background-color: #dddddd20;">
-                                <div>To</div>
+                                <div>DICE</div>
                                 <div style="display: flex; justify-content: space-between;">
                                     <span>0.0</span>
                                     <span style="display: flex;"><v-img width="25" class="mr-2"
