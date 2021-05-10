@@ -5,10 +5,12 @@
                 Fun!
             </v-card-title>
             <v-card-actions>
-                <v-btn color="secondary" x-large class="rounded-lg px-7">Buy
-                    <v-img :src="require('../assets/DICE-COIN.png')" width="40" contain class="mx-3"/>
-                    Farm, Play and Earn!
-                </v-btn>
+                <router-link to="/exchange" style="text-decoration: none; color: inherit;">
+                    <v-btn color="secondary" x-large class="rounded-lg px-7">Buy
+                        <v-img :src="require('../assets/DICE-COIN.png')" width="40" contain class="mx-3"/>
+                        Farm, Play and Earn!
+                    </v-btn>
+                </router-link>
             </v-card-actions>
         </v-card>
         <v-container>
