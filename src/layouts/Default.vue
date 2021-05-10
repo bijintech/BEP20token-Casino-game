@@ -145,11 +145,7 @@ export default {
   computed: {
     getWalletAdrAbbr() {
       if (this.walletAddress !== "Connect Wallet")
-        return (
-          this.walletAddress.substr(0, 7) +
-          "....." +
-          this.walletAddress.substr(-5, 6)
-        );
+        return 'CONNECTED'
       else return "Connect Wallet";
     },
 
