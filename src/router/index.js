@@ -38,4 +38,12 @@ const router = new VueRouter({
   routes
 })
 
+const DEFAULT_TITLE = 'Play The Best Crypto Dice Game: Start Earning Crypto With A New Blockchain Social Gaming Experience';
+router.afterEach((to, from) => {
+    Vue.nextTick(() => {
+        console.log(to, from)
+        document.title = DEFAULT_TITLE;
+    });
+});
+
 export default router
