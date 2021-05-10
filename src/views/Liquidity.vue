@@ -238,7 +238,7 @@ export default {
           this.getBalance()
           this.appState.diceContract.methods.getReserves().call(
           ).then((res) => {
-            this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);:q
+            this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
             this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
           });
 
