@@ -168,7 +168,7 @@ export default {
       alertMsg: "",
       diceContract: null,
       swapMode: 0,
-      inToken: "BNB",
+      inToken: "FMT",
       outToken: "DICE",
       inputAmount: 0.0,
       outputAmount: 0.0,
@@ -304,9 +304,9 @@ export default {
       this.swapMode = this.swapMode === 1 ? 0 : 1;
       if (this.swapMode === 1) {
         this.inToken = "DICE";
-        this.outToken = "BNB";
+        this.outToken = "FMT";
       } else {
-        this.inToken = "BNB";
+        this.inToken = "FMT";
         this.outToken = "DICE";
       }
     },
