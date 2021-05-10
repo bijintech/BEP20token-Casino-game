@@ -219,7 +219,7 @@ export default {
 
           this.changeWalletInfo();
           this.getBalance();
-          this.callInterval = setInterval(this.getBalance, 2500);
+          //this.callInterval = setInterval(this.getBalance, 2500);
         }
       });
   },
@@ -261,7 +261,7 @@ export default {
         })
         .then(() => {
           this.getBalance();
-          this.callInterval = setInterval(this.getBalance, 2500);
+          //this.callInterval = setInterval(this.getBalance, 2500);
         });
     },
     async getChainId() {
