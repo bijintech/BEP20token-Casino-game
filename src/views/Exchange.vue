@@ -205,6 +205,10 @@ export default {
     },
 
     swap() {
+      if (this.inputAmount === 0 || this.outputAmount === 0) {
+        this.alertMessage("input or output can't be 0!!!!");
+        return
+      }
       if (this.appState.walletAddress === "Connect Wallet") {
         this.alertMessage("connect wallet!!!!");
         return;
