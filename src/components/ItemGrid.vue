@@ -2,7 +2,7 @@
   <v-card class="background rounded-xl card">
         <div class="top">
             <div class="icon">
-                <v-img width="60" :src="require('../assets/DICE-COIN.png')" />
+                <v-img width="60" :src="require('../assets/DICE-FMTLP.png')" />
             </div>
             <div class="right">
                 <div class="font-weight-bold text-h5">DICE-FTM LP</div>
