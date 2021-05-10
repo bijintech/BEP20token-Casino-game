@@ -215,7 +215,7 @@ export default {
       //decimal : 8,  1wei : 1000000000000000000
       if (this.bnbReserve === 0 && this.diceReserve === 0) {
         this.alertMessage('adding first liquidity......')
-        this.appState.diceContract.methods.addLiquidityETH(this.diceAmount * 100000000, 1, 1, this.appState.walletAddress).send({ from: this.walletState.walletAddress, value: Math.pow(10, 18) * this.bnbAmount }
+        this.appState.diceContract.methods.addLiquidityETH(this.diceAmount * 100000000, 1, 1, this.appState.walletAddress).send({ from: this.appState.walletAddress, value: Math.pow(10, 18) * this.bnbAmount }
         ).then(() => {
           this.getBalance()
           this.appState.diceContract.methods.getReserves().call(
