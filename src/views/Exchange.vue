@@ -182,7 +182,6 @@ export default {
       bnbReserve: -1,
       diceReserve: -1,
       case: 0,
-      swapAlertShow: false,
       swapAlert: "",
     };
   },

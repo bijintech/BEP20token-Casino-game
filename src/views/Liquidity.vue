@@ -15,6 +15,7 @@
     </v-card>
     <div class="items">
       <div class="items__item">
+        <div v-html="liquidityAlert"></div>
         <v-card class="rounded-xl card" color="background" outlined>
           <v-app-bar flat color="rgba(0, 0, 0, 0)">
             <v-toolbar-title class="title white--text pl-0"
@@ -160,6 +161,7 @@ export default {
       diceAmount: 0.0,
       bnbReserve: -1,
       diceReserve: -1,
+      liquidityAlert: ""
     };
   },
 
@@ -202,8 +204,10 @@ export default {
     },
 
     liquidity() {
+      this.liquidityAlert = ""
       if (this.appState.walletAddress === "Connect") {
-        //this.alertMessage("connect wallet");
+        //this.alertMessage("please connect wallet");
+        this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>please connect wallet</div>";
         return;
       }
 
@@ -214,21 +218,25 @@ export default {
 
       if (this.bnbAmount <= 0 || this.diceAmount <= 0) {
         //this.alertMessagert("amount can not be same or under 0");
+        this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Thinkg about selecting some bnb and dices</div>";
         return;
       }
 
       if (this.bnbReserve < 0 || this.diceReserve < 0) {
         //this.alertMessage("reserve received not yet from net");
+        //this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>xxxx</div>";
         return;
       }
 
       if (this.bnbAmount > this.bnbBalance) {
         //this.alertMessage("insufficient fmt for liquidity pool");
+        this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient fmt for liquidity pool</div>";
         return;
       }
 
       if (this.diceAmount > this.tokenBalance) {
         //this.alertMessage("insufficient token for liquidity pool");
+        this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient token for liquidity pool</div>";
       }
       //decimal : 8,  1wei : 1000000000000000000
       if (this.bnbReserve === 0 && this.diceReserve === 0) {
