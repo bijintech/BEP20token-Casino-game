@@ -201,18 +201,19 @@ export default {
     ...mapMutations(["callTokenBalance", "getBalance"]),
 
     getReserves() {
-      this.diceContract.methods
-        .getReserves()
-        .call()
-        .then((res) => {
-          this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-          this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
-        });
+      if (this.diceContract)
+        this.diceContract.methods
+          .getReserves()
+          .call()
+          .then((res) => {
+            this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
+            this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+          });
     },
 
     swap() {
       if (this.appState.walletAddress === "Connect") {
-        this.alertMessage("connect wallet!!!!");
+        //this.alertMessage("connect wallet!!!!");
         return;
       }
 
@@ -220,7 +221,7 @@ export default {
       this.outputAmount = Number(this.outputAmount);
 
       if (this.inputAmount === 0 || this.outputAmount === 0) {
-        this.alertMessage("input or output can't be 0!!!!");
+        //this.alertMessage("input or output can't be 0!!!!");
         return;
       }
 
@@ -232,44 +233,45 @@ export default {
       if (this.bnbReserve < 0 || this.diceReserve < 0) {
         this.inputAmount = 0;
         this.outputAmount = 0;
-        this.alertMessage("reserve received not yet from net");
+        //this.alertMessage("reserve received not yet from net");
         return;
       }
 
       if (this.swapMode === 0 && this.inputAmount > this.bnbBalance) {
-        this.alertMessage("insufficient fmt for swap");
+        //this.alertMessage("insufficient fmt for swap");
         return;
       }
 
       if (this.swapMode === 1 && this.inputAmount > this.tokenBalance) {
-        this.alertMessage("insufficient token for swap");
+        //this.alertMessage("insufficient token for swap");
+        return;
       }
 
       if (this.outputAmount > this.diceReserve && this.swapMode === 0) {
-        this.alertMessage(
+        /*this.alertMessage(
           "dice amounts you wanna swap are more than dices in liquidity pool"
-        );
+        );*/
         return;
       }
 
       if (this.outputAmount > this.bnbReserve && this.swapMode === 1) {
-        this.alertMessage(
+        /*this.alertMessage(
           "fmt amounts you wanna swap are more than fmts in liquidity pool"
-        );
+        );*/
         return;
       }
 
       if (this.inputAmount > this.bnbReserve && this.swapMode === 0) {
-        this.alertMessage(
+        /*this.alertMessage(
           "fmt amounts you selected are more than fmts in liquidity pool"
-        );
+        );*/
         return;
       }
 
       if (this.inputAmount > this.diceReserve && this.swapMode === 1) {
-        this.alertMessage(
+        /*this.alertMessage(
           "dice amounts you selected are more than dices in liquidity pool"
-        );
+        );*/
         return;
       }
 
