@@ -27,6 +27,10 @@ const routes = [
       {
         path: 'farming',
         component: () => import('@/views/Farming')
+      },
+      {
+        path: 'faq',
+        component: () => import('@/views/Home')
       }
     ]
   }
