@@ -55,7 +55,7 @@
               style="width: 100%; display: flex; justify-content: center"
               class="my-2"
             >
-              <v-btn icon>
+              <v-btn icon @click="liquidity()">
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </v-list-item>
@@ -102,8 +102,8 @@
                 color="#01659c"
                 elevation="0"
                 block
-                @click="liquidity()"
-                >Add Liquidity
+                @click="unlockWallet()"
+                >Unlock wallet
               </v-btn>
             </v-list-item>
           </v-list>
