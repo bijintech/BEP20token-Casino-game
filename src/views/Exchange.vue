@@ -71,7 +71,7 @@
               style="width: 100%; display: flex; justify-content: center"
               class="my-2"
             >
-              <v-btn icon>
+              <v-btn icon @click="swap()">
                 <v-icon>mdi-arrow-down</v-icon>
               </v-btn>
             </v-list-item>
@@ -127,8 +127,8 @@
               style="width: 100%; display: flex; justify-content: center"
               class="my-2"
             >
-              <v-btn rounded color="#01659c" elevation="0" block @click="swap()"
-                >Swap
+              <v-btn rounded color="#01659c" elevation="0" block @click="unlockWallet()"
+                >Unlock Wallet
               </v-btn>
             </v-list-item>
           </v-list>
@@ -205,10 +205,6 @@ export default {
     },
 
     swap() {
-      if (this.inputAmount === 0 || this.outputAmount === 0) {
-        this.alertMessage("input or output can't be 0!!!!");
-        return
-      }
       if (this.appState.walletAddress === "Connect") {
         this.alertMessage("connect wallet!!!!");
         return;
@@ -216,6 +212,12 @@ export default {
 
       this.inputAmount = Number(this.inputAmount);
       this.outputAmount = Number(this.outputAmount);
+
+      if (this.inputAmount === 0 || this.outputAmount === 0) {
+        this.alertMessage("input or output can't be 0!!!!");
+        return
+      }
+      
       this.inputAmount = this.inputAmount.toFixed(this.swapMode === 0 ? 4 : 0);
       this.outputAmount = this.outputAmount.toFixed(
         this.swapMode === 0 ? 0 : 4
