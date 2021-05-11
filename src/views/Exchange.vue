@@ -15,6 +15,7 @@
     </v-card>
     <div class="items">
       <div class="items__item">
+        <div v-html="swapAlert"></div>
         <v-card class="rounded-xl card" color="background" outlined>
           <v-app-bar flat color="rgba(0, 0, 0, 0)">
             <v-toolbar-title class="title white--text pl-0">
@@ -181,6 +182,8 @@ export default {
       bnbReserve: -1,
       diceReserve: -1,
       case: 0,
+      swapAlertShow: false,
+      swapAlert: "",
     };
   },
 
@@ -212,8 +215,11 @@ export default {
     },
 
     swap() {
+      this.swapAlert = "";
       if (this.appState.walletAddress === "Connect") {
-        //this.alertMessage("connect wallet!!!!");
+        //this.alertMessage("please connect wallet");
+        this.swapAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>please connect wallet</div>";
         return;
       }
 
@@ -222,6 +228,8 @@ export default {
 
       if (this.inputAmount === 0 || this.outputAmount === 0) {
         //this.alertMessage("input or output can't be 0!!!!");
+        this.swapAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Thinking about selecting some fmts or tokens</div>";
         return;
       }
 
@@ -239,11 +247,15 @@ export default {
 
       if (this.swapMode === 0 && this.inputAmount > this.bnbBalance) {
         //this.alertMessage("insufficient fmt for swap");
+        this.swapAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient fmt balance for swap</div>";
         return;
       }
 
       if (this.swapMode === 1 && this.inputAmount > this.tokenBalance) {
         //this.alertMessage("insufficient token for swap");
+        this.swapAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient token balance for swap</div>";
         return;
       }
 
@@ -251,6 +263,8 @@ export default {
         /*this.alertMessage(
           "dice amounts you wanna swap are more than dices in liquidity pool"
         );*/
+        this.swapAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Dice amounts are more than dices in liquidity pool</div>";
         return;
       }
 
@@ -258,6 +272,9 @@ export default {
         /*this.alertMessage(
           "fmt amounts you wanna swap are more than fmts in liquidity pool"
         );*/
+        this.swapAlert = "";
+        this.swapAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>fmt amounts are more than fmts in liquidity pool</div>";
         return;
       }
 
@@ -265,6 +282,8 @@ export default {
         /*this.alertMessage(
           "fmt amounts you selected are more than fmts in liquidity pool"
         );*/
+        this.swapAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>fmt amounts are more than fmts in liquidity pool</div>";
         return;
       }
 
@@ -272,6 +291,8 @@ export default {
         /*this.alertMessage(
           "dice amounts you selected are more than dices in liquidity pool"
         );*/
+        this.swapAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>dice amounts are more than dices in liquidity pool</div>";
         return;
       }
 
