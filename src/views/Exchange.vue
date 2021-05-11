@@ -241,6 +241,8 @@ export default {
         this.inputAmount = 0;
         this.outputAmount = 0;
         //this.alertMessage("reserve received not yet from net");
+        this.swapAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>reserve received not yet from net</div>";
         return;
       }
 

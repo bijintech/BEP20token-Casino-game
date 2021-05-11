@@ -224,7 +224,7 @@ export default {
 
       if (this.bnbReserve < 0 || this.diceReserve < 0) {
         //this.alertMessage("reserve received not yet from net");
-        //this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>xxxx</div>";
+        this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>reserve received not yet from net</div>";
         return;
       }
 
