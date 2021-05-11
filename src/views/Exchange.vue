@@ -127,7 +127,12 @@
               style="width: 100%; display: flex; justify-content: center"
               class="my-2"
             >
-              <v-btn rounded color="#01659c" elevation="0" block @click="unlockWallet()"
+              <v-btn
+                rounded
+                color="#01659c"
+                elevation="0"
+                block
+                @click="unlockWallet()"
                 >Unlock Wallet
               </v-btn>
             </v-list-item>
@@ -156,6 +161,7 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
+import { CUSTOM_NETWORK } from "../../config";
 
 export default {
   name: "Swap",
@@ -215,9 +221,9 @@ export default {
 
       if (this.inputAmount === 0 || this.outputAmount === 0) {
         this.alertMessage("input or output can't be 0!!!!");
-        return
+        return;
       }
-      
+
       this.inputAmount = this.inputAmount.toFixed(this.swapMode === 0 ? 4 : 0);
       this.outputAmount = this.outputAmount.toFixed(
         this.swapMode === 0 ? 0 : 4
@@ -406,6 +412,27 @@ export default {
     alertMessage(msg) {
       this.alertMsg = msg;
       this.dialog = true;
+    },
+    async unlockWallet() {
+      if (typeof window.ethereum === "undefined") {
+        return;
+      }
+
+      const chainId = await this.getChainId();
+      if (chainId !== CUSTOM_NETWORK.chainId) {
+        var msg = "It's a wrong network, not " + CUSTOM_NETWORK.chainName;
+        this.alertMessage(msg);
+        this.bscConnect = false;
+        return;
+      }
+
+      window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+    },
+    async getChainId() {
+      const chainId = await window.ethereum.request({ method: "eth_chainId" });
+      return chainId;
     },
   },
 };
