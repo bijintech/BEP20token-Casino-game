@@ -131,6 +131,9 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
+import {
+  CUSTOM_NETWORK,
+} from "../../config";
 
 export default {
   name: "AddLiquidity",
@@ -290,7 +293,33 @@ export default {
     alertMessage(msg) {
         this.alertMsg = msg
         this.dialog = true
-    }
+    },
+    async unlockWallet() {
+      if (typeof window.ethereum === "undefined") {
+        return
+      }
+
+      const chainId = await this.getChainId();
+      if (chainId !== CUSTOM_NETWORK.chainId) {
+        var msg = "It's a wrong network, not " + CUSTOM_NETWORK.chainName;
+        this.alertMessage(msg);
+        this.bscConnect = false;
+        return;
+      }
+
+      window.ethereum
+        .request({
+          method: "eth_requestAccounts",
+        })
+        .then(() => {
+          this.getBalance();
+          //this.callInterval = setInterval(this.getBalance, 2500);
+        });
+    },
+    async getChainId() {
+      const chainId = await window.ethereum.request({ method: "eth_chainId" });
+      return chainId;
+    },
   }
 }
 </script>

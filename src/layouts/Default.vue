@@ -249,8 +249,7 @@ export default {
     },
     async connectWallet() {
       if (typeof window.ethereum === "undefined") {
-        var msg = "MetaMask is not installed. You should install it.";
-        this.alertMessage(msg);
+        return
       }
 
       if (this.walletAddress !== "Connect") {
