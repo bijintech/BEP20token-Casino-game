@@ -418,21 +418,9 @@ export default {
         return;
       }
 
-      const chainId = await this.getChainId();
-      if (chainId !== CUSTOM_NETWORK.chainId) {
-        var msg = "It's a wrong network, not " + CUSTOM_NETWORK.chainName;
-        this.alertMessage(msg);
-        this.bscConnect = false;
-        return;
-      }
-
       window.ethereum.request({
         method: "eth_requestAccounts",
       });
-    },
-    async getChainId() {
-      const chainId = await window.ethereum.request({ method: "eth_chainId" });
-      return chainId;
     },
   },
 };
