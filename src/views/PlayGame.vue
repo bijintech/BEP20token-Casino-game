@@ -913,7 +913,7 @@ export default {
                     });
 
                     if (
-                      this.appState.walletAddress !== "Connect Wallet" &&
+                      this.appState.walletAddress !== "Connect" &&
                       this.appState.walletAddress !== "" &&
                       this.confirmed === true &&
                       rewardAmount > 0
@@ -1127,7 +1127,7 @@ export default {
         this.thrownCredits = [];
 
         if (
-          this.appState.walletAddress !== "Connect Wallet" &&
+          this.appState.walletAddress !== "Connect" &&
           this.appState.walletAddress !== ""
         ) {
           if (thrownAmount > this.maxWager) {

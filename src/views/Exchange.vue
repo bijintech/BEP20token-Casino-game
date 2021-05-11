@@ -209,7 +209,7 @@ export default {
         this.alertMessage("input or output can't be 0!!!!");
         return
       }
-      if (this.appState.walletAddress === "Connect Wallet") {
+      if (this.appState.walletAddress === "Connect") {
         this.alertMessage("connect wallet!!!!");
         return;
       }
@@ -316,7 +316,7 @@ export default {
     },
 
     keyUpEvent(dir) {
-      if (this.appState.walletAddress === "Connect Wallet") {
+      if (this.appState.walletAddress === "Connect") {
         this.inputAmount = 0;
         this.outputAmount = 0;
         this.alertMessage("connect wallet!!!!");

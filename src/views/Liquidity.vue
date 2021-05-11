@@ -184,7 +184,7 @@ export default {
 
     liquidity() {
      
-      if (this.appState.walletAddress === 'Connect Wallet') {
+      if (this.appState.walletAddress === 'Connect') {
         this.alertMessage("connect wallet!!!!")
         return
       }
@@ -248,7 +248,7 @@ export default {
     },
 
     keyUpEvent(token) {
-      if (this.appState.walletAddress === 'Connect Wallet') {
+      if (this.appState.walletAddress === 'Connect') {
         this.bnbAmount = 0
         this.diceAmount = 0
         this.alertMessage("connect wallet!!!!")

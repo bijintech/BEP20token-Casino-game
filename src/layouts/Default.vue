@@ -140,15 +140,15 @@ export default {
     },
     web3: new Web3(Web3.givenProvider),
     diceContract: null,
-    walletAddress: "Connect Wallet",
+    walletAddress: "Connect",
     netConnect: false,
     callInterval: null,
   }),
   computed: {
     getWalletAdrAbbr() {
-      if (this.walletAddress !== "Connect Wallet")
+      if (this.walletAddress !== "Connect")
         return 'CONNECTED'
-      else return "Connect Wallet";
+      else return "Connect";
     },
 
     ...mapGetters({
@@ -194,7 +194,7 @@ export default {
       }
       this.changeWalletInfo();
 
-      if (this.walletAddress !== "Connect Wallet") {
+      if (this.walletAddress !== "Connect") {
         this.getBalance();
       }
     });
@@ -205,7 +205,7 @@ export default {
         this.changeWalletInfo();
         this.getBalance();
       } else {
-        this.walletAddress = "Connect Wallet";
+        this.walletAddress = "Connect";
         this.changeWalletInfo();
         this.getBalance();
       }
@@ -217,7 +217,7 @@ export default {
       })
       .then((accounts) => {
         this.walletAddress =
-          accounts.length <= 0 ? "Connect Wallet" : accounts[0];
+          accounts.length <= 0 ? "Connect" : accounts[0];
         if (accounts.length > 0) {
           if (window.ethereum.chainId === CUSTOM_NETWORK.chainId) {
             this.bscConnect = true;
@@ -253,7 +253,7 @@ export default {
         this.alertMessage(msg);
       }
 
-      if (this.walletAddress !== "Connect Wallet") {
+      if (this.walletAddress !== "Connect") {
         var url = "https://etherscan.io/address/" + this.walletAddress;
         window.open(url, "_blank");
         return;
