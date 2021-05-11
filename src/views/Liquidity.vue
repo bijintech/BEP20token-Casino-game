@@ -172,13 +172,14 @@ export default {
   },
 
   mounted() {
-    this.appState.diceContract.methods
-      .getReserves()
-      .call()
-      .then((res) => {
-        this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-        this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
-      });
+    if (this.appState.diceContract)
+      this.appState.diceContract.methods
+        .getReserves()
+        .call()
+        .then((res) => {
+          this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
+          this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+        });
   },
 
   methods: {
@@ -202,7 +203,7 @@ export default {
 
     liquidity() {
       if (this.appState.walletAddress === "Connect") {
-        this.alertMessage("connect wallet!!!!");
+        //this.alertMessage("connect wallet");
         return;
       }
 
@@ -212,26 +213,26 @@ export default {
       this.diceAmount = this.diceAmount.toFixed(0);
 
       if (this.bnbAmount <= 0 || this.diceAmount <= 0) {
-        alethis.alertMessagert("amount can not be same or under 0");
+        //this.alertMessagert("amount can not be same or under 0");
         return;
       }
 
       if (this.bnbReserve < 0 || this.diceReserve < 0) {
-        this.alertMessage("reserve received not yet from net");
+        //this.alertMessage("reserve received not yet from net");
         return;
       }
 
       if (this.bnbAmount > this.bnbBalance) {
-        this.alertMessage("insufficient fmt for liquidity pool");
+        //this.alertMessage("insufficient fmt for liquidity pool");
         return;
       }
 
       if (this.diceAmount > this.tokenBalance) {
-        this.alertMessage("insufficient token for liquidity pool");
+        //this.alertMessage("insufficient token for liquidity pool");
       }
       //decimal : 8,  1wei : 1000000000000000000
       if (this.bnbReserve === 0 && this.diceReserve === 0) {
-        this.alertMessage("adding first liquidity......");
+        //this.alertMessage("adding first liquidity......");
         this.appState.diceContract.methods
           .addLiquidityETH(
             this.diceAmount * 100000000,
@@ -256,14 +257,14 @@ export default {
             this.getSharePercent();
           });
       } else {
-        if (this.bnbAmount < Math.pow(10, -4))
+        /*if (this.bnbAmount < Math.pow(10, -4))
           this.alertMessage("fmt amount to exchange is too low ");
 
         if (
           this.diceAmount <
           (Math.pow(10, -4) * this.diceReserve) / this.bnbReserve
         )
-          this.alertMessage("diceAmount to exchange is too low");
+          this.alertMessage("diceAmount to exchange is too low");*/
 
         this.appState.diceContract.methods
           .addLiquidityETH(
@@ -295,12 +296,12 @@ export default {
       if (this.appState.walletAddress === "Connect") {
         this.bnbAmount = 0;
         this.diceAmount = 0;
-        this.alertMessage("connect wallet!!!!");
+        //this.alertMessage("connect wallet!!!!");
         return;
       }
 
       if (this.bnbReserve < 0 || this.diceReserve < 0) {
-        this.alertMessage("reserve received not yet from net");
+        //this.alertMessage("reserve received not yet from net");
         return;
       }
 
