@@ -254,7 +254,7 @@ export default {
       }
 
       if (this.walletAddress !== "Connect") {
-        var url = "https://etherscan.io/address/" + this.walletAddress;
+        var url = "https://ftmscan.com";
         window.open(url, "_blank");
         return;
       }
