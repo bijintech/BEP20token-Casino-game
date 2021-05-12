@@ -443,26 +443,34 @@ contract DICEToken is Context, IBEP20, Ownable {
       // _transfer(address(this), developerAddress, developerToken);
 
       uint256 betToken = mintedAmount.div(10).mul(3);
-      for(uint256 i = 0; i < BetAdresses.length; i++) {
-        user = users[BetAdresses[i]];
-        user.play = false;
-        user.reward = user.reward + betToken.div(betnum).mul(user.playcount);
-        user.playcount = 0;
-        // _transfer(address(this), BetAdresses[i], betToken.div(betnum).mul(users[BetAdresses[i]].playcount));      
-      }
-      betnum = 0;
-      delete BetAdresses;
+      playerReward(betToken);
       uint256 liqudityToken = mintedAmount.div(10).mul(4);
-      for(uint256 i = 0; i < LiqudityAdresses.length; i++) {
-        if(StableXPair(pairAddress).totalSupply() != 0) {
-            user = users[LiqudityAdresses[i]];
-            uint256 token = liqudityToken.div(StableXPair(pairAddress).totalSupply()).mul(StableXPair(pairAddress).balanceOf(LiqudityAdresses[i]));
-            user.reward = user.reward + token;
-            // _transfer(address(this), LiqudityAdresses[i], token);
-        }
-      }
+      farmingReward(liqudityToken);
       mintedAmount = mintedAmount - mintAmount;
       return true;
+  }
+
+  function playerReward(uint256 amount) internal returns (bool) {
+    for(uint256 i = 0; i < BetAdresses.length; i++) {
+      User storage user = users[BetAdresses[i]];
+      user.play = false;
+      user.reward = user.reward + amount.div(betnum).mul(user.playcount);
+      user.playcount = 0;
+      // _transfer(address(this), BetAdresses[i], betToken.div(betnum).mul(users[BetAdresses[i]].playcount));      
+    }
+    betnum = 0;
+    delete BetAdresses;
+  }
+
+  function farmingReward(uint256 amount) internal returns (bool) {
+    for(uint256 i = 0; i < LiqudityAdresses.length; i++) {
+      if(StableXPair(pairAddress).totalSupply() != 0) {
+          User storage user = users[LiqudityAdresses[i]];
+          uint256 token = amount.div(StableXPair(pairAddress).totalSupply()).mul(StableXPair(pairAddress).balanceOf(LiqudityAdresses[i]));
+          user.reward = user.reward + token;
+          // _transfer(address(this), LiqudityAdresses[i], token);
+      }
+    }
   }
 
   function checkReward() external view returns (bool) {
