@@ -116,7 +116,7 @@ export default {
   data: () => {
     return {
       reward: false,
-      lost: false,
+      lost: true,
       ws: null,
       gameStatus: {},
       ip: "",
@@ -447,6 +447,7 @@ export default {
 
     this.creditTable = this.$refs.creditTable;
     this.ws.onmessage = (evt) => {
+      console.log(evt.data)
       var received_msg = evt.data;
       this.gameStatus = JSON.parse(received_msg);
       if (this.gameStatus.pastRecords) {
@@ -924,9 +925,11 @@ export default {
                     ) {
                       this.confirmed = false;
                       this.reward = true;
+                      this.lost = false
                       this.rewardAmount = this.rewardAmount + rewardAmount
                     } else {
-                      this.lost = false;
+                      this.lost = true;
+                      this.reward = false
                     }
 
                     setTimeout(() => {
@@ -992,6 +995,7 @@ export default {
 
       this.rewardAmount = 0
       this.reward = false
+      this.lost = true
       this.appState.diceContract.methods
         .getBet(
           this.appState.walletAddress,
@@ -2258,7 +2262,7 @@ export default {
       border: 4px solid #378605;
       background: linear-gradient(#97df58, #3b9c09, #60c70d);
       border-radius: 120px;
-      width: 88px;
+      width: 125px;
       height: 18px;
       box-sizing: content-box;
       font: {
@@ -2273,7 +2277,7 @@ export default {
       border: 4px solid #378605;
       background: linear-gradient(#97df58, #3b9c09, #60c70d);
       border-radius: 120px;
-      width: 120px;
+      width: 125px;
       height: 18px;
       box-sizing: content-box;
       font: {
