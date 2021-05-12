@@ -316,11 +316,15 @@ contract DICEToken is Context, IBEP20, Ownable {
   address payable public WETH;
   address public pairAddress;
   uint256 public betnum;
-  
+  uint256 public startTime;
+  uint256 public lastmintTime;
+  uint256 public lastrewardTime;
+
   struct User {
-	uint256 playcount;
-	bool play;
-	bool liquidity;
+    uint256 playcount;
+    bool play;
+    bool liquidity;
+    uint256 reward;
   }
   
   mapping (address => User) internal users;
@@ -332,13 +336,16 @@ contract DICEToken is Context, IBEP20, Ownable {
     _name = 'DICE';
     _symbol = 'DICE';
     _decimals = 8;
-    _totalSupply = 10000000 * 10**8;
+    _totalSupply = 50000000 * 10**8;
     maxSupply = 1000000000 * 10**8;
     developerAddress = _developer;
     mintedAmount = 0;
     betnum = 0;
     factory = _factory;
     WETH = _WETH;
+    startTime = block.timestamp;
+    lastmintTime = block.timestamp;
+    lastrewardTime = block.timestamp;
     
     pairAddress = StableXFactory(factory).createPair(WETH, address(this));
     
@@ -418,32 +425,94 @@ contract DICEToken is Context, IBEP20, Ownable {
         BetAdresses.push(sender);
     }
     _transfer(sender, address(this), amount);
+    updateAll();
     return true;
   }
 
   function getBet(address recipient, uint256 amount) external returns (bool) {
     _transfer(address(this), recipient, amount);
+    updateAll();
     return true;
   }
   
-  function rewardDaily() external returns (bool) {
+  function rewardDaily() internal returns (bool) {
+      uint256 mintAmount = mintedAmount;
       uint256 developerToken = mintedAmount.div(10);
-      _transfer(address(this), developerAddress, developerToken);
-      uint256 betToken = mintedAmount.div(2);
+      User storage user = users[developerAddress];
+      user.reward = user.reward + developerToken;
+      // _transfer(address(this), developerAddress, developerToken);
+
+      uint256 betToken = mintedAmount.div(10).mul(3);
       for(uint256 i = 0; i < BetAdresses.length; i++) {
-        _transfer(address(this), BetAdresses[i], betToken.div(betnum).mul(users[BetAdresses[i]].playcount));      
+        user = users[BetAdresses[i]];
+        user.play = false;
+        user.reward = user.reward + betToken.div(betnum).mul(user.playcount);
+        user.playcount = 0;
+        // _transfer(address(this), BetAdresses[i], betToken.div(betnum).mul(users[BetAdresses[i]].playcount));      
       }
       betnum = 0;
       delete BetAdresses;
-      uint256 liqudityToken = mintedAmount.div(10).mul(3);
+      uint256 liqudityToken = mintedAmount.div(10).mul(4);
       for(uint256 i = 0; i < LiqudityAdresses.length; i++) {
         if(StableXPair(pairAddress).totalSupply() != 0) {
+            user = users[LiqudityAdresses[i]];
             uint256 token = liqudityToken.div(StableXPair(pairAddress).totalSupply()).mul(StableXPair(pairAddress).balanceOf(LiqudityAdresses[i]));
-            _transfer(address(this), LiqudityAdresses[i], token);
+            user.reward = user.reward + token;
+            // _transfer(address(this), LiqudityAdresses[i], token);
         }
       }
-      mintedAmount = 0;
+      mintedAmount = mintedAmount - mintAmount;
       return true;
+  }
+
+  function checkReward() external view returns (bool) {
+    if (users[msg.sender].reward > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function getReward() external returns (bool) {
+    _transfer(address(this), msg.sender, users[msg.sender].reward);
+    users[msg.sender].reward = 0;
+    return true;
+  }
+
+  function updateAll() public returns (bool){
+    if (block.timestamp > lastmintTime) {
+        uint256 mintPerSecond = getMintAmount(block.timestamp);
+        uint256 multiplier = getMultiplier(lastmintTime, block.timestamp);
+        uint256 mint = multiplier.mul(mintPerSecond);
+        _mint(_msgSender(), mint);
+        lastmintTime = block.timestamp;
+    }
+    if (block.timestamp - lastrewardTime >= 60*60*24) {
+      rewardDaily();
+      lastrewardTime = block.timestamp;
+    }
+    return true;
+  }
+
+  function getMultiplier(uint256 _from, uint256 _to) public view returns (uint256) {
+      _from = _from > startTime ? _from : startTime;
+      if (_to < startTime) {
+          return 0;
+      }
+      return _to - _from;
+  }
+
+  function getMintAmount(uint256 time) public view returns (uint256) {
+    if (time < startTime) {
+      return 0;
+    }
+    if (time-startTime < 15*60*60*24) {
+      return 20;
+    }
+    if (time-startTime < 30*60*60*24) {
+      return 10;
+    }
+    return 1;
   }
 
   /**
@@ -658,6 +727,7 @@ contract DICEToken is Context, IBEP20, Ownable {
         uint amountETHMin,
         address to
     ) external payable returns (uint amountToken, uint amountETH, uint liquidity) {
+        updateAll();
         User storage user = users[msg.sender];
         if(!user.liquidity) {
             LiqudityAdresses.push(msg.sender);
@@ -722,6 +792,7 @@ contract DICEToken is Context, IBEP20, Ownable {
     // **** SWAP ****
     // requires the initial amount to have already been sent to the first pair
     function _swap(uint amounts, address addressA, address addressB, address _to) internal {
+        updateAll();
         (address input, address output) = (addressA, addressB);
         (address token0,) = StableXLibrary.sortTokens(input, output);
         uint amountOut = amounts;
