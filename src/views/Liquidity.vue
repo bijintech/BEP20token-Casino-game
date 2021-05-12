@@ -63,7 +63,7 @@
               style="width: 100%; display: flex; justify-content: center"
               class="my-2"
             >
-              <v-btn icon @click="liquidity()">
+              <v-btn icon >
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </v-list-item>
@@ -306,11 +306,13 @@ export default {
         this.bnbAmount = 0;
         this.diceAmount = 0;
         //this.alertMessage("connect wallet!!!!");
+        //this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>please connect to wallet</div>";
         return;
       }
 
       if (this.bnbReserve < 0 || this.diceReserve < 0) {
         //this.alertMessage("reserve received not yet from net");
+        this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Loading...</div>";
         return;
       }
 
@@ -320,7 +322,9 @@ export default {
         if (this.bnbAmount > this.bnbBalance) {
           this.bnbAmount = 0;
           this.diceAmount = 0;
-          this.alertMessage("insufficient fmt balance");
+          //this.alertMessage("insufficient fmt balance");
+          this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient ftm balance</div>";
+          return
         } else {
           this.diceAmount =
             (this.diceReserve / this.bnbReserve) * this.bnbAmount;
@@ -332,7 +336,9 @@ export default {
         if (this.diceAmount > this.tokenBalance) {
           this.bnbAmount = 0;
           this.diceAmount = 0;
-          this.alertMessage("insufficient token balance");
+          //this.alertMessage("insufficient token balance");
+          this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient dice balance</div>";
+          return
         } else {
           this.bnbAmount =
             (this.bnbReserve / this.diceReserve) * this.diceAmount;
@@ -341,6 +347,7 @@ export default {
           }
         }
       }
+      this.liquidityAlert = ""
     },
     alertMessage(msg) {
       this.alertMsg = msg;
@@ -349,6 +356,11 @@ export default {
     async unlockWallet() {
       if (typeof window.ethereum === "undefined") {
         return;
+      }
+
+      if (this.appState.walletStatus !== "CONNECT") {
+        this.liquidity()
+        return
       }
 
       window.ethereum.request({
