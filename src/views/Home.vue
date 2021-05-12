@@ -74,9 +74,9 @@
                   >Add Dice to metamask</v-btn
                 >
               </v-list-item>
-              <v-list-item  v-show="reward">
+              <v-list-item>
                 <v-btn rounded color="#01659c" elevation="0" @click="rewardEveryday()" block
-                  >Reward</v-btn
+                  >{{rewardStatus}}</v-btn
                 >
               </v-list-item>
               <v-list-item>
@@ -181,6 +181,7 @@ export default {
   data() {
     return {
       reward: false,
+      rewardStatus: "COLLECTING REWARDS"
     };
   },
   computed: {
@@ -194,6 +195,11 @@ export default {
     if (this.appState.diceContract) {
       this.appState.diceContract.methods.checkReward().call().then((res) => {
         this.reward = res
+        if (this.reward === false) {
+          this.rewardStatus = "COLLECTING REWARDS"
+        } else {
+          this.rewardStatus = "CLAIMING REWARDS"
+        }
       })
     }
   },
