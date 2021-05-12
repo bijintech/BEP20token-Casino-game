@@ -30,7 +30,7 @@ const routes = [
       },
       {
         path: 'faq',
-        component: () => import('@/views/Home')
+        component: () => import('@/views/FAQ')
       }
     ]
   }
