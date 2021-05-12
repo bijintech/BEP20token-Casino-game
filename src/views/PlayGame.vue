@@ -1131,11 +1131,12 @@ export default {
           this.appState.walletAddress !== ""
         ) {
           if (thrownAmount > this.maxWager) {
-            var msg = 'it is bigger that maxwager'
+            var msg = "Maxwager is " + this.maxWager + ". You can't place more that it"
             this.alertMessage(msg)
             return
           }
           this.getBalance()
+          console.log('step1')
           this.appState.diceContract.methods
             .setBet(
               this.appState.walletAddress,
@@ -1143,11 +1144,15 @@ export default {
             )
             .send({ from: this.appState.walletAddress })
             .then(() => {
+              console.log('final')
               this.confirmed = true;
             })
             .catch((err) => {
               this.confirmed = false
+              console.log(err)
+              console.log('failed')
             });
+          console.log('sdsdfdfsfsf')
         }
       }
     },
