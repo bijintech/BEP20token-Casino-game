@@ -140,15 +140,15 @@ export default {
     },
     web3: new Web3(Web3.givenProvider),
     diceContract: null,
-    walletAddress: "Connect",
+    walletAddress: "CONNECT",
     netConnect: false,
     callInterval: null,
   }),
   computed: {
     getWalletAdrAbbr() {
-      if (this.walletAddress !== "Connect")
+      if (this.walletAddress !== "CONNECT")
         return 'CONNECTED'
-      else return "Connect";
+      else return "CONNECT";
     },
 
     ...mapGetters({
@@ -194,7 +194,7 @@ export default {
       }
       this.changeWalletInfo();
 
-      if (this.walletAddress !== "Connect") {
+      if (this.walletAddress !== "CONNECT") {
         this.getBalance();
       }
     });
@@ -205,7 +205,7 @@ export default {
         this.changeWalletInfo();
         this.getBalance();
       } else {
-        this.walletAddress = "Connect";
+        this.walletAddress = "CONNECT";
         this.changeWalletInfo();
         this.getBalance();
       }
@@ -217,7 +217,7 @@ export default {
       })
       .then((accounts) => {
         this.walletAddress =
-          accounts.length <= 0 ? "Connect" : accounts[0];
+          accounts.length <= 0 ? "CONNECT" : accounts[0];
         if (accounts.length > 0) {
           if (window.ethereum.chainId === CUSTOM_NETWORK.chainId) {
             this.bscConnect = true;
@@ -252,7 +252,7 @@ export default {
         return
       }
 
-      if (this.walletAddress !== "Connect") {
+      if (this.walletAddress !== "CONNECT") {
         var url = "https://ftmscan.com";
         window.open(url, "_blank");
         return;

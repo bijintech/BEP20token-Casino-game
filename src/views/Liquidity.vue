@@ -206,7 +206,7 @@ export default {
 
     liquidity() {
       this.liquidityAlert = ""
-      if (this.appState.walletAddress === "Connect") {
+      if (this.appState.walletAddress === "CONNECT") {
         //this.alertMessage("please connect wallet");
         this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>please connect wallet</div>";
         return;
@@ -302,7 +302,7 @@ export default {
     },
 
     keyUpEvent(token) {
-      if (this.appState.walletAddress === "Connect") {
+      if (this.appState.walletAddress === "CONNECT") {
         this.bnbAmount = 0;
         this.diceAmount = 0;
         //this.alertMessage("connect wallet!!!!");

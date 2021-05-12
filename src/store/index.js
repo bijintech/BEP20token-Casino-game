@@ -58,7 +58,7 @@ export default new Vuex.Store({
     },
 
     getBalance(state) {
-      if (state.walletAddress !== "Connect") {
+      if (state.walletAddress !== "CONNECT") {
         state.diceContract.methods.balanceOf(state.walletAddress).call(
         ).then((res) => {
           state.tokenBalance = res / 100000000 //decimal is 8

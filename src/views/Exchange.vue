@@ -217,7 +217,7 @@ export default {
 
     swap() {
       this.swapAlert = "";
-      if (this.appState.walletAddress === "Connect") {
+      if (this.appState.walletAddress === "CONNECT") {
         //this.alertMessage("please connect wallet");
         this.swapAlert =
           "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>please connect wallet</div>";
@@ -350,7 +350,7 @@ export default {
     },
 
     keyUpEvent(dir) {
-      if (this.appState.walletAddress === "Connect") {
+      if (this.appState.walletAddress === "CONNECT") {
         this.inputAmount = 0;
         this.outputAmount = 0;
         this.alertMessage("connect wallet!!!!");
