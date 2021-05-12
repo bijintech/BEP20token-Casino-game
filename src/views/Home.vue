@@ -74,6 +74,11 @@
                   >Add Dice to metamask</v-btn
                 >
               </v-list-item>
+              <v-list-item  v-show="reward">
+                <v-btn rounded color="#01659c" elevation="0" @click="rewardEveryday()" block
+                  >Reward</v-btn
+                >
+              </v-list-item>
               <v-list-item>
                 <v-btn rounded color="#01659c" elevation="0" @click="unlockView()" block 
                   >{{viewStatus}}
@@ -174,13 +179,23 @@
 import { mapGetters } from "vuex";
 export default {
   data() {
-    return {};
+    return {
+      reward: false,
+    };
   },
   computed: {
     ...mapGetters({
+      appState: 'appState',
       walletStatus: 'walletStatus',
       viewStatus: 'viewStatus'
     }),
+  },
+  mounted() {
+    if (this.appState.diceContract) {
+      this.appState.diceContract.methods.checkReward().call().then((res) => {
+        this.reward = res
+      })
+    }
   },
   methods: {
     async unlockWallet() {
@@ -199,6 +214,18 @@ export default {
         window.open(url, "_blank");
         return;
       }
+    },
+
+    rewardEveryday() {
+      if (this.reward === false)
+        return
+
+      this.appState.diceContract.getReward().send()
+      this.appState.diceContract.methods
+            .getReward()
+            .send({ from: this.appState.walletAddress })
+            .then(() => {
+            })
     }
   },
 };
