@@ -24,6 +24,7 @@
           <div>
             <button class="clear" @click="clearBet()">CLEAR</button>
             <button class="bet" @click="bet()">PLAY</button>
+            <button v-show="reward" class="reward" @click="rewardWinning()">+ REWARD + </button>
           </div>
         </div>
         <div class="left-panel panel">
@@ -113,6 +114,7 @@ export default {
   name: "Board",
   data: () => {
     return {
+      reward: false,
       ws: null,
       gameStatus: {},
       ip: "",
@@ -919,14 +921,8 @@ export default {
                       rewardAmount > 0
                     ) {
                       this.confirmed = false;
-                      this.appState.diceContract.methods
-                        .getBet(
-                          this.appState.walletAddress,
-                          Math.abs(rewardAmount) * 100000000
-                        )
-                        .send({ from: this.appState.walletAddress }).then(() => {
-                          this.getBalnce()
-                        })
+                      this.reward = true;
+                      this.rewardAmount = this.rewardAmount + rewardAmount
                     }
 
                     setTimeout(() => {
@@ -986,6 +982,21 @@ export default {
 
   methods: {
     ...mapMutations(["chageState", "getBalance"]),
+    rewardWinning() {
+      if (this.reward === false || this.rewardAmount <= 0)
+        return
+
+      this.rewardAmount = 0
+      this.reward = false
+      this.appState.diceContract.methods
+        .getBet(
+          this.appState.walletAddress,
+          Math.abs(this.rewardAmount) * 100000000
+        )
+        .send({ from: this.appState.walletAddress }).then(() => {
+          this.getBalance()
+        })
+    },
     alertMessage(msg, show = true) {
       var msgState = {
         alertMsg: msg,
@@ -1136,7 +1147,6 @@ export default {
             return
           }
           this.getBalance()
-          console.log('step1')
           this.appState.diceContract.methods
             .setBet(
               this.appState.walletAddress,
@@ -1144,15 +1154,11 @@ export default {
             )
             .send({ from: this.appState.walletAddress })
             .then(() => {
-              console.log('final')
               this.confirmed = true;
             })
             .catch((err) => {
               this.confirmed = false
-              console.log(err)
-              console.log('failed')
             });
-          console.log('sdsdfdfsfsf')
         }
       }
     },
@@ -2228,6 +2234,22 @@ export default {
     }
 
     .bet {
+      color: #5af0b1;
+      border: 4px solid #378605;
+      background: linear-gradient(#97df58, #3b9c09, #60c70d);
+      border-radius: 120px;
+      width: 88px;
+      height: 18px;
+      box-sizing: content-box;
+      margin-right: 10px; 
+      font: {
+        family: Roboto;
+        size: 14px;
+        weight: 500;
+      }
+    }
+
+    .reward {
       color: #5af0b1;
       border: 4px solid #378605;
       background: linear-gradient(#97df58, #3b9c09, #60c70d);
