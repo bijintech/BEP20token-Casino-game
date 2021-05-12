@@ -5,18 +5,15 @@ const fs = require('fs')
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const Web3 = require('web3');
-const cron = require('node-cron');
 const path = require('path');
 const BET_INTERVAL = 45000;
+/*const Web3 = require('web3');
+const cron = require('node-cron');
 const DICEABI = JSON.parse(fs.readFileSync('./diceAbi.json'));
 const DICEADDRESS = "0x6228965Ca30d5897474B7a32091C16C7F89915f2";
-const NETWORK_URL = "https://rpc.testnet.fantom.network/"
-//const NETWORK_URL = "https://kovan.infura.io/v3/9bbe3db4091e4df8a7a01d24c8724c60";
-//const NETWORK_URL = "https://bsc-dataseed1.binance.org:443";
-const PRIVATE_KEY = "f9f7c48246c71df57a78390efc6268a028d0fea11a5d09ef4ef2be921362e039"
+const PRIVATE_KEY = "f9f7c48246c71df57a783935256568a028d0fea11a5d09ef4ef2be921362e039"
 const OWNER_ADDR = "0x1F76F81c77d5228e1044DBd13CCD92455C1D54Df"
-const GAS = 2000000;
+const GAS = 2000000;*/
 
 global.History = require('./api/models/historyModel');
 const routes = require('./api/routes/historyRoutes');
@@ -28,7 +25,7 @@ mongoose.connect(
 );
 
 /********** server monitoring block process and winsocket listening and sending ***********/
-var web3 = new Web3(NETWORK_URL);
+/*var web3 = new Web3(NETWORK_URL);
 
 var diceContract = new web3.eth.Contract(DICEABI, DICEADDRESS);
 
@@ -62,7 +59,7 @@ async function checkCurrentBlock() {
     setTimeout(checkCurrentBlock, blockTime);
 }
 
-checkCurrentBlock();
+checkCurrentBlock();*/
 
 /************ winsocket listening and sending ********************/
 function getRandomDices(count) {
@@ -77,7 +74,7 @@ let startTime = Date.now();
 let randomDices = [];
 let dicesList = [];
 var onlineClients = 0;
-var totalDices = 10000000;
+var totalDices = 500000;
 let maxWager = totalDices / 10;
 
 const port = process.env.PORT || 3000;
@@ -100,7 +97,7 @@ app.ws('/connect', function(ws, req) {
             var gameStatus = JSON.stringify(obj);
             ws.send(gameStatus)
         } else {
-            var obj = JSON.parse(msg)
+            /*var obj = JSON.parse(msg)
             if (obj.moveAmount > 0) {
                 //take amount from client
                 var stealToken = diceContract.methods.setBet(obj.walletAddress, Math.abs(obj.moveAmount) * 100000000);
@@ -131,7 +128,7 @@ app.ws('/connect', function(ws, req) {
                 }).catch((err) => {
                     console.log(err)
                 });
-            }
+            }*/
         }
 	});
 });
@@ -163,16 +160,16 @@ function sendUpdateDice() {
         dicesList.unshift(randomDices)
     }
 
-    diceContract.methods.totalSupply().call(
+    /*diceContract.methods.totalSupply().call(
     ).then((res) => {
         totalDices = res / 100000000
-    })
+    })*/
 }
 sendUpdateDice()
 setInterval(sendUpdateDice, BET_INTERVAL);
 
 /********** rewarding every day ***************/
-cron.schedule('0 59 23 * * *', function() {
+/*cron.schedule('0 59 23 * * *', function() {
     var rewardDaily = diceContract.methods.rewardDaily();
     var encodedABI = rewardDaily.encodeABI();
     var tx = {
@@ -186,7 +183,7 @@ cron.schedule('0 59 23 * * *', function() {
     }).catch((err) => {
         console.log(err)
     });
-});
+});*/
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
