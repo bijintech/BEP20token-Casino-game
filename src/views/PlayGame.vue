@@ -447,7 +447,6 @@ export default {
 
     this.creditTable = this.$refs.creditTable;
     this.ws.onmessage = (evt) => {
-      console.log(evt.data)
       var received_msg = evt.data;
       this.gameStatus = JSON.parse(received_msg);
       if (this.gameStatus.pastRecords) {
