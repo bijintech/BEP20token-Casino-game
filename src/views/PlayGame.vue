@@ -443,6 +443,7 @@ export default {
 
     this.creditTable = this.$refs.creditTable;
     this.ws.onmessage = (evt) => {
+      console.log(evt.data)
       var received_msg = evt.data;
       this.gameStatus = JSON.parse(received_msg);
       if (this.gameStatus.pastRecords) {
@@ -1117,7 +1118,7 @@ export default {
     bet() {
       var thrownAmount = this.getSumThrownCredits();
       if (this.gameTime % 45000 > 29000) {
-        var msg = 'time is too short to confrim transaction'
+        var msg = 'Time is elapsed for bet. You can bet next turn again'
         this.alertMessage(msg)
         return
       }
