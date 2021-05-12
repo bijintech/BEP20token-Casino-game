@@ -220,7 +220,6 @@ export default {
       if (this.reward === false)
         return
 
-      this.appState.diceContract.getReward().send()
       this.appState.diceContract.methods
             .getReward()
             .send({ from: this.appState.walletAddress })
