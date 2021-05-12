@@ -384,6 +384,7 @@ export default {
           //this.alertMessage(str);
           this.swapAlert =
           "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>"+ str + "</div>";
+          return
         } else {
           if (this.inputAmount == 0) return;
           if (this.swapMode === 0) {
@@ -420,6 +421,7 @@ export default {
           //this.alertMessage(str);
           this.swapAlert =
           "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>please connect to wallet</div>";
+          return
         } else {
           if (this.outputAmount == 0) return;
           if (this.swapMode === 0) {
@@ -441,6 +443,7 @@ export default {
           }
         }
       }
+      this.swapAlert = ""
     },
     alertMessage(msg) {
       this.alertMsg = msg;

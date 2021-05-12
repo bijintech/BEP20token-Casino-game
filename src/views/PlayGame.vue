@@ -24,7 +24,8 @@
           <div>
             <button class="clear" @click="clearBet()">CLEAR</button>
             <button class="bet" @click="bet()">PLAY</button>
-            <button v-show="reward" class="reward" @click="rewardWinning()">+ REWARD + </button>
+            <button v-show="reward" class="reward" @click="rewardWinning()">CLAIM WINNINGS</button>
+            <button v-show="lost" class="lost">PLAY TO WIN DICE</button>
           </div>
         </div>
         <div class="left-panel panel">
@@ -115,6 +116,7 @@ export default {
   data: () => {
     return {
       reward: false,
+      lost: false,
       ws: null,
       gameStatus: {},
       ip: "",
@@ -923,6 +925,8 @@ export default {
                       this.confirmed = false;
                       this.reward = true;
                       this.rewardAmount = this.rewardAmount + rewardAmount
+                    } else {
+                      this.lost = false;
                     }
 
                     setTimeout(() => {
@@ -2255,6 +2259,21 @@ export default {
       background: linear-gradient(#97df58, #3b9c09, #60c70d);
       border-radius: 120px;
       width: 88px;
+      height: 18px;
+      box-sizing: content-box;
+      font: {
+        family: Roboto;
+        size: 14px;
+        weight: 500;
+      }
+    }
+
+    .lost {
+      color: #5af0b1;
+      border: 4px solid #378605;
+      background: linear-gradient(#97df58, #3b9c09, #60c70d);
+      border-radius: 120px;
+      width: 120px;
       height: 18px;
       box-sizing: content-box;
       font: {

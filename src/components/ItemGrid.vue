@@ -40,7 +40,7 @@
           color="primary"
           class="my-2"
           @click="unlockWallet()"
-          >{{walletStatus}}</v-btn
+          >{{farmStatus}}</v-btn
         >
       </div>
     </div>
@@ -99,7 +99,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      walletStatus: 'walletStatus',
+      farmStatus: 'farmStatus',
     }),
   },
   methods: {
