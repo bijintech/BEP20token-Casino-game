@@ -28,7 +28,7 @@
             <v-btn icon @click="dialog = true">
               <v-icon>mdi-cog</v-icon>
             </v-btn>
-            <v-btn icon @click="reverse()">
+            <v-btn icon>
               <v-icon>mdi-history</v-icon>
             </v-btn>
           </v-app-bar>
@@ -72,7 +72,7 @@
               style="width: 100%; display: flex; justify-content: center"
               class="my-2"
             >
-              <v-btn icon @click="swap()">
+              <v-btn icon @click="reverse()">
                 <v-icon>mdi-arrow-down</v-icon>
               </v-btn>
             </v-list-item>
@@ -134,7 +134,7 @@
                 elevation="0"
                 block
                 @click="unlockWallet()"
-                >{{walletStatus}}
+                >{{swapStatus}}
               </v-btn>
             </v-list-item>
           </v-list>
@@ -191,7 +191,7 @@ export default {
       appState: "appState",
       tokenBalance: "tokenBalance",
       bnbBalance: "bnbBalance",
-      walletStatus: 'walletStatus',
+      swapStatus: 'swapStatus',
       viewStatus: 'viewStatus'
     }),
   },
@@ -353,12 +353,16 @@ export default {
       if (this.appState.walletAddress === "CONNECT") {
         this.inputAmount = 0;
         this.outputAmount = 0;
-        this.alertMessage("connect wallet!!!!");
+        //this.alertMessage("connect wallet!!!!");
+        this.swapAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>please connect to wallet</div>";
         return;
       }
 
       if (this.bnbReserve < 0 || this.diceReserve < 0) {
-        this.alertMessage("reserve received not yet from net");
+        //this.alertMessage("reserve received not yet from net");
+        this.swapAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Loading...</div>";
         return;
       }
 
@@ -377,7 +381,9 @@ export default {
             "insufficient " +
             (this.swapMode === 0 ? "fmt" : "token") +
             " balance";
-          this.alertMessage(str);
+          //this.alertMessage(str);
+          this.swapAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>"+ str + "</div>";
         } else {
           if (this.inputAmount == 0) return;
           if (this.swapMode === 0) {
@@ -411,7 +417,9 @@ export default {
             "insufficient " +
             (this.swapMode === 0 ? "token" : "fmt") +
             " balance";
-          this.alertMessage(str);
+          //this.alertMessage(str);
+          this.swapAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>please connect to wallet</div>";
         } else {
           if (this.outputAmount == 0) return;
           if (this.swapMode === 0) {
@@ -428,7 +436,6 @@ export default {
               )
               .call()
               .then((res) => {
-                console.log(res);
                 this.inputAmount = (res / Math.pow(10, 18)).toFixed(3);
               });
           }
@@ -442,6 +449,11 @@ export default {
     async unlockWallet() {
       if (typeof window.ethereum === "undefined") {
         return;
+      }
+
+      if (this.appState.walletStatus !== "CONNECT") {
+        this.swap()
+        return
       }
 
       window.ethereum.request({

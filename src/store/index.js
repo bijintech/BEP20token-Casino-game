@@ -7,7 +7,7 @@ export default new Vuex.Store({
   state: {
     web3: null,
     diceContract: null,
-    walletAddress: 'Connect',
+    walletAddress: 'CONNECT',
     bscConnect: false,
     tokenBalance: 0.0,
     bnbBalance: 0.0,
