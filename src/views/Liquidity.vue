@@ -118,7 +118,7 @@
                 elevation="0"
                 block
                 @click="unlockWallet()"
-                >{{walletStatus}}
+                >{{poolStatus}}
               </v-btn>
             </v-list-item>
           </v-list>
@@ -169,7 +169,7 @@ export default {
       appState: "appState",
       tokenBalance: "tokenBalance",
       bnbBalance: "bnbBalance",
-      walletStatus: 'walletStatus',
+      poolStatus: 'poolStatus',
       viewStatus: 'viewStatus'
     }),
   },
