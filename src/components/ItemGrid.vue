@@ -40,7 +40,7 @@
           color="primary"
           class="my-2"
           @click="unlockWallet()"
-          >Unlock Wallet</v-btn
+          >{{walletStatus}}</v-btn
         >
       </div>
     </div>
@@ -90,12 +90,17 @@
 </template>
 
 <script>
-import { CUSTOM_NETWORK } from "../../config";
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
       dialog: false,
     };
+  },
+  computed: {
+    ...mapGetters({
+      walletStatus: 'walletStatus',
+    }),
   },
   methods: {
     unlockWallet() {

@@ -66,7 +66,7 @@
                   elevation="0"
                   @click="unlockWallet()"
                   block
-                  >Unlock Wallet
+                  >{{walletStatus}}
                 </v-btn>
               </v-list-item>
               <v-list-item>
@@ -75,8 +75,8 @@
                 >
               </v-list-item>
               <v-list-item>
-                <v-btn rounded color="#01659c" elevation="0" block
-                  >Unlock View on ftmscan
+                <v-btn rounded color="#01659c" elevation="0" @click="unlockView()" block 
+                  >{{viewStatus}}
                 </v-btn>
               </v-list-item>
             </v-list>
@@ -171,10 +171,16 @@
 </template>
 
 <script>
-import { CUSTOM_NETWORK } from "../../config";
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {};
+  },
+  computed: {
+    ...mapGetters({
+      walletStatus: 'walletStatus',
+      viewStatus: 'viewStatus'
+    }),
   },
   methods: {
     async unlockWallet() {
@@ -186,6 +192,14 @@ export default {
         method: "eth_requestAccounts",
       });
     },
+
+    unlockView() {
+      if (this.walletStatus === "WALLET") {
+        var url = "https://ftmscan.com";
+        window.open(url, "_blank");
+        return;
+      }
+    }
   },
 };
 </script>

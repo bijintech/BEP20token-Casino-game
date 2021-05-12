@@ -118,7 +118,7 @@
                 elevation="0"
                 block
                 @click="unlockWallet()"
-                >Unlock wallet
+                >{{walletStatus}}
               </v-btn>
             </v-list-item>
           </v-list>
@@ -145,8 +145,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
-import { CUSTOM_NETWORK } from "../../config";
+import { mapGetters, mapMutations } from "vuex"
 
 export default {
   name: "AddLiquidity",
@@ -170,6 +169,8 @@ export default {
       appState: "appState",
       tokenBalance: "tokenBalance",
       bnbBalance: "bnbBalance",
+      walletStatus: 'walletStatus',
+      viewStatus: 'viewStatus'
     }),
   },
 

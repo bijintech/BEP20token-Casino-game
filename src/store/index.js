@@ -12,7 +12,9 @@ export default new Vuex.Store({
     tokenBalance: 0.0,
     bnbBalance: 0.0,
     alertMsg: '',
-    alert: false
+    alert: false,
+    walletStatus: 'Unlock Wallet',
+    viewStatus: 'Unlock View On FMT'
   },
 
   getters: {
@@ -20,7 +22,9 @@ export default new Vuex.Store({
     tokenBalance: state => state.tokenBalance,
     bnbBalance: state => state.bnbBalance,
     alertMsg: state => state.alertMsg,
-    alert: state => state.alert
+    alert: state => state.alert,
+    walletStatus: state => state.walletStatus,
+    viewStatus: state => state.viewStatus
   },
 
   mutations: {
@@ -28,8 +32,16 @@ export default new Vuex.Store({
       if (appState.web3)
         state.web3 = appState.web3
 
-      if (appState.walletAddress)
-      state.walletAddress = appState.walletAddress
+      if (appState.walletAddress) {
+        state.walletAddress = appState.walletAddress
+        if (appState.walletAddress !== 'Connect') {
+          state.walletStatus = 'WALLET'
+          state.viewStatus = 'VIEW ON FMTSCAN'
+        } else {
+          state.walletStatus = 'UNLOCK WALLET'
+          state.viewStatus = 'UNLOCK VIEW ON FMTSCAN'
+        }
+      }
 
       if (appState.bscConnect)
       state.bscConnect = appState.bscConnect
