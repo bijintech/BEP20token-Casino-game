@@ -11,8 +11,6 @@ const BET_INTERVAL = 45000;
 const cron = require('node-cron');
 const DICEABI = JSON.parse(fs.readFileSync('./diceAbi.json'));
 const DICEADDRESS = "0x6228965Ca30d5897474B7a32091C16C7F89915f2";
-const PRIVATE_KEY = "f9f7c48246c71df57a783935256568a028d0fea11a5d09ef4ef2be921362e039"
-const OWNER_ADDR = "0x1F76F81c77d5228e1044DBd13CCD92455C1D54Df"
 const GAS = 2000000;*/
 
 global.History = require('./api/models/historyModel');
