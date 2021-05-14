@@ -12,9 +12,17 @@
     <div class="body">
       <div>
         <div class="body__item">
-          <div>APR:</div>
-          <div>000.00%</div>
+          <div>Total Liquidity:</div>
+          <div>{{totalPool}}</div>
         </div>
+        <div class="body__item">
+          <div>User Liquidity Pool:</div>
+          <div>{{totalPool}}%</div>
+        </div>
+        <div class="body__item">
+            <div>LP price:</div>
+            <div>~0</div>
+          </div>
         <div class="body__item">
           <div>Earn:</div>
           <div>DICE</div>
@@ -33,7 +41,7 @@
       </div>
       <div class="my-4">
         <div class="secondary--text subtitle-2">DICE-FTM LP STAKED</div>
-        <v-btn
+        <!--<v-btn
           block
           large
           rounded
@@ -41,6 +49,9 @@
           class="my-2"
           @click="unlockWallet()"
           >{{farmStatus}}</v-btn
+        >-->
+        <v-btn rounded color="#01659c" elevation="0" @click="rewardEveryday()" block
+          >{{rewardStatus}}</v-btn
         >
       </div>
     </div>
@@ -56,11 +67,7 @@
           <div class="body__item">
             <div>Total Liquidity:</div>
             <div>${{totalPool}}</div>
-          </div>
-          <div class="body__item">
-            <div>LP price:</div>
-            <div>~0</div>
-          </div>
+          </div>          
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -89,13 +96,28 @@ export default {
   data() {
     return {
       dialog: false,
+      reward: false,
+      rewardStatus: "COLLECTING REWARDS"
     };
   },
   computed: {
     ...mapGetters({
+      appState: 'appState',
       farmStatus: 'farmStatus',
       totalPool: 'totalPool'
     }),
+  },
+  mounted() {
+    if (this.appState.diceContract) {
+      this.appState.diceContract.methods.checkReward().call().then((res) => {
+        this.reward = res
+        if (this.reward === false) {
+          this.rewardStatus = "COLLECTING REWARDS"
+        } else {
+          this.rewardStatus = "CLAIMING REWARDS"
+        }
+      })
+    }
   },
   methods: {
     unlockWallet() {
@@ -107,6 +129,17 @@ export default {
         method: "eth_requestAccounts",
       });
     },
+    rewardEveryday() {
+      if (this.reward === false)
+          return
+
+      this.appState.diceContract.methods
+            .getReward()
+            .send({ from: this.appState.walletAddress })
+            .then((res) => {
+              console.log(res)
+            })
+    }
   },
 };
 </script>

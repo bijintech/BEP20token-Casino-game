@@ -75,11 +75,6 @@
                 >
               </v-list-item>
               <v-list-item>
-                <v-btn rounded color="#01659c" elevation="0" @click="rewardEveryday()" block
-                  >{{rewardStatus}}</v-btn
-                >
-              </v-list-item>
-              <v-list-item>
                 <v-btn rounded color="#01659c" elevation="0" @click="unlockView()" block 
                   >{{viewStatus}}
                 </v-btn>
@@ -159,7 +154,7 @@
             <v-list color="transparent">
               <v-list-item>
                 <v-list-item-content class="text-h3">
-                  {{totalLiquidity}}
+                  {{totalLiquidity}} FTM
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
@@ -221,13 +216,15 @@ export default {
           this.getcirculateSupply();
           this.getNewDiceBlock();
           this.appState.diceContract.methods
-            .getTotalLiquidity()
+            .getReserves()
             .call()
-            .then((totalPool) => {
-              this.totalLiquidity = (totalPool / 100000000).toFixed(2)
+            .then((res) => {
+                //console.log("called")
+                const bnbReserve = Number(res.amountA) / Math.pow(10, 18);
+                this.totalLiquidity = (bnbReserve * 2).toFixed(5);
             });
         }, 2000);        
-      }, 2000);
+      }, 1500);
     }
   },
   methods: {
@@ -271,7 +268,7 @@ export default {
             .getReserves()
             .call()
             .then((res) => {
-                console.log("called")
+                //console.log("called")
                 const bnbReserve = Number(res.amountA) / Math.pow(10, 18);
                 const diceReserve = Number(res.amountB) / Math.pow(10, 8);    
                 //this.dicePrice = (bnbReserve / diceReserve).toFixed(8);
