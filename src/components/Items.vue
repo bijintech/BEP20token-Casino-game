@@ -1,9 +1,6 @@
 <template>
   <div class="items">
       <ItemGrid class="items__item" />
-      <ItemGrid class="items__item" />
-      <ItemGrid class="items__item" />
-      <ItemGrid class="items__item" />
   </div>
 </template>
 

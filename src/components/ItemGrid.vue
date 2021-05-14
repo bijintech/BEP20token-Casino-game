@@ -6,14 +6,14 @@
       </div>
       <div class="right">
         <div class="font-weight-bold text-h5">DICE-FTM LP</div>
-        <div class="secondary px-2 py-1 rounded-xl">5X</div>
+        <div class="secondary px-2 py-1 rounded-xl">BEST</div>
       </div>
     </div>
     <div class="body">
       <div>
         <div class="body__item">
           <div>APR:</div>
-          <div>589.95%</div>
+          <div>000.00%</div>
         </div>
         <div class="body__item">
           <div>Earn:</div>
@@ -25,10 +25,10 @@
         </div>
       </div>
       <div class="my-3">
-        <div class="secondary--text subtitle-2">DICE EARN</div>
+        <div class="secondary--text subtitle-2">DICE EARNED</div>
         <div class="body__item">
           <div class="text-h4 grey--text">0</div>
-          <div class="grey px-4 py-2 rounded-xl">Harvest</div>
+          <div class="grey px-4 py-2 rounded-xl">Harvest (CLAIM DICE)</div>
         </div>
       </div>
       <div class="my-4">
@@ -45,13 +45,13 @@
       </div>
     </div>
     <v-divider></v-divider>
-    <v-expansion-panels focusable flat>
+    <v-expansion-panels flat>
       <v-expansion-panel class="transparent">
-        <v-expansion-panel-header>Detail</v-expansion-panel-header>
+        <v-expansion-panel-header>Details</v-expansion-panel-header>
         <v-expansion-panel-content>
           <div class="body__item">
             <div>Deposit:</div>
-            <div>WBTC-FTM LP</div>
+            <div>DICE-FTM LP</div>
           </div>
           <div class="body__item">
             <div>Total Liquidity:</div>
@@ -68,7 +68,7 @@
       <v-card class="rounded-xl card" color="background" flat elevation="0">
         <v-app-bar flat color="rgba(0, 0, 0, 0)">
           <v-toolbar-title class="title white--text pl-0">
-            Farming!
+            Add to Farm
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn icon @click="dialog = false">
@@ -76,13 +76,7 @@
           </v-btn>
         </v-app-bar>
         <v-card-text>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
+          Error Message.
         </v-card-text>
       </v-card>
     </v-dialog>

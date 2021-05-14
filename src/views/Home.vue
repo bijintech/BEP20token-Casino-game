@@ -51,7 +51,7 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <v-list-item-title class="subtitle-2"
-                  >DICE to Wallet:
+                  >DICE in Wallet:
                 </v-list-item-title>
                 <v-list-item-subtitle class="grey--text"
                   >LOCKED
@@ -71,7 +71,7 @@
               </v-list-item>
               <v-list-item>
                 <v-btn rounded color="#01659c" elevation="0" block
-                  >Add Dice to metamask</v-btn
+                  >Add DICE to metamask</v-btn
                 >
               </v-list-item>
               <v-list-item>
@@ -107,7 +107,7 @@
                     width: 100%;
                   "
                 >
-                  <span>Criculating Supply</span>
+                  <span>Circulating Supply</span>
                   <span>$000,000,000</span>
                 </div>
               </v-list-item>
@@ -133,7 +133,7 @@
                     width: 100%;
                   "
                 >
-                  <span>Total Minted</span>
+                  <span>Total DICE</span>
                   <span>$000,000,000</span>
                 </div>
               </v-list-item>
@@ -147,7 +147,7 @@
                   "
                 >
                   <span>New DICE/block</span>
-                  <span>10</span>
+                  <span>20</span>
                 </div>
               </v-list-item>
             </v-list>
@@ -164,7 +164,7 @@
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
-                  $Across all Farms and Pools
+                  $Across FTM DICE Farm and Pool
                 </v-list-item-content>
               </v-list-item>
             </v-list>
@@ -215,7 +215,7 @@ export default {
     },
 
     unlockView() {
-      if (this.walletStatus === "WALLET") {
+      if (this.walletStatus === "CHECK WALLET") {
         var url = "https://ftmscan.com";
         window.open(url, "_blank");
         return;

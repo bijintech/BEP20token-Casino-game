@@ -1199,8 +1199,8 @@ export const CUSTOM_NETWORK = {
 	],
 };
 
-export const DICE_ADDRESS = "0x7ACD30422759B9E56960CB146Fa606277EF7A84d"
+export const DICE_ADDRESS = "0x3983055C651C93F590fc1C49653c12C3b3E680cC"
 
-export const SERVER_URL = "dice.com"
+export const SERVER_URL = "dice.game"
 
 export const SERVER_PORT = "3000"
