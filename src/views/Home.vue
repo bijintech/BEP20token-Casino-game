@@ -220,15 +220,14 @@ export default {
         setInterval(() => {
           this.getcirculateSupply();
           this.getNewDiceBlock();
-        }, 2000);
-
-        this.appState.diceContract.methods
-        .getTotalLiquidity()
-        .call()
-        .then((totalPool) => {
-          this.totalLiquidity = (totalPool / 100000000).toFixed(2)
-        });
-      }, 1500);
+          this.appState.diceContract.methods
+            .getTotalLiquidity()
+            .call()
+            .then((totalPool) => {
+              this.totalLiquidity = (totalPool / 100000000).toFixed(2)
+            });
+        }, 2000);        
+      }, 2000);
     }
   },
   methods: {
