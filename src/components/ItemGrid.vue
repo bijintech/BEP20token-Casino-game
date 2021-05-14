@@ -55,7 +55,7 @@
           </div>
           <div class="body__item">
             <div>Total Liquidity:</div>
-            <div>$000,000,000</div>
+            <div>${{totalPool}}</div>
           </div>
           <div class="body__item">
             <div>LP price:</div>
@@ -94,6 +94,7 @@ export default {
   computed: {
     ...mapGetters({
       farmStatus: 'farmStatus',
+      totalPool: 'totalPool'
     }),
   },
   methods: {

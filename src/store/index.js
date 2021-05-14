@@ -11,6 +11,7 @@ export default new Vuex.Store({
     bscConnect: false,
     tokenBalance: 0.0,
     bnbBalance: 0.0,
+    totalPool: 0.0,
     alertMsg: '',
     alert: false,
     walletStatus: 'UNLOCK WALLET',
@@ -24,6 +25,7 @@ export default new Vuex.Store({
     appState: state => state,
     tokenBalance: state => state.tokenBalance,
     bnbBalance: state => state.bnbBalance,
+    totalPool: state => state.totalPool,
     alertMsg: state => state.alertMsg,
     alert: state => state.alert,
     walletStatus: state => state.walletStatus,
@@ -81,13 +83,18 @@ export default new Vuex.Store({
 
         state.web3.eth.getBalance(state.walletAddress).then((res) => {
           state.bnbBalance = (res / 1000000000000000000).toFixed(4) //decimal is 18
-          
         }).catch(() => {
           state.bnbBalance = 0
         })
+
+        state.diceContract.methods.getTotalLiquidity().call(
+        ).then((totalPool) => {
+          state.totalPool = (totalPool / 100000000).toFixed(2)
+        });
       } else {
         state.tokenBalance = 0
         state.bnbBalance = 0
+        state.totalPool = 0
       }
     }
   }

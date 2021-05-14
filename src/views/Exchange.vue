@@ -157,11 +157,11 @@
                             <v-expansion-panel-content>
                                 <div class="d-flex justify-space-between">
                                     <div>Trading Price:</div>
-                                    <div>100 DICE = 1 FTM</div>
+                                    <div>{{tradingPrice}} DICE = 1 FTM</div>
                                 </div>
                                 <div class="d-flex justify-space-between">
                                     <div>Total Liquidity:</div>
-                                    <div>$000,000,000</div>
+                                    <div>${{totalPool}}</div>
                                 </div>
                                 <div class="d-flex justify-space-between">
                                     <div>Price:</div>
@@ -215,6 +215,7 @@
                 diceReserve: -1,
                 case: 0,
                 swapAlert: "",
+                tradingPrice: 0
             };
         },
 
@@ -224,7 +225,8 @@
                 tokenBalance: "tokenBalance",
                 bnbBalance: "bnbBalance",
                 swapStatus: 'swapStatus',
-                viewStatus: 'viewStatus'
+                viewStatus: 'viewStatus',
+                totalPool: 'totalPool'
             }),
             fromBalance() {
                 return (this.swapMode === 0) ? this.bnbBalance : this.tokenBalance
@@ -244,14 +246,16 @@
             ...mapMutations(["callTokenBalance", "getBalance"]),
 
             getReserves() {
-                if (this.diceContract)
+                if (this.diceContract) {
                     this.diceContract.methods
                         .getReserves()
                         .call()
                         .then((res) => {
                             this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-                            this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+                            this.diceReserve = Number(res.amountB) / Math.pow(10, 8);    
+                            this.tradingPrice = (this.diceReserve / this.bnbReserve).toFixed(0)
                         });
+                }
             },
 
             swap() {

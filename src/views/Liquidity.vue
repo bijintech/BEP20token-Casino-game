@@ -63,7 +63,7 @@
               style="width: 100%; display: flex; justify-content: center"
               class="my-2"
             >
-              <v-btn icon >
+              <v-btn icon>
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </v-list-item>
@@ -118,29 +118,29 @@
                 elevation="0"
                 block
                 @click="unlockWallet()"
-                >{{poolStatus}}
+                >{{ poolStatus }}
               </v-btn>
             </v-list-item>
           </v-list>
           <v-expansion-panels flat class="my-5">
-                        <v-expansion-panel class="transparent">
-                            <v-expansion-panel-header>Details</v-expansion-panel-header>
-                            <v-expansion-panel-content>
-                                <div class="d-flex justify-space-between">
-                                    <div>Deposit:</div>
-                                    <div>DICE-FTM LP</div>
-                                </div>
-                                <div class="d-flex justify-space-between">
-                                    <div>Total Liquidity:</div>
-                                    <div>$000,000,000</div>
-                                </div>
-                                <div class="d-flex justify-space-between">
-                                    <div>LP price:</div>
-                                    <div>~0</div>
-                                </div>
-                            </v-expansion-panel-content>
-                        </v-expansion-panel>
-                    </v-expansion-panels>
+            <v-expansion-panel class="transparent">
+              <v-expansion-panel-header>Details</v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <div class="d-flex justify-space-between">
+                  <div>Deposit:</div>
+                  <div>DICE-FTM LP</div>
+                </div>
+                <div class="d-flex justify-space-between">
+                  <div>Total Liquidity:</div>
+                  <div>${{totalLiquidity}}</div>
+                </div>
+                <div class="d-flex justify-space-between">
+                  <div>LP price:</div>
+                  <div>~0</div>
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
         </v-card>
       </div>
     </div>
@@ -171,16 +171,14 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-app-bar>
-        <v-card-text>
-          Transaction history
-        </v-card-text>
+        <v-card-text> Transaction history </v-card-text>
       </v-card>
     </v-dialog>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex"
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "AddLiquidity",
@@ -196,7 +194,8 @@ export default {
       diceAmount: 0.0,
       bnbReserve: -1,
       diceReserve: -1,
-      liquidityAlert: ""
+      liquidityAlert: "",
+      totalLiquidity: 0,
     };
   },
 
@@ -205,8 +204,8 @@ export default {
       appState: "appState",
       tokenBalance: "tokenBalance",
       bnbBalance: "bnbBalance",
-      poolStatus: 'poolStatus',
-      viewStatus: 'viewStatus'
+      poolStatus: "poolStatus",
+      viewStatus: "viewStatus",
     }),
   },
 
@@ -219,6 +218,13 @@ export default {
           this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
           this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
         });
+
+    this.appState.diceContract.methods
+      .getTotalLiquidity()
+      .call()
+      .then((totalPool) => {
+        this.totalLiquidity = (totalPool / 100000000).toFixed(2)
+      });
   },
 
   methods: {
@@ -235,16 +241,18 @@ export default {
             .then((totalPool) => {
               var myPer = (myPool * 100) / totalPool;
               var str = "Your liquidity share pool " + myPer.toFixed(2) + "%";
+              this.totalLiquidity = totalPool / 100000000
               this.alertMessage(str);
             });
         });
     },
 
     liquidity() {
-      this.liquidityAlert = ""
+      this.liquidityAlert = "";
       if (this.appState.walletAddress === "CONNECT") {
         //this.alertMessage("please connect wallet");
-        this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Please connect your wallet</div>";
+        this.liquidityAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Please connect your wallet</div>";
         return;
       }
 
@@ -255,25 +263,29 @@ export default {
 
       if (this.bnbAmount <= 0 || this.diceAmount <= 0) {
         //this.alertMessagert("amount can not be same or under 0");
-        this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Thinkg about selecting some FTM and DICE?</div>";
+        this.liquidityAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Thinkg about selecting some FTM and DICE?</div>";
         return;
       }
 
       if (this.bnbReserve < 0 || this.diceReserve < 0) {
         //this.alertMessage("reserve received not yet from net");
-        this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Reserve has not received yet</div>";
+        this.liquidityAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Reserve has not received yet</div>";
         return;
       }
 
       if (this.bnbAmount > this.bnbBalance) {
         //this.alertMessage("insufficient fmt for liquidity pool");
-        this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient FTM for liquidity pool</div>";
+        this.liquidityAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient FTM for liquidity pool</div>";
         return;
       }
 
       if (this.diceAmount > this.tokenBalance) {
         //this.alertMessage("insufficient token for liquidity pool");
-        this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient DICE for liquidity pool</div>";
+        this.liquidityAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient DICE for liquidity pool</div>";
       }
       //decimal : 8,  1wei : 1000000000000000000
       if (this.bnbReserve === 0 && this.diceReserve === 0) {
@@ -348,7 +360,8 @@ export default {
 
       if (this.bnbReserve < 0 || this.diceReserve < 0) {
         //this.alertMessage("reserve received not yet from net");
-        this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Loading...</div>";
+        this.liquidityAlert =
+          "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Loading...</div>";
         return;
       }
 
@@ -359,8 +372,9 @@ export default {
           this.bnbAmount = 0;
           this.diceAmount = 0;
           //this.alertMessage("insufficient fmt balance");
-          this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient FTM balance</div>";
-          return
+          this.liquidityAlert =
+            "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient FTM balance</div>";
+          return;
         } else {
           this.diceAmount =
             (this.diceReserve / this.bnbReserve) * this.bnbAmount;
@@ -373,8 +387,9 @@ export default {
           this.bnbAmount = 0;
           this.diceAmount = 0;
           //this.alertMessage("insufficient token balance");
-          this.liquidityAlert = "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient DICE balance</div>";
-          return
+          this.liquidityAlert =
+            "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient DICE balance</div>";
+          return;
         } else {
           this.bnbAmount =
             (this.bnbReserve / this.diceReserve) * this.diceAmount;
@@ -383,7 +398,7 @@ export default {
           }
         }
       }
-      this.liquidityAlert = ""
+      this.liquidityAlert = "";
     },
     alertMessage(msg) {
       this.alertMsg = msg;
@@ -395,8 +410,8 @@ export default {
       }
 
       if (this.appState.walletStatus !== "CONNECT") {
-        this.liquidity()
-        return
+        this.liquidity();
+        return;
       }
 
       window.ethereum.request({
