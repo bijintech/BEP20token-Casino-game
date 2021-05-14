@@ -62,7 +62,7 @@
                             class="py-2"
                             style="display: flex; align-items: center"
                     >
-                        <div class="font-weight-bold">DICE: ${{tokenBalance}}</div>
+                        <div class="font-weight-bold">DICE: {{dicePrice}} FTM</div>
                         <v-spacer/>
                         <v-btn icon small>
                             <a style="text-decoration: none;" href="https://twitter.com/CryptoDiceGame" target="blank"><v-icon>mdi-twitter</v-icon></a>
@@ -128,6 +128,7 @@
 
     export default {
         data: () => ({
+            dicePrice: 0,
             drawer: false,
             mini: false,
             logo: {
@@ -245,9 +246,25 @@
                         //this.callInterval = setInterval(this.getBalance, 2500);
                     }
                 });
+            this.getDicePrice();
+        },
+        mounted() {
+            
         },
         methods: {
             ...mapMutations(["chageState", "getBalance"]),
+            getDicePrice() {
+                if (this.diceContract) {
+                    this.diceContract.methods
+                        .getReserves()
+                        .call()
+                        .then((res) => {
+                            const bnbReserve = Number(res.amountA) / Math.pow(10, 18);
+                            const diceReserve = Number(res.amountB) / Math.pow(10, 8);    
+                            this.dicePrice = (bnbReserve / diceReserve).toFixed(8)
+                        });
+                }
+            },
             changeWalletInfo() {
                 var walletState = {
                     web3: this.web3,
