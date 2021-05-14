@@ -235,7 +235,7 @@ export default {
                 .totalSupply()
                 .call()
                 .then((res) => {
-                    this.circulateSupply = res;
+                    this.circulateSupply = res / 1e8;
                     this.getMarketCap();
                 });
         }
@@ -243,12 +243,13 @@ export default {
 
     getNewDiceBlock() {
         if (this.appState.diceContract) {
-            const timestamp = new Date().getTime();
+            let timestamp = new Date().getTime();
+            timestamp = (timestamp/1e3).toFixed(0);
             this.appState.diceContract.methods
                 .getMintAmount(timestamp)
                 .call()
                 .then((res) => {
-                    this.newDiceBlock = res;
+                    this.newDiceBlock = res/1e8;
                 });
         }
     },

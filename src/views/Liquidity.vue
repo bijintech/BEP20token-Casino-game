@@ -275,14 +275,17 @@ export default {
         return;
       }
 
-      if (this.bnbAmount > this.bnbBalance) {
+      console.log(this.bnbAmount)
+      console.log(this.diceAmount)
+      console.log(this.bnbBalance)
+      if (parseInt(this.bnbAmount) > parseInt(this.bnbBalance)) {
         //this.alertMessage("insufficient fmt for liquidity pool");
         this.liquidityAlert =
           "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient FTM for liquidity pool</div>";
         return;
       }
 
-      if (this.diceAmount > this.tokenBalance) {
+      if (parseInt(this.diceAmount) > parseInt(this.tokenBalance)) {
         //this.alertMessage("insufficient token for liquidity pool");
         this.liquidityAlert =
           "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient DICE for liquidity pool</div>";
@@ -368,7 +371,7 @@ export default {
       if (this.bnbReserve === 0 || this.diceReserve === 0) return;
 
       if (token === "bnb") {
-        if (this.bnbAmount > this.bnbBalance) {
+        if (parseInt(this.bnbAmount) > parseInt(this.bnbBalance)) {
           this.bnbAmount = 0;
           this.diceAmount = 0;
           //this.alertMessage("insufficient fmt balance");
@@ -383,7 +386,7 @@ export default {
           }
         }
       } else if (token === "dice") {
-        if (this.diceAmount > this.tokenBalance) {
+        if (parseInt(this.diceAmount) > parseInt(this.tokenBalance)) {
           this.bnbAmount = 0;
           this.diceAmount = 0;
           //this.alertMessage("insufficient token balance");

@@ -53,7 +53,7 @@
           </div>
           <div class="body__item">
             <div>Total Liquidity:</div>
-            <div>{{totalPool}} FTM</div>
+            <div>{{totalLiquidity}} FTM</div>
           </div>
           <!--<div class="body__item">
             <div>User Liquidity Pool:</div>
@@ -92,6 +92,7 @@ export default {
     return {
       dialog: false,
       reward: false,
+      totalLiquidity: 0,
       farmReward: 0,
       playReward: 0,
       currentPercent: 0,
@@ -124,6 +125,15 @@ export default {
         this.checkPlayReward();
         this.checkFarmReward();
       }, 1000);
+
+      this.appState.diceContract.methods
+            .getReserves()
+            .call()
+            .then((res) => {
+                //console.log("called")
+                const bnbReserve = Number(res.amountA) / Math.pow(10, 18);
+                this.totalLiquidity = (bnbReserve * 2).toFixed(5);
+            });
     }
   },
   methods: {
@@ -144,7 +154,7 @@ export default {
             .getReward()
             .send({ from: this.appState.walletAddress })
             .then((res) => {
-              console.log(res)
+              //console.log(res)
             })
     },
     getSharePercent() {
@@ -152,7 +162,7 @@ export default {
         .getLiquidity(this.appState.walletAddress)
         .call()
         .then((myPool) => {
-          console.log(this.totalPool);
+          //console.log(this.totalPool);
           if(this.totalPool == 0) {
             this.currentPercent = '~';
           } else {
@@ -166,7 +176,7 @@ export default {
                 .totalSupply()
                 .call()
                 .then((res) => {
-                    this.totalDiceReward = res - 5000000000000000;
+                    this.totalDiceReward = res/1e8 - 5000000000000000/1e8;
                 });
         }
     },
@@ -176,7 +186,7 @@ export default {
             .checkPlayReward()
             .call()
             .then((res) => {
-                console.log(res)
+                //console.log(res)
                 this.playReward = res;
             });
       }
@@ -187,7 +197,7 @@ export default {
             .checkFarmReward()
             .call()
             .then((res) => {
-                console.log(res)
+                //console.log(res)
                 this.farmReward = res;
             });
       }

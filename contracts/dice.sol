@@ -521,12 +521,12 @@ contract DICEToken is Context, IBEP20, Ownable {
       return 0;
     }
     if (time-startTime < 15*60*60*24) {
-      return 20;
+      return 20 * 10**8;
     }
     if (time-startTime < 30*60*60*24) {
-      return 10;
+      return 10 * 10**8;
     }
-    return 1;
+    return 1 * 10**8;
   }
 
   /**
