@@ -159,7 +159,7 @@
             <v-list color="transparent">
               <v-list-item>
                 <v-list-item-content class="text-h3">
-                  $000,000,000
+                  {{totalLiquidity}}
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
@@ -185,6 +185,7 @@ export default {
       circulateSupply: 0,
       newDiceBlock: 0,
       marketCap: 0,
+      totalLiquidity: 0,
       reward: false,
       rewardStatus: "COLLECTING REWARDS"
     };
@@ -220,6 +221,13 @@ export default {
           this.getcirculateSupply();
           this.getNewDiceBlock();
         }, 2000);
+
+        this.appState.diceContract.methods
+        .getTotalLiquidity()
+        .call()
+        .then((totalPool) => {
+          this.totalLiquidity = (totalPool / 100000000).toFixed(2)
+        });
       }, 1500);
     }
   },
