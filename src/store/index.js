@@ -45,13 +45,13 @@ export default new Vuex.Store({
         state.walletAddress = appState.walletAddress
         if (appState.walletAddress !== 'CONNECT') {
           state.walletStatus = 'WALLET'
-          state.viewStatus = 'VIEW ON FMTSCAN'
+          state.viewStatus = 'VIEW ON FTMSCAN'
           state.swapStatus = 'SWAP'
           state.poolStatus = 'ADD LIQUIDITY'
           state.farmStatus = 'FARMING'
         } else {
           state.walletStatus = 'UNLOCK WALLET'
-          state.viewStatus = 'UNLOCK VIEW ON FMTSCAN'
+          state.viewStatus = 'UNLOCK VIEW ON FTMSCAN'
           state.swapStatus = 'UNLOCK WALLET'
           state.poolStatus = 'UNLOCK WALLET'
           state.farmStatus = 'UNLOCK WALLET'

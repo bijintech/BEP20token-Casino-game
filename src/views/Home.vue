@@ -177,7 +177,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import {SERVER_URL, SERVER_PORT, DICE_ADDRESS} from "../../config";
+import {SERVER_URL, SERVER_PORT, NET_URL, DICE_ADDRESS} from "../../config";
 
 export default {
   data() {
@@ -218,11 +218,12 @@ export default {
     },
 
     unlockView() {
-      if (this.walletStatus === "CHECK WALLET") {
-        var url = "https://ftmscan.com";
+      console.log(this.walletStatus);
+      //if (this.walletStatus === "CHECK WALLET") {
+        const url = `${NET_URL}/${DICE_ADDRESS}`;
         window.open(url, "_blank");
         return;
-      }
+      //}
     },
 
     async addDiceToMetaMask() {
