@@ -287,7 +287,7 @@
                 }
 
                 if (this.walletAddress !== "CONNECT") {
-                    var url = "https://ftmscan.com";
+                    var url = `https://ftmscan.com/address/${this.walletAddress}`;                    
                     window.open(url, "_blank");
                     return;
                 }

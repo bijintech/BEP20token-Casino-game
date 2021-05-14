@@ -66,7 +66,7 @@
                   elevation="0"
                   @click="unlockWallet()"
                   block
-                  >{{walletStatus}}
+                  >{{tokenBalance}} Dice
                 </v-btn>
               </v-list-item>
               <v-list-item>
@@ -188,7 +188,8 @@ export default {
     ...mapGetters({
       appState: 'appState',
       walletStatus: 'walletStatus',
-      viewStatus: 'viewStatus'
+      viewStatus: 'viewStatus',
+      tokenBalance: "tokenBalance",
     }),
   },
   mounted() {
