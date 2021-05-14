@@ -198,8 +198,11 @@ export default {
     }),
   },
   created() {
-    this.getcirculateSupply();
-    this.getNewDiceBlock();
+    setTimeout(() => {
+      this.getcirculateSupply();
+      this.getNewDiceBlock();
+    }, 1500);
+    
   },
   mounted() {
     if (this.appState.diceContract) {
@@ -212,10 +215,12 @@ export default {
         }
       })
 
-      setInterval(() => {
-        this.getcirculateSupply();
-        this.getNewDiceBlock();
-      }, 2000);
+      setTimeout(() => {
+        setInterval(() => {
+          this.getcirculateSupply();
+          this.getNewDiceBlock();
+        }, 2000);
+      }, 1500);
     }
   },
   methods: {
