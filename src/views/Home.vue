@@ -197,6 +197,10 @@ export default {
       tokenBalance: "tokenBalance",
     }),
   },
+  created() {
+    this.getcirculateSupply();
+    this.getNewDiceBlock();
+  },
   mounted() {
     if (this.appState.diceContract) {
       this.appState.diceContract.methods.checkReward().call().then((res) => {
@@ -207,10 +211,7 @@ export default {
           this.rewardStatus = "CLAIMING REWARDS"
         }
       })
-    }
-
-    this.getcirculateSupply();
-    this.getNewDiceBlock();
+    }    
   },
   methods: {
     async unlockWallet() {
