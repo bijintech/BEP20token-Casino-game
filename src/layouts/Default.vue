@@ -62,7 +62,7 @@
                             class="py-2"
                             style="display: flex; align-items: center"
                     >
-                        <div class="font-weight-bold">DICE: $0.001</div>
+                        <div class="font-weight-bold">DICE: ${{tokenBalance}}</div>
                         <v-spacer/>
                         <v-btn icon small>
                             <a href="https://twitter.com/CryptoDiceGame" target="blank"><v-icon>mdi-twitter</v-icon></a>
@@ -124,8 +124,6 @@
         DICE_ADDRESS,
         DICE_ABI,
         CUSTOM_NETWORK,
-        SERVER_URL,
-        SERVER_PORT,
     } from "../../config";
 
     export default {
@@ -171,6 +169,8 @@
             ...mapGetters({
                 alertMsg: "alertMsg",
                 dialog: "alert",
+                tokenBalance: "tokenBalance",
+                bnbBalance: "bnbBalance"
             }),
         },
         async created() {

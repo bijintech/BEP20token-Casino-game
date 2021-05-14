@@ -74,13 +74,13 @@ export default new Vuex.Store({
       if (state.walletAddress !== "CONNECT") {
         state.diceContract.methods.balanceOf(state.walletAddress).call(
         ).then((res) => {
-          state.tokenBalance = res / 100000000 //decimal is 8
+          state.tokenBalance = (res / 100000000).toFixed(2) //decimal is 8
         }).catch(() => {
           state.tokenBalance = 0
         })
 
         state.web3.eth.getBalance(state.walletAddress).then((res) => {
-          state.bnbBalance = res / 1000000000000000000 //decimal is 18
+          state.bnbBalance = (res / 1000000000000000000).toFixed(4) //decimal is 18
           
         }).catch(() => {
           state.bnbBalance = 0
