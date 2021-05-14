@@ -42,7 +42,7 @@
                             >
                                 <div class="d-flex justify-space-between">
                                     <div>From</div>
-                                    <div>Balance: 000.00</div>
+                                    <div>Balance: {{fromBalance}}</div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between">
                   <span class="form-control"
@@ -56,7 +56,7 @@
                   /></span>
                                     <div class="d-flex align-center"
                                     >
-                                        <v-btn text small color="secondary">Max</v-btn>
+                                        <v-btn text small color="secondary" @click="insertMaxFrom()">Max</v-btn>
                                         <v-img
                                                 v-if="swapMode === 0"
                                                 width="25"
@@ -93,7 +93,7 @@
                             >
                                 <div class="d-flex justify-space-between">
                                     <div>To</div>
-                                    <div>Balance: 000.00</div>
+                                    <div>Balance: {{toBalance}}</div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between">
                   <span class="form-control"
@@ -107,7 +107,7 @@
                   /></span>
                                      <div class="d-flex align-center"
                                     >
-                                        <v-btn text small color="secondary">Max</v-btn><v-img
+                                        <v-btn text small color="secondary" @click="insertMaxTo()">Max</v-btn><v-img
                                             v-if="swapMode === 0"
                                             width="25"
                                             class="mr-2"
@@ -226,11 +226,18 @@
                 swapStatus: 'swapStatus',
                 viewStatus: 'viewStatus'
             }),
+            fromBalance() {
+                return (this.swapMode === 0) ? this.bnbBalance : this.tokenBalance
+            },
+            toBalance() {
+                return (this.swapMode === 0) ? this.tokenBalance : this.bnbBalance
+            }
         },
 
         mounted() {
             this.diceContract = this.appState.diceContract;
             this.getReserves();
+            this.getBalance()
         },
 
         methods: {
@@ -381,6 +388,24 @@
                 }
             },
 
+            insertMaxFrom() {
+                if (this.swapMode === 0) {
+                    this.inputAmount = this.bnbBalance
+                } else {
+                    this.inputAmount = this.tokenBalance
+                }
+                this.keyUpEvent("from")
+            },
+
+            insertMaxTo() {
+                if (this.swapMode === 0) {
+                    this.outputAmount = this.tokenBalance
+                } else {
+                    this.outputAmount = this.bnbBalance
+                }
+                this.keyUpEvent("to")
+            },
+
             keyUpEvent(dir) {
                 if (this.appState.walletAddress === "CONNECT") {
                     this.inputAmount = 0;
@@ -406,7 +431,6 @@
                         this.inputAmount >
                         (this.swapMode === 0 ? this.bnbBalance : this.tokenBalance)
                     ) {
-                        console.log(this.inputAmount, this.bnbBalance, this.tokenBalance);
                         this.inputAmount = 0;
                         this.outputAmount = 0;
                         let str =
