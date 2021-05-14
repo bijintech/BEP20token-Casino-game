@@ -108,7 +108,7 @@
                   "
                 >
                   <span>Circulating Supply</span>
-                  <span>$000,000,000</span>
+                  <span>{{circulateSupply}}</span>
                 </div>
               </v-list-item>
               <v-list-item style="width: 100%">
@@ -121,7 +121,7 @@
                   "
                 >
                   <span>Market Cap</span>
-                  <span>$000,000,000</span>
+                  <span>{{marketCap}}</span>
                 </div>
               </v-list-item>
               <v-list-item style="width: 100%">
@@ -134,7 +134,7 @@
                   "
                 >
                   <span>Total DICE</span>
-                  <span>$000,000,000</span>
+                  <span>{{circulateSupply}}</span>
                 </div>
               </v-list-item>
               <v-list-item style="width: 100%">
@@ -147,7 +147,7 @@
                   "
                 >
                   <span>New DICE/block</span>
-                  <span>20</span>
+                  <span>{{newDiceBlock}}</span>
                 </div>
               </v-list-item>
             </v-list>
@@ -182,6 +182,9 @@ import {SERVER_URL, SERVER_PORT, NET_URL, DICE_ADDRESS} from "../../config";
 export default {
   data() {
     return {
+      circulateSupply: 0,
+      newDiceBlock: 0,
+      marketCap: 0,
       reward: false,
       rewardStatus: "COLLECTING REWARDS"
     };
@@ -205,6 +208,9 @@ export default {
         }
       })
     }
+
+    this.getcirculateSupply();
+    this.getNewDiceBlock();
   },
   methods: {
     async unlockWallet() {
@@ -215,6 +221,44 @@ export default {
       window.ethereum.request({
         method: "eth_requestAccounts",
       });
+    },
+
+    getcirculateSupply() {
+        if (this.appState.diceContract) {
+            this.appState.diceContract.methods
+                .totalSupply()
+                .call()
+                .then((res) => {
+                    this.circulateSupply = res;
+                    this.getMarketCap();
+                });
+        }
+    },
+
+    getNewDiceBlock() {
+        if (this.appState.diceContract) {
+            const timestamp = new Date().getTime();
+            this.appState.diceContract.methods
+                .getMintAmount(timestamp)
+                .call()
+                .then((res) => {
+                    this.newDiceBlock = res;
+                });
+        }
+    },
+
+    getMarketCap() {
+      if (this.appState.diceContract) {
+        this.appState.diceContract.methods
+            .getReserves()
+            .call()
+            .then((res) => {
+                const bnbReserve = Number(res.amountA) / Math.pow(10, 18);
+                const diceReserve = Number(res.amountB) / Math.pow(10, 8);    
+                //this.dicePrice = (bnbReserve / diceReserve).toFixed(8);
+                this.marketCap = this.circulateSupply * bnbReserve / diceReserve;
+            });
+      }
     },
 
     unlockView() {
