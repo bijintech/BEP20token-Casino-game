@@ -65,10 +65,10 @@
                         <div class="font-weight-bold">DICE: ${{tokenBalance}}</div>
                         <v-spacer/>
                         <v-btn icon small>
-                            <a href="https://twitter.com/CryptoDiceGame" target="blank"><v-icon>mdi-twitter</v-icon></a>
+                            <a style="text-decoration: none;" href="https://twitter.com/CryptoDiceGame" target="blank"><v-icon>mdi-twitter</v-icon></a>
                         </v-btn>
                         <v-btn icon small>
-                            <a href="https://t.me/CryptoDiceGame" target="blank"><v-icon>mdi-telegram</v-icon></a>
+                            <a style="text-decoration: none;" href="https://t.me/CryptoDiceGame" target="blank"><v-icon>mdi-telegram</v-icon></a>
                         </v-btn>
                     </div>
                     <v-btn @click="modeTigger" block plain>
