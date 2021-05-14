@@ -201,16 +201,7 @@ export default {
     
   },
   mounted() {
-    if (this.appState.diceContract) {
-      this.appState.diceContract.methods.checkReward().call().then((res) => {
-        this.reward = res
-        if (this.reward === false) {
-          this.rewardStatus = "COLLECTING REWARDS"
-        } else {
-          this.rewardStatus = "CLAIMING REWARDS"
-        }
-      })
-
+    if (this.appState.diceContract) {      
       setTimeout(() => {
         setInterval(() => {
           this.getcirculateSupply();
@@ -224,7 +215,7 @@ export default {
                 this.totalLiquidity = (bnbReserve * 2).toFixed(5);
             });
         }, 2000);        
-      }, 1500);
+      }, 2000);
     }
   },
   methods: {
@@ -272,7 +263,11 @@ export default {
                 const bnbReserve = Number(res.amountA) / Math.pow(10, 18);
                 const diceReserve = Number(res.amountB) / Math.pow(10, 8);    
                 //this.dicePrice = (bnbReserve / diceReserve).toFixed(8);
-                this.marketCap = this.circulateSupply * bnbReserve / diceReserve;
+                if(diceReserve == 0) {
+                  this.marketCap = 0;
+                } else {
+                  this.marketCap = this.circulateSupply * bnbReserve / diceReserve;
+                }
             });
       }
     },

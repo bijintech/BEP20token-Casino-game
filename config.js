@@ -284,12 +284,27 @@ export const DICE_ABI = [
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "checkReward",
+		"name": "checkFarmReward",
 		"outputs": [
 			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "checkPlayReward",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -525,6 +540,21 @@ export const DICE_ABI = [
 		"type": "function"
 	},
 	{
+		"constant": false,
+		"inputs": [],
+		"name": "getFarmReward",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"constant": true,
 		"inputs": [
 			{
@@ -623,6 +653,21 @@ export const DICE_ABI = [
 		"type": "function"
 	},
 	{
+		"constant": false,
+		"inputs": [],
+		"name": "getPlayReward",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"constant": true,
 		"inputs": [],
 		"name": "getReserves",
@@ -640,21 +685,6 @@ export const DICE_ABI = [
 		],
 		"payable": false,
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [],
-		"name": "getReward",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -1199,7 +1229,8 @@ export const CUSTOM_NETWORK = {
 	],
 };
 
-export const DICE_ADDRESS = "0x3983055C651C93F590fc1C49653c12C3b3E680cC"
+export const DICE_ADDRESS = "0xf24f38641325faB55702bF4016313E53D1C63D06";//"0x3983055C651C93F590fc1C49653c12C3b3E680cC"
 export const SERVER_URL = "dice.game"
+export const NET_URL = "https://explorer.testnet.fantom.network/address"
 
 export const SERVER_PORT = "3000"

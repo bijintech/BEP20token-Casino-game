@@ -10,38 +10,25 @@
       </div>
     </div>
     <div class="body">
-      <div>
+      <div class="my-3">
+        <div class="secondary--text subtitle-2">DICE EARNED FROM LIQUIDITY</div>
         <div class="body__item">
-          <div>Total Liquidity:</div>
-          <div>{{totalPool}}</div>
-        </div>
-        <div class="body__item">
-          <div>User Liquidity Pool:</div>
-          <div>{{totalPool}}%</div>
-        </div>
-        <div class="body__item">
-            <div>LP price:</div>
-            <div>~0</div>
-          </div>
-        <div class="body__item">
-          <div>Earn:</div>
-          <div>DICE</div>
-        </div>
-        <div class="body__item">
-          <div>Deposit Fee:</div>
-          <div class="secondary px-2 py-1 rounded-xl">0%</div>
+          <div class="text-h4 grey--text">{{playReward}}</div>
+          <div v-if="playReward < 1" class="disabled grey px-4 py-2 rounded-xl">Harvest (CLAIM DICE)</div>
+          <div v-if="playReward > 0" class="enabled px-4 py-2 rounded-xl" @click="clickPlayReward()">Harvest (CLAIM DICE)</div>
         </div>
       </div>
       <div class="my-3">
-        <div class="secondary--text subtitle-2">DICE EARNED</div>
+        <div class="secondary--text subtitle-2">DICE EARNED FROM PLAYING</div>
         <div class="body__item">
-          <div class="text-h4 grey--text">0</div>
-          <div class="grey px-4 py-2 rounded-xl">Harvest (CLAIM DICE)</div>
+          <div class="text-h4 grey--text">{{farmReward}}</div>
+          <div v-if="farmReward < 1" class="disabled grey px-4 py-2 rounded-xl">Harvest (CLAIM DICE)</div>
+          <div v-if="farmReward > 0" class="enabled px-4 py-2 rounded-xl" @click="clickFarmReward()">Harvest (CLAIM DICE)</div>
         </div>
       </div>
-      <div class="my-4">
+      <!--<div class="my-4">
         <div class="secondary--text subtitle-2">DICE-FTM LP STAKED</div>
-        <!--<v-btn
+        <v-btn
           block
           large
           rounded
@@ -49,11 +36,11 @@
           class="my-2"
           @click="unlockWallet()"
           >{{farmStatus}}</v-btn
-        >-->
+        >
         <v-btn rounded color="#01659c" elevation="0" @click="rewardEveryday()" block
           >{{rewardStatus}}</v-btn
         >
-      </div>
+      </div>-->
     </div>
     <v-divider></v-divider>
     <v-expansion-panels flat>
@@ -61,13 +48,21 @@
         <v-expansion-panel-header>Details</v-expansion-panel-header>
         <v-expansion-panel-content>
           <div class="body__item">
-            <div>Deposit:</div>
-            <div>DICE-FTM LP</div>
+            <div>Total DICE Rewards:</div>
+            <div>{{totalDiceReward}}</div>
           </div>
           <div class="body__item">
             <div>Total Liquidity:</div>
-            <div>${{totalPool}}</div>
-          </div>          
+            <div>{{totalPool}} FTM</div>
+          </div>
+          <!--<div class="body__item">
+            <div>User Liquidity Pool:</div>
+            <div>{{currentPercent}}%</div>
+          </div>-->
+          <div class="body__item">
+              <div>YOUR LP SHARE:</div>
+              <div>?</div>
+          </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -97,6 +92,10 @@ export default {
     return {
       dialog: false,
       reward: false,
+      farmReward: 0,
+      playReward: 0,
+      currentPercent: 0,
+      totalDiceReward: 0,
       rewardStatus: "COLLECTING REWARDS"
     };
   },
@@ -109,14 +108,22 @@ export default {
   },
   mounted() {
     if (this.appState.diceContract) {
-      this.appState.diceContract.methods.checkReward().call().then((res) => {
+      /*this.appState.diceContract.methods.checkReward().call().then((res) => {
         this.reward = res
         if (this.reward === false) {
           this.rewardStatus = "COLLECTING REWARDS"
         } else {
           this.rewardStatus = "CLAIMING REWARDS"
         }
-      })
+      })*/
+
+      this.getSharePercent();
+      this.getDiceRewards();
+
+      setInterval(() => {
+        this.checkPlayReward();
+        this.checkFarmReward();
+      }, 1000);
     }
   },
   methods: {
@@ -139,6 +146,67 @@ export default {
             .then((res) => {
               console.log(res)
             })
+    },
+    getSharePercent() {
+      this.appState.diceContract.methods
+        .getLiquidity(this.appState.walletAddress)
+        .call()
+        .then((myPool) => {
+          console.log(this.totalPool);
+          this.currentPercent = (myPool * 100) / this.totalPool;          
+        });
+    },
+    getDiceRewards() {
+        if (this.appState.diceContract) {
+            this.appState.diceContract.methods
+                .totalSupply()
+                .call()
+                .then((res) => {
+                    this.totalDiceReward = res - 5000000000000000;
+                });
+        }
+    },
+    checkPlayReward() {
+      if (this.appState.diceContract) {
+        this.appState.diceContract.methods
+            .checkPlayReward()
+            .call()
+            .then((res) => {
+                console.log(res)
+                this.playReward = res;
+            });
+      }
+    },
+    checkFarmReward() {
+      if (this.appState.diceContract) {
+        this.appState.diceContract.methods
+            .checkFarmReward()
+            .call()
+            .then((res) => {
+                console.log(res)
+                this.farmReward = res;
+            });
+      }
+    },
+    clickPlayReward() {
+      if (this.appState.diceContract) {
+        this.appState.diceContract.methods
+            .getPlayReward()
+            .call()
+            .then((res) => {
+                console.log(res)
+            });
+      }
+    },
+    clickFarmReward() {
+      if (this.appState.diceContract) {
+        this.appState.diceContract.methods
+            .getFarmReward()
+            .call()
+            .then((res) => {
+                console.log(res)
+            });
+      }
     }
   },
 };
@@ -168,5 +236,10 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.enabled {
+  border-color: rgb(1, 101, 156);
+  background-color: rgb(1, 101, 156);
+  cursor: pointer;
 }
 </style>

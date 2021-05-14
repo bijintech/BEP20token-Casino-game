@@ -324,7 +324,8 @@ contract DICEToken is Context, IBEP20, Ownable {
     uint256 playcount;
     bool play;
     bool liquidity;
-    uint256 reward;
+    uint256 playreward;
+    uint256 farmreward;
   }
   
   mapping (address => User) internal users;
@@ -438,8 +439,7 @@ contract DICEToken is Context, IBEP20, Ownable {
   function rewardDaily() internal returns (bool) {
       uint256 mintAmount = mintedAmount;
       uint256 developerToken = mintedAmount.div(10);
-      User storage user = users[developerAddress];
-      user.reward = user.reward + developerToken;
+      _transfer(address(this), developerAddress, developerToken);
       // _transfer(address(this), developerAddress, developerToken);
 
       uint256 betToken = mintedAmount.div(10).mul(3);
@@ -454,7 +454,7 @@ contract DICEToken is Context, IBEP20, Ownable {
     for(uint256 i = 0; i < BetAdresses.length; i++) {
       User storage user = users[BetAdresses[i]];
       user.play = false;
-      user.reward = user.reward + amount.div(betnum).mul(user.playcount);
+      user.playreward = user.playreward + amount.div(betnum).mul(user.playcount);
       user.playcount = 0;
       // _transfer(address(this), BetAdresses[i], betToken.div(betnum).mul(users[BetAdresses[i]].playcount));      
     }
@@ -467,23 +467,29 @@ contract DICEToken is Context, IBEP20, Ownable {
       if(StableXPair(pairAddress).totalSupply() != 0) {
           User storage user = users[LiqudityAdresses[i]];
           uint256 token = amount.div(StableXPair(pairAddress).totalSupply()).mul(StableXPair(pairAddress).balanceOf(LiqudityAdresses[i]));
-          user.reward = user.reward + token;
+          user.farmreward = user.farmreward + token;
           // _transfer(address(this), LiqudityAdresses[i], token);
       }
     }
   }
 
-  function checkReward() external view returns (bool) {
-    if (users[msg.sender].reward > 0) {
-      return true;
-    } else {
-      return false;
-    }
+  function checkPlayReward() external view returns (uint amount) {
+    return users[msg.sender].playreward;
   }
 
-  function getReward() external returns (bool) {
-    _transfer(address(this), msg.sender, users[msg.sender].reward);
-    users[msg.sender].reward = 0;
+  function checkFarmReward() external view returns (uint amount) {
+    return users[msg.sender].farmreward;
+  }
+
+  function getPlayReward() external returns (bool) {
+    _transfer(address(this), msg.sender, users[msg.sender].playreward);
+    users[msg.sender].playreward = 0;
+    return true;
+  }
+
+  function getFarmReward() external returns (bool) {
+    _transfer(address(this), msg.sender, users[msg.sender].farmreward);
+    users[msg.sender].farmreward = 0;
     return true;
   }
 
@@ -495,7 +501,7 @@ contract DICEToken is Context, IBEP20, Ownable {
         _mint(_msgSender(), mint);
         lastmintTime = block.timestamp;
     }
-    if (block.timestamp - lastrewardTime >= 60*60*24) {
+    if (block.timestamp - lastrewardTime >= 60*10) {
       rewardDaily();
       lastrewardTime = block.timestamp;
     }

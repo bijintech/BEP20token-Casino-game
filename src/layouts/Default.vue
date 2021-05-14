@@ -260,8 +260,12 @@
                         .call()
                         .then((res) => {
                             const bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-                            const diceReserve = Number(res.amountB) / Math.pow(10, 8);    
-                            this.dicePrice = (bnbReserve / diceReserve).toFixed(8)
+                            const diceReserve = Number(res.amountB) / Math.pow(10, 8);
+                            if(diceReserve == 0) {
+                                this.dicePrice = 0;
+                            } else {
+                                this.dicePrice = (bnbReserve / diceReserve).toFixed(8)
+                            }
                         });
                 }
             },
