@@ -1001,7 +1001,7 @@
                         this.appState.walletAddress,
                         Math.abs(this.rewardAmount) * 100000000
                     )
-                    .send({from: this.appState.walletAddress}).then(() => {
+                    .send({from: this.appState.walletAddress, gas: 161148}).then(() => {
                     this.rewardAmount = 0
                     this.getBalance()
                 })
