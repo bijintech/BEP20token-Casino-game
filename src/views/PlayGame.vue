@@ -995,6 +995,7 @@
 
                 this.reward = false
                 this.lost = true
+        
                 this.appState.diceContract.methods
                     .getBet(
                         this.appState.walletAddress,
@@ -1154,7 +1155,7 @@
                             this.alertMessage(msg)
                             return
                         }
-                        this.getBalance()
+                        console.log('set betting', thrownAmount)
                         this.appState.diceContract.methods
                             .setBet(
                                 this.appState.walletAddress,
@@ -1163,6 +1164,7 @@
                             .send({from: this.appState.walletAddress})
                             .then(() => {
                                 this.confirmed = true;
+                                this.getBalance()
                             })
                             .catch((err) => {
                                 this.confirmed = false
