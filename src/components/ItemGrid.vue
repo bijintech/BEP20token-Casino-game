@@ -61,7 +61,7 @@
           </div>-->
           <div class="body__item">
               <div>YOUR LP SHARE:</div>
-              <div>?</div>
+              <div>{{currentPercent}}</div>
           </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
@@ -153,7 +153,11 @@ export default {
         .call()
         .then((myPool) => {
           console.log(this.totalPool);
-          this.currentPercent = (myPool * 100) / this.totalPool;          
+          if(this.totalPool == 0) {
+            this.currentPercent = '~';
+          } else {
+            this.currentPercent = (myPool * 100) / this.totalPool + '%';
+          }
         });
     },
     getDiceRewards() {
