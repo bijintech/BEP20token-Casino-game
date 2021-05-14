@@ -211,7 +211,12 @@ export default {
           this.rewardStatus = "CLAIMING REWARDS"
         }
       })
-    }    
+
+      setInterval(() => {
+        this.getcirculateSupply();
+        this.getNewDiceBlock();
+      }, 2000);
+    }
   },
   methods: {
     async unlockWallet() {
@@ -254,6 +259,7 @@ export default {
             .getReserves()
             .call()
             .then((res) => {
+                console.log("called")
                 const bnbReserve = Number(res.amountA) / Math.pow(10, 18);
                 const diceReserve = Number(res.amountB) / Math.pow(10, 8);    
                 //this.dicePrice = (bnbReserve / diceReserve).toFixed(8);
