@@ -132,11 +132,11 @@
                 </div>
                 <div class="d-flex justify-space-between">
                   <div>Total Liquidity:</div>
-                  <div>${{totalLiquidity}}</div>
+                  <div>{{totalLiquidity}} FTM</div>
                 </div>
                 <div class="d-flex justify-space-between">
                   <div>LP price:</div>
-                  <div>~0</div>
+                  <div>{{totalLiquidity}} FTM</div>
                 </div>
               </v-expansion-panel-content>
             </v-expansion-panel>
@@ -217,14 +217,8 @@ export default {
         .then((res) => {
           this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
           this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+          this.totalLiquidity = (this.bnbReserve * 2).toFixed(5);
         });
-
-    this.appState.diceContract.methods
-      .getTotalLiquidity()
-      .call()
-      .then((totalPool) => {
-        this.totalLiquidity = (totalPool / 100000000).toFixed(2)
-      });
   },
 
   methods: {
