@@ -197,6 +197,14 @@ export default {
     setTimeout(() => {
       this.getcirculateSupply();
       this.getNewDiceBlock();
+      this.appState.diceContract.methods
+          .getReserves()
+          .call()
+          .then((res) => {
+              //console.log("called")
+              const bnbReserve = Number(res.amountA) / Math.pow(10, 18);
+              this.totalLiquidity = (bnbReserve * 2).toFixed(5);
+          });
     }, 1500);
     
   },
