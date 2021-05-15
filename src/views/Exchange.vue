@@ -157,16 +157,16 @@
                             <v-expansion-panel-content>
                                 <div class="d-flex justify-space-between">
                                     <div>Trading Price:</div>
-                                    <div>{{tradingPrice}} DICE = 1 FTM</div>
+                                    <div> 1 DICE = {{tradingPrice}} FTM</div>
                                 </div>
                                 <div class="d-flex justify-space-between">
                                     <div>Total Liquidity:</div>
-                                    <div>${{totalPool}}</div>
+                                    <div>{{totalLiquidity}} FTM</div>
                                 </div>
-                                <div class="d-flex justify-space-between">
+                                <!--<div class="d-flex justify-space-between">
                                     <div>Price:</div>
-                                    <div>$0</div>
-                                </div>
+                                    <div>{{totalLiquidity}} FTM</div>
+                                </div>-->
                             </v-expansion-panel-content>
                         </v-expansion-panel>
                     </v-expansion-panels>
@@ -215,7 +215,8 @@
                 diceReserve: -1,
                 case: 0,
                 swapAlert: "",
-                tradingPrice: 0
+                tradingPrice: 0,
+                totalLiquidity: 0,
             };
         },
 
@@ -252,8 +253,14 @@
                         .call()
                         .then((res) => {
                             this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-                            this.diceReserve = Number(res.amountB) / Math.pow(10, 8);    
-                            this.tradingPrice = (this.diceReserve / this.bnbReserve).toFixed(0)
+                            this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+                            if(this.diceReserve == 0) {
+                                this.tradingPrice = 0;
+                            } else {
+                                this.tradingPrice = (this.bnbReserve / this.diceReserve).toFixed(8)
+                            }                            
+
+                            this.totalLiquidity = (this.bnbReserve * 2).toFixed(5);
                         });
                 }
             },

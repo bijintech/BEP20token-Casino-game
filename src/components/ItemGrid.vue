@@ -162,11 +162,12 @@ export default {
         .getLiquidity(this.appState.walletAddress)
         .call()
         .then((myPool) => {
-          //console.log(this.totalPool);
+          console.log(myPool);
+          console.log(this.totalPool);
           if(this.totalPool == 0) {
             this.currentPercent = '~';
           } else {
-            this.currentPercent = (myPool * 100) / this.totalPool + '%';
+            this.currentPercent = (myPool * 100 ) / (1e8 * this.totalPool) + '%';
           }
         });
     },
