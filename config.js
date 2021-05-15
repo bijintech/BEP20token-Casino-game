@@ -1229,7 +1229,7 @@ export const CUSTOM_NETWORK = {
 	],
 };
 
-export const DICE_ADDRESS = "0x6fE2F6879Db0c5Ff9EbF1Ee94288ad6d73AFD64E"
+export const DICE_ADDRESS = "0xaE019E7D9B4C5d17258c66f8c5964C0E0f57e83a"
 export const SERVER_URL = "dice.game"
 export const NET_URL = "https://explorer.testnet.fantom.network/address"
 
