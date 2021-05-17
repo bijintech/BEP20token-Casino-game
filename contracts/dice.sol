@@ -501,7 +501,7 @@ contract DICEToken is Context, IBEP20, Ownable {
         _mint(_msgSender(), mint);
         lastmintTime = block.timestamp;
     }
-    if (block.timestamp - lastrewardTime >= 60*1) {
+    if (block.timestamp - lastrewardTime >= 60*10) {
       rewardDaily();
       lastrewardTime = block.timestamp;
     }

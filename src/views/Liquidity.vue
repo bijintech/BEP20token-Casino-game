@@ -454,13 +454,12 @@ export default {
         .call()
         .then((myPool) => {
           const removeValue = myPool * this.removePercent / 100;
-          console.log(myPool);
-          console.log(removeValue.toString());
+          console.log(removeValue);
           this.appState.diceContract.methods
           .removeLiquidityETH(
             removeValue.toString(),
-            0,
-            0,
+            1,
+            1,
             this.appState.walletAddress
           )
           .send({
