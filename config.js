@@ -283,7 +283,13 @@ export const DICE_ABI = [
 	},
 	{
 		"constant": true,
-		"inputs": [],
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			}
+		],
 		"name": "checkFarmReward",
 		"outputs": [
 			{
@@ -298,7 +304,13 @@ export const DICE_ABI = [
 	},
 	{
 		"constant": true,
-		"inputs": [],
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			}
+		],
 		"name": "checkPlayReward",
 		"outputs": [
 			{
@@ -1212,6 +1224,47 @@ export const DICE_ABI = [
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "users",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "playcount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "play",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "liquidity",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "playreward",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "farmreward",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
 	}
 ]
 
@@ -1229,8 +1282,9 @@ export const CUSTOM_NETWORK = {
 	],
 };
 
-export const DICE_ADDRESS = "0xaE019E7D9B4C5d17258c66f8c5964C0E0f57e83a"
-export const SERVER_URL = "dice.game"
+export const DICE_ADDRESS = "0x6Ed01A3b86391c3B29ad38C6661C0D0A7304496D"
+//export const SERVER_URL = "dice.game"
+export const SERVER_URL = "localhost"
 export const NET_URL = "https://explorer.testnet.fantom.network/address"
 
 export const SERVER_PORT = "3000"

@@ -55,10 +55,10 @@
             <div>Total Liquidity:</div>
             <div>{{totalLiquidity}} FTM</div>
           </div>
-          <!--<div class="body__item">
-            <div>User Liquidity Pool:</div>
-            <div>{{currentPercent}}%</div>
-          </div>-->
+          <div class="body__item">
+            <div>LP price:</div>
+            <div>{{totalLiquidity}} FTM</div>
+          </div>
           <div class="body__item">
               <div>YOUR LP SHARE:</div>
               <div>{{currentPercent}}</div>
@@ -184,22 +184,22 @@ export default {
     checkPlayReward() {
       if (this.appState.diceContract) {
         this.appState.diceContract.methods
-            .checkPlayReward()
+            .checkPlayReward(this.appState.walletAddress)
             .call()
             .then((res) => {
-                //console.log(res)
-                this.playReward = res;
+                console.log(res)
+                this.playReward = (res/1e8).toFixed();
             });
       }
     },
     checkFarmReward() {
       if (this.appState.diceContract) {
         this.appState.diceContract.methods
-            .checkFarmReward()
+            .checkFarmReward(this.appState.walletAddress)
             .call()
             .then((res) => {
                 //console.log(res)
-                this.farmReward = res;
+                this.farmReward = (res/1e8).toFixed();
             });
       }
     },
@@ -207,7 +207,7 @@ export default {
       if (this.appState.diceContract) {
         this.appState.diceContract.methods
             .getPlayReward()
-            .call()
+            .send({ from: this.appState.walletAddress })
             .then((res) => {
                 console.log(res)
             });
@@ -217,7 +217,7 @@ export default {
       if (this.appState.diceContract) {
         this.appState.diceContract.methods
             .getFarmReward()
-            .call()
+            .send({ from: this.appState.walletAddress })
             .then((res) => {
                 console.log(res)
             });

@@ -138,6 +138,10 @@
                   <div>LP price:</div>
                   <div>{{totalLiquidity}} FTM</div>
                 </div>
+                <div class="d-flex justify-space-between">
+                    <div>YOUR LP SHARE:</div>
+                    <div>{{currentPercent}}</div>
+                </div>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -196,6 +200,7 @@ export default {
       diceReserve: -1,
       liquidityAlert: "",
       totalLiquidity: 0,
+      currentPercent: 0,
     };
   },
 
@@ -211,6 +216,7 @@ export default {
 
   mounted() {
     if (this.appState.diceContract)
+      this.getSharePercent();
       this.appState.diceContract.methods
         .getReserves()
         .call()
@@ -233,10 +239,11 @@ export default {
             .getTotalLiquidity()
             .call()
             .then((totalPool) => {
-              var myPer = (myPool * 100) / totalPool;
-              var str = "Your liquidity share pool " + myPer.toFixed(2) + "%";
-              this.totalLiquidity = totalPool / 100000000
-              this.alertMessage(str);
+              if(totalPool == 0) {
+                this.currentPercent = '~';
+              } else {
+                this.currentPercent = (myPool * 100 ) / (totalPool) + '%';
+              }
             });
         });
     },

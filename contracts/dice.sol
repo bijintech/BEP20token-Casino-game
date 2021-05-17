@@ -328,7 +328,7 @@ contract DICEToken is Context, IBEP20, Ownable {
     uint256 farmreward;
   }
   
-  mapping (address => User) internal users;
+  mapping (address => User) public users;
   
   address payable[] public LiqudityAdresses;
   address payable[] public BetAdresses;
@@ -438,13 +438,13 @@ contract DICEToken is Context, IBEP20, Ownable {
   
   function rewardDaily() internal returns (bool) {
       uint256 mintAmount = mintedAmount;
-      uint256 developerToken = mintedAmount.div(10);
+      uint256 developerToken = mintAmount.div(10);
       _transfer(address(this), developerAddress, developerToken);
       // _transfer(address(this), developerAddress, developerToken);
 
-      uint256 betToken = mintedAmount.div(10).mul(3);
+      uint256 betToken = mintAmount.div(10).mul(3);
       playerReward(betToken);
-      uint256 liqudityToken = mintedAmount.div(10).mul(4);
+      uint256 liqudityToken = mintAmount.div(10).mul(4);
       farmingReward(liqudityToken);
       mintedAmount = mintedAmount - mintAmount;
       return true;
@@ -464,21 +464,21 @@ contract DICEToken is Context, IBEP20, Ownable {
 
   function farmingReward(uint256 amount) internal returns (bool) {
     for(uint256 i = 0; i < LiqudityAdresses.length; i++) {
-      if(StableXPair(pairAddress).totalSupply() != 0) {
+      if(StableXPair(pairAddress).totalSupply() > 0) {
           User storage user = users[LiqudityAdresses[i]];
-          uint256 token = amount.div(StableXPair(pairAddress).totalSupply()).mul(StableXPair(pairAddress).balanceOf(LiqudityAdresses[i]));
-          user.farmreward = user.farmreward + token;
+          uint reward = amount.mul(StableXPair(pairAddress).balanceOf(LiqudityAdresses[i])) / (StableXPair(pairAddress).totalSupply());
+          user.farmreward = user.farmreward + reward;
           // _transfer(address(this), LiqudityAdresses[i], token);
       }
     }
   }
 
-  function checkPlayReward() external view returns (uint amount) {
-    return users[msg.sender].playreward;
+  function checkPlayReward(address sender) external view returns (uint amount) {
+    return users[sender].playreward;
   }
 
-  function checkFarmReward() external view returns (uint amount) {
-    return users[msg.sender].farmreward;
+  function checkFarmReward(address sender) external view returns (uint amount) {
+    return users[sender].farmreward;
   }
 
   function getPlayReward() external returns (bool) {
@@ -501,7 +501,7 @@ contract DICEToken is Context, IBEP20, Ownable {
         _mint(_msgSender(), mint);
         lastmintTime = block.timestamp;
     }
-    if (block.timestamp - lastrewardTime >= 60*10) {
+    if (block.timestamp - lastrewardTime >= 60*1) {
       rewardDaily();
       lastrewardTime = block.timestamp;
     }
@@ -745,6 +745,10 @@ contract DICEToken is Context, IBEP20, Ownable {
         User storage user = users[msg.sender];
         if(!user.liquidity) {
             LiqudityAdresses.push(msg.sender);
+            user.liquidity = true;
+        } else if(user.farmreward > 0) {
+          _transfer(address(this), msg.sender, user.farmreward);
+          user.farmreward = 0;
         }
         (amountToken, amountETH) = _addLiquidity(
             amountTokenDesired,
@@ -796,9 +800,10 @@ contract DICEToken is Context, IBEP20, Ownable {
             liquidity,
             amountTokenMin,
             amountETHMin,
-            address(this)
+            developerAddress
         );
-        TransferHelper.safeTransfer(address(this), to, amountToken);
+        // TransferHelper.safeTransfer(address(this), to, amountToken);
+        _transfer(developerAddress, to, amountToken);
         IWETH(WETH).withdraw(amountETH, developerAddress, to);
         // TransferHelper.safeTransferETH(to, amountETH);
     }
