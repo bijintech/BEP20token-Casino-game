@@ -140,7 +140,32 @@
                 </div>
                 <div class="d-flex justify-space-between">
                     <div>YOUR LP SHARE:</div>
-                    <div>{{currentPercent}}</div>
+                    <div>{{currentPercent}}%</div>
+                </div>
+                <div class="d-flex justify-space-between" v-if="currentPercent > 0">
+                  <div>
+                    <input
+                        style="width: 45px;height: 41px;"
+                        type="number"
+                        class="form-control"
+                        Placeholder="0.0"
+                        min="0.0"
+                        max="100.0"
+                        v-model="removePercent"
+                        @keyup="keyUpEvent('dice')"
+                    />
+                    <span style="line-height: 44px;">%</span>
+                  </div>
+                  <div>
+                    <v-btn
+                      rounded
+                      color="#01659c"
+                      elevation="0"
+                      block
+                      @click="removeLiquidity()"
+                      >Remove Liquidity
+                    </v-btn>
+                  </div>
                 </div>
               </v-expansion-panel-content>
             </v-expansion-panel>
@@ -201,6 +226,7 @@ export default {
       liquidityAlert: "",
       totalLiquidity: 0,
       currentPercent: 0,
+      removePercent: 0
     };
   },
 
@@ -242,7 +268,7 @@ export default {
               if(totalPool == 0) {
                 this.currentPercent = '~';
               } else {
-                this.currentPercent = (myPool * 100 ) / (totalPool) + '%';
+                this.currentPercent = (myPool * 100 ) / (totalPool);
               }
             });
         });
@@ -422,6 +448,37 @@ export default {
         method: "eth_requestAccounts",
       });
     },
+    removeLiquidity() {
+      this.appState.diceContract.methods
+        .getLiquidity(this.appState.walletAddress)
+        .call()
+        .then((myPool) => {
+          const removeValue = myPool * this.removePercent / 100;
+          console.log(myPool);
+          console.log(removeValue.toString());
+          this.appState.diceContract.methods
+          .removeLiquidityETH(
+            removeValue.toString(),
+            0,
+            0,
+            this.appState.walletAddress
+          )
+          .send({
+            from: this.appState.walletAddress            
+          })
+          .then(() => {
+            this.getSharePercent();
+            this.appState.diceContract.methods
+              .getReserves()
+              .call()
+              .then((res) => {
+                this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
+                this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+                this.totalLiquidity = (this.bnbReserve * 2).toFixed(5);
+              });
+          });
+        });      
+    }
   },
 };
 </script>
