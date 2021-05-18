@@ -51,11 +51,7 @@
                       @keyup="keyUpEvent('bnb')"
                   /></span>
                   <span style="display: flex"
-                    ><v-btn text small color="secondary" @click="insertMaxFTM()">Max</v-btn><v-img
-                              width="25"
-                              class="mr-2"
-                              :src="require('../assets/DICE-COIN.png')"
-                      />
+                    ><v-btn text small color="secondary" @click="insertMaxFTM()">Max</v-btn>
                     <v-img
                       width="25"
                       class="mr-2"
@@ -94,10 +90,6 @@
                   /></span>
                   <span style="display: flex"
                     ><v-btn text small color="secondary" @click="insertMaxDice()">Max</v-btn><v-img
-                              width="25"
-                              class="mr-2"
-                              :src="require('../assets/DICE-COIN.png')"
-                      /><v-img
                       width="25"
                       class="mr-2"
                       :src="require('../assets/DICE-COIN.png')"
