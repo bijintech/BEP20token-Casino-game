@@ -120,66 +120,48 @@ export default {
     }),
   },
   mounted() {
-    if (this.appState.diceContract) {
-      /*this.appState.diceContract.methods.checkReward().call().then((res) => {
-        this.reward = res
-        if (this.reward === false) {
-          this.rewardStatus = "COLLECTING REWARDS"
-        } else {
-          this.rewardStatus = "CLAIMING REWARDS"
-        }
-      })*/
-
-      this.getSharePercent();
-      this.getDiceRewards();
-      this.getNewDiceBlock();
-
-      setInterval(() => {
-        this.checkPlayReward();
-        this.checkFarmReward();
-      }, 1000);
-
-      this.appState.diceContract.methods
-            .getReserves()
-            .call()
-            .then((res) => {
-                //console.log("called")
-                const bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-                this.totalLiquidity = (bnbReserve * 2).toFixed(5);
-                if(this.totalLiquidity == 0){
-                  this.lpPrice = 0;
-                } else {
-                  this.lpPrice = this.totalLiquidity/ this.totalPool * 1e5;
-                }
-            });
-    } else {
-      setTimeout(()=>{
-        this.getSharePercent();
-      this.getDiceRewards();
-      this.getNewDiceBlock();
-
-      setInterval(() => {
-        this.checkPlayReward();
-        this.checkFarmReward();
-      }, 1000);
-
-      this.appState.diceContract.methods
-            .getReserves()
-            .call()
-            .then((res) => {
-                //console.log("called")
-                const bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-                this.totalLiquidity = (bnbReserve * 2).toFixed(5);
-                if(this.totalLiquidity == 0){
-                  this.lpPrice = 0;
-                } else {
-                  this.lpPrice = this.totalLiquidity/ this.totalPool * 1e5;
-                }
-            });
-      },1000);
-    }
+    this.loading();
   },
   methods: {
+    loading() {
+        if (this.appState.diceContract) {
+        /*this.appState.diceContract.methods.checkReward().call().then((res) => {
+          this.reward = res
+          if (this.reward === false) {
+            this.rewardStatus = "COLLECTING REWARDS"
+          } else {
+            this.rewardStatus = "CLAIMING REWARDS"
+          }
+        })*/
+
+        this.getSharePercent();
+        this.getDiceRewards();
+        this.getNewDiceBlock();
+
+        setInterval(() => {
+          this.checkPlayReward();
+          this.checkFarmReward();
+        }, 1000);
+
+        this.appState.diceContract.methods
+              .getReserves()
+              .call()
+              .then((res) => {
+                  //console.log("called")
+                  const bnbReserve = Number(res.amountA) / Math.pow(10, 18);
+                  this.totalLiquidity = (bnbReserve * 2).toFixed(5);
+                  if(this.totalLiquidity == 0){
+                    this.lpPrice = 0;
+                  } else {
+                    this.lpPrice = this.totalLiquidity/ this.totalPool * 1e5;
+                  }
+              });
+      } else {
+        setTimeout(()=>{
+          this.loading();
+        }, 1000);
+      }
+    },
     unlockWallet() {
       if (typeof window.ethereum === "undefined") {
         return;

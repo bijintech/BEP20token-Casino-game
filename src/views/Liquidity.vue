@@ -302,19 +302,22 @@ export default {
   },
 
   mounted() {
-    if (this.appState.diceContract) {
-      this.getSharePercent();
-      this.getReserved();
-    } else {
-      setTimeout(()=>{
-        this.getSharePercent();
-        this.getReserved();
-      },1000);
-    }
+    this.loading();
   },
 
   methods: {
     ...mapMutations(["callTokenBalance", "getBalance"]),
+
+    loading() {
+      if (this.appState.diceContract) {
+        this.getSharePercent();
+        this.getReserved();
+      } else {
+        setTimeout(()=>{
+          this.loading();
+        },1000);
+      }
+    },
 
     getSharePercent() {
       this.appState.diceContract.methods

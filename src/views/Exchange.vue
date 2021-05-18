@@ -239,19 +239,22 @@
 
         mounted() {
             this.diceContract = this.appState.diceContract;
-            if (this.appState.diceContract) {
-                this.getReserves();
-                this.getBalance();
-            } else {
-                setTimeout(()=>{
-                    this.getReserves();
-                    this.getBalance();
-                },1000);
-            }
+            this.loading();
         },
 
         methods: {
             ...mapMutations(["callTokenBalance", "getBalance"]),
+
+            loading() {
+                if (this.appState.diceContract) {
+                    this.getReserves();
+                    this.getBalance();
+                } else {
+                    setTimeout(()=>{
+                        this.loading();
+                    },1000);
+                }
+            },
 
             getReserves() {
                 if (this.appState.diceContract) {
