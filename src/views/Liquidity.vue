@@ -404,6 +404,7 @@ export default {
         //this.alertMessage("insufficient token for liquidity pool");
         this.liquidityAlert =
           "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient DICE for liquidity pool</div>";
+        return;
       }
       //decimal : 8,  1wei : 1000000000000000000
       if (this.bnbReserve === 0 && this.diceReserve === 0) {
@@ -496,9 +497,9 @@ export default {
         } else {
           this.diceAmount =
             (this.diceReserve / this.bnbReserve) * this.bnbAmount;
-          if (this.diceAmount > this.tokenBalance) {
-            this.diceAmount = this.tokenBalance;
-          }
+          // if (this.diceAmount > this.tokenBalance) {
+          //   this.diceAmount = this.tokenBalance;
+          // }
         }
       } else if (token === "dice") {
         if (parseInt(this.diceAmount) > parseInt(this.tokenBalance)) {
@@ -511,9 +512,9 @@ export default {
         } else {
           this.bnbAmount =
             (this.bnbReserve / this.diceReserve) * this.diceAmount;
-          if (this.bnbAmount > this.bnbBalance) {
-            this.bnbAmount = this.bnbBalance;
-          }
+          // if (this.bnbAmount > this.bnbBalance) {
+          //   this.bnbAmount = this.bnbBalance;
+          // }
         }
       }
       this.liquidityAlert = "";
