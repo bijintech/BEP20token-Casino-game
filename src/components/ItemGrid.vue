@@ -11,7 +11,7 @@
     </div>
     <div class="body">
       <div class="my-3">
-        <div class="secondary--text subtitle-2">DICE EARNED FROM LIQUIDITY</div>
+        <div class="secondary--text subtitle-2">DICE EARNED FROM PLAYING</div>
         <div class="body__item">
           <div class="text-h4 grey--text">{{playReward}}</div>
           <div v-if="playReward < 1" class="disabled grey px-4 py-2 rounded-xl">Harvest (CLAIM DICE)</div>
@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="my-3">
-        <div class="secondary--text subtitle-2">DICE EARNED FROM PLAYING</div>
+        <div class="secondary--text subtitle-2">DICE EARNED FROM LIQUIDITY</div>
         <div class="body__item">
           <div class="text-h4 grey--text">{{farmReward}}</div>
           <div v-if="farmReward < 1" class="disabled grey px-4 py-2 rounded-xl">Harvest (CLAIM DICE)</div>
