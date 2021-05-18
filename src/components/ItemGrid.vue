@@ -7,9 +7,19 @@
       <div class="right">
         <div class="font-weight-bold text-h5">DICE-FTM LP</div>
         <div class="secondary px-2 py-1 rounded-xl">BEST</div>
+        
       </div>
+     
     </div>
     <div class="body">
+       <div class="body__item">
+          <div>APR %:</div>
+          <div>{{newDiceBlock}}%</div>
+      </div>
+      <div class="body__item">
+          <div>Daily APR:</div>
+          <div>{{newDiceBlock/365}}%</div>
+      </div>
       <div class="my-3">
         <div class="secondary--text subtitle-2">DICE EARNED FROM PLAYING</div>
         <div class="body__item">
@@ -63,14 +73,7 @@
               <div>YOUR LP SHARE:</div>
               <div>{{currentPercent}}</div>
           </div>
-          <div class="body__item">
-              <div>APR %:</div>
-              <div>{{newDiceBlock}}%</div>
-          </div>
-          <div class="body__item">
-              <div>Daily APR:</div>
-              <div>{{newDiceBlock/365}}%</div>
-          </div>          
+          
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
