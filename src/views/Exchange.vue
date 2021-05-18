@@ -239,16 +239,23 @@
 
         mounted() {
             this.diceContract = this.appState.diceContract;
-            this.getReserves();
-            this.getBalance();
+            if (this.appState.diceContract) {
+                this.getReserves();
+                this.getBalance();
+            } else {
+                setTimeout(()=>{
+                    this.getReserves();
+                    this.getBalance();
+                },1000);
+            }
         },
 
         methods: {
             ...mapMutations(["callTokenBalance", "getBalance"]),
 
             getReserves() {
-                if (this.diceContract) {
-                    this.diceContract.methods
+                if (this.appState.diceContract) {
+                    this.appState.diceContract.methods
                         .getReserves()
                         .call()
                         .then((res) => {
@@ -262,6 +269,23 @@
 
                             this.totalLiquidity = (this.bnbReserve * 2).toFixed(5);
                         });
+                } else {
+                    setTimeout(()=>{
+                        this.appState.diceContract.methods
+                        .getReserves()
+                        .call()
+                        .then((res) => {
+                            this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
+                            this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+                            if(this.diceReserve == 0) {
+                                this.tradingPrice = 0;
+                            } else {
+                                this.tradingPrice = (this.bnbReserve / this.diceReserve).toFixed(8)
+                            }                            
+
+                            this.totalLiquidity = (this.bnbReserve * 2).toFixed(5);
+                        });
+                    },1000);
                 }
             },
 
@@ -298,14 +322,14 @@
                     return;
                 }
 
-                if (this.swapMode === 0 && this.inputAmount > this.bnbBalance) {
+                if (this.swapMode === 0 && this.inputAmount > parseFloat(this.bnbBalance)) {
                     //this.alertMessage("insufficient fmt for swap");
                     this.swapAlert =
                         "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient FTM balance to swap</div>";
                     return;
                 }
 
-                if (this.swapMode === 1 && this.inputAmount > this.tokenBalance) {
+                if (this.swapMode === 1 && this.inputAmount > parseFloat(this.tokenBalance)) {
                     //this.alertMessage("insufficient token for swap");
                     this.swapAlert =
                         "<div style='border: 2px solid white; text-align: center; border-radius: 30px; margin: auto; width: 60%; padding: 10px; margin-bottom: 20px'>Insufficient DICE balance to swap</div>";
@@ -350,7 +374,7 @@
                 }
 
                 if (this.swapMode === 0) {
-                    this.diceContract.methods
+                    this.appState.diceContract.methods
                         .swapExactETHForTokens(this.appState.walletAddress)
                         .send({
                             from: this.appState.walletAddress,
@@ -361,7 +385,7 @@
                             this.getReserves();
                         });
                 } else if (this.swapMode === 1) {
-                    this.diceContract.methods
+                    this.appState.diceContract.methods
                         .swapExactTokensForETH(
                             this.inputAmount * Math.pow(10, 8),
                             this.appState.walletAddress
@@ -441,9 +465,9 @@
 
                 if (dir === "from") {
                     this.case = this.swapMode === 0 ? 0 : 1;
+                    var temp = this.swapMode === 0 ? this.bnbBalance : this.tokenBalance;
                     if (
-                        this.inputAmount >
-                        (this.swapMode === 0 ? this.bnbBalance : this.tokenBalance)
+                        this.inputAmount > parseFloat(temp)
                     ) {
                         this.inputAmount = 0;
                         this.outputAmount = 0;
@@ -458,7 +482,7 @@
                     } else {
                         if (this.inputAmount == 0) return;
                         if (this.swapMode === 0) {
-                            this.diceContract.methods
+                            this.appState.diceContract.methods
                                 .getAmountsOutFromETH(
                                     (Math.pow(10, 18) * this.inputAmount).toString()
                                 )
@@ -467,7 +491,7 @@
                                     this.outputAmount = res / 100000000; //.toFixed(3)
                                 });
                         } else {
-                            this.diceContract.methods
+                            this.appState.diceContract.methods
                                 .getAmountsOutFromToken((this.inputAmount * 100000000).toString())
                                 .call()
                                 .then((res) => {
@@ -477,10 +501,9 @@
                     }
                 } else if (dir === "to") {
                     this.case = this.swapMode === 0 ? 2 : 3;
+                    var temp = this.swapMode === 0 ? this.tokenBalance : this.bnbBalance;
                     if (
-                        this.outputAmount >
-                        (this.swapMode === 0 ? this.tokenBalance : this.bnbBalance) ||
-                        this.outputAmount == 0
+                        this.outputAmount > parseFloat(temp) || this.outputAmount == 0
                     ) {
                         this.inputAmount = 0;
                         this.outputAmount = 0;
