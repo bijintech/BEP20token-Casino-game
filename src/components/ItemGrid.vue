@@ -63,6 +63,14 @@
               <div>YOUR LP SHARE:</div>
               <div>{{currentPercent}}</div>
           </div>
+          <div class="body__item">
+              <div>APR %:</div>
+              <div>{{newDiceBlock}}%</div>
+          </div>
+          <div class="body__item">
+              <div>Daily APR:</div>
+              <div>{{newDiceBlock/365}}%</div>
+          </div>          
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -98,6 +106,9 @@ export default {
       playReward: 0,
       currentPercent: 0,
       totalDiceReward: 0,
+      aprPercent: 0,
+      dailyApr: 0,
+      newDiceBlock: 0,
       rewardStatus: "COLLECTING REWARDS"
     };
   },
@@ -121,6 +132,7 @@ export default {
 
       this.getSharePercent();
       this.getDiceRewards();
+      this.getNewDiceBlock();
 
       setInterval(() => {
         this.checkPlayReward();
@@ -228,7 +240,19 @@ export default {
                 console.log(res)
             });
       }
-    }
+    },
+    getNewDiceBlock() {
+        if (this.appState.diceContract) {
+            let timestamp = new Date().getTime();
+            timestamp = (timestamp/1e3).toFixed(0);
+            this.appState.diceContract.methods
+                .getMintAmount(timestamp)
+                .call()
+                .then((res) => {
+                    this.newDiceBlock = 60 * 10 * 0.4 * 6 * 24 * 365 * 100 * res / (1e8 * 2 * this.totalPool) ;
+                });
+        }
+    },
   },
 };
 </script>
