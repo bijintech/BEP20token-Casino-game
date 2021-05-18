@@ -45,15 +45,15 @@
                                     <div>Balance: {{fromBalance}}</div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between">
-                  <span class="form-control"
-                  ><input
-                          class="form-control"
-                          id="ex1"
-                          type="number"
-                          Placeholder="0.0"
-                          v-model="inputAmount"
-                          @keyup="keyUpEvent('from')"
-                  /></span>
+                                    <span class="form-control"
+                                    ><input
+                                            class="form-control"
+                                            id="ex1"
+                                            type="number"
+                                            Placeholder="0.0"
+                                            v-model="inputAmount"
+                                            @keyup="keyUpEvent('from')"
+                                    /></span>
                                     <div class="d-flex align-center"
                                     >
                                         <v-btn text small color="secondary" @click="insertMaxFrom()">Max</v-btn>
@@ -240,7 +240,7 @@
         mounted() {
             this.diceContract = this.appState.diceContract;
             this.getReserves();
-            this.getBalance()
+            this.getBalance();
         },
 
         methods: {
@@ -418,6 +418,9 @@
             },
 
             keyUpEvent(dir) {
+                if(!this.appState.diceContract) {
+                    return ;
+                }
                 if (this.appState.walletAddress === "CONNECT") {
                     this.inputAmount = 0;
                     this.outputAmount = 0;

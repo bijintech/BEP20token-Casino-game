@@ -37,7 +37,10 @@
                 class="px-3 py-2 rounded-lg"
                 style="width: 100%; background-color: #dddddd20"
               >
-                <div>FTM</div>
+                <div class="d-flex justify-space-between">
+                    <div>FTM</div>
+                    <div>Balance: {{bnbBalance}}</div>
+                </div>
                 <div style="display: flex; justify-content: space-between">
                   <span class="form-control"
                     ><input
@@ -48,13 +51,17 @@
                       @keyup="keyUpEvent('bnb')"
                   /></span>
                   <span style="display: flex"
-                    ><v-img
+                    ><v-btn text small color="secondary" @click="insertMaxFTM()">Max</v-btn><v-img
+                              width="25"
+                              class="mr-2"
+                              :src="require('../assets/DICE-COIN.png')"
+                      />
+                    <v-img
                       width="25"
                       class="mr-2"
                       :src="require('../assets/fantom-ftm.png')"
                     />
-                    FTM</span
-                  >
+                    FTM</span>
                 </div>
               </div>
             </v-list-item>
@@ -72,7 +79,10 @@
                 class="px-3 py-2 rounded-lg"
                 style="width: 100%; background-color: #dddddd20"
               >
-                <div>DICE</div>
+                <div class="d-flex justify-space-between">
+                    <div>DICE</div>
+                    <div>Balance: {{tokenBalance}}</div>
+                </div>
                 <div style="display: flex; justify-content: space-between">
                   <span class="form-control"
                     ><input
@@ -83,7 +93,11 @@
                       @keyup="keyUpEvent('dice')"
                   /></span>
                   <span style="display: flex"
-                    ><v-img
+                    ><v-btn text small color="secondary" @click="insertMaxDice()">Max</v-btn><v-img
+                              width="25"
+                              class="mr-2"
+                              :src="require('../assets/DICE-COIN.png')"
+                      /><v-img
                       width="25"
                       class="mr-2"
                       :src="require('../assets/DICE-COIN.png')"
@@ -238,31 +252,14 @@ export default {
       bnbBalance: "bnbBalance",
       poolStatus: "poolStatus",
       viewStatus: "viewStatus",
-    }),
+    })
   },
 
   mounted() {
-    if (this.appState.diceContract)
+    if (this.appState.diceContract) {
       this.getSharePercent();
-      this.appState.diceContract.methods
-        .getReserves()
-        .call()
-        .then((res) => {
-          this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-          this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
-          this.totalLiquidity = (this.bnbReserve * 2).toFixed(5);
-          if(this.totalLiquidity == 0){
-            this.lpPrice = 0;
-          } else {
-            this.appState.diceContract.methods
-            .getTotalLiquidity()
-            .call()
-            .then((totalPool) => {
-              var totalPool = (totalPool / 100000000).toFixed(2)
-              this.lpPrice = this.totalLiquidity/ totalPool * 1e5;
-            });
-          }
-        });
+      this.getReserved();
+    }      
   },
 
   methods: {
@@ -283,6 +280,30 @@ export default {
                 this.currentPercent = (myPool * 100 ) / (totalPool);
               }
             });
+        });
+    },
+
+    getReserved() {
+      this.appState.diceContract.methods
+        .getReserves()
+        .call()
+        .then((res) => {
+          this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
+          this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+          console.log(this.bnbReserve);
+          console.log(this.diceReserve);
+          this.totalLiquidity = (this.bnbReserve * 2).toFixed(5);
+          if(this.totalLiquidity == 0){
+            this.lpPrice = 0;
+          } else {
+            this.appState.diceContract.methods
+            .getTotalLiquidity()
+            .call()
+            .then((totalPool) => {
+              var totalPool = (totalPool / 100000000).toFixed(2)
+              this.lpPrice = this.totalLiquidity/ totalPool * 1e5;
+            });
+          }
         });
     },
 
@@ -489,7 +510,21 @@ export default {
               });
           });
         });      
-    }
+    },
+    insertMaxFTM() {
+      this.getReserved();
+      setTimeout(() => {
+        this.bnbAmount = this.bnbBalance;
+        this.keyUpEvent("bnb");
+      }, 1000);
+    },
+    insertMaxDice() {
+      this.getReserved();
+      setTimeout(() => {
+        this.diceAmount = this.tokenBalance;
+        this.keyUpEvent("dice");
+      }, 1000);
+    },
   },
 };
 </script>
