@@ -446,7 +446,6 @@ contract DICEToken is Context, IBEP20, Ownable {
       playerReward(betToken);
       uint256 liqudityToken = mintAmount.div(10).mul(4);
       farmingReward(liqudityToken);
-      mintedAmount = mintedAmount - mintAmount;
       return true;
   }
 
@@ -516,16 +515,16 @@ contract DICEToken is Context, IBEP20, Ownable {
       return _to - _from;
   }
 
-  function getMintAmount(uint256 time) public view returns (uint256) {
+  function getMintAmount(uint256 time) public returns (uint256) {
     if (time < startTime) {
+      mintedAmount = 0;
       return 0;
     }
     if (time-startTime < 15*60*60*24) {
+      mintedAmount = 20 * 10**8 * 60 * 10;
       return 20 * 10**8;
     }
-    if (time-startTime < 30*60*60*24) {
-      return 10 * 10**8;
-    }
+    mintedAmount = 1 * 10**8 * 60 * 10;
     return 1 * 10**8;
   }
 
@@ -653,7 +652,6 @@ contract DICEToken is Context, IBEP20, Ownable {
 
     _totalSupply = _totalSupply.add(amount);
     _balances[address(this)] = _balances[address(this)].add(amount);
-    mintedAmount = mintedAmount.add(amount);
     emit Transfer(address(0), address(this), amount);
   }
 
@@ -794,6 +792,7 @@ contract DICEToken is Context, IBEP20, Ownable {
         uint amountETHMin,
         address payable to
     ) public returns (uint amountToken, uint amountETH) {
+        updateAll();
         (amountToken, amountETH) = removeLiquidity(
             address(this),
             WETH,
