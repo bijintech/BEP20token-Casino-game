@@ -57,7 +57,7 @@
           </div>
           <div class="body__item">
             <div>LP price:</div>
-            <div>{{totalLiquidity}} FTM</div>
+            <div>{{lpPrice}} FTM</div>
           </div>
           <div class="body__item">
               <div>YOUR LP SHARE:</div>
@@ -93,6 +93,7 @@ export default {
       dialog: false,
       reward: false,
       totalLiquidity: 0,
+      lpPrice:0,
       farmReward: 0,
       playReward: 0,
       currentPercent: 0,
@@ -133,6 +134,11 @@ export default {
                 //console.log("called")
                 const bnbReserve = Number(res.amountA) / Math.pow(10, 18);
                 this.totalLiquidity = (bnbReserve * 2).toFixed(5);
+                if(this.totalLiquidity == 0){
+                  this.lpPrice = 0;
+                } else {
+                  this.lpPrice = this.totalLiquidity/ this.totalPool * 1e5;
+                }
             });
     }
   },

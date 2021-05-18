@@ -136,7 +136,7 @@
                 </div>
                 <div class="d-flex justify-space-between">
                   <div>LP price:</div>
-                  <div>{{totalLiquidity}} FTM</div>
+                  <div>{{lpPrice}} FTM</div>
                 </div>
                 <div class="d-flex justify-space-between">
                     <div>YOUR LP SHARE:</div>
@@ -226,7 +226,8 @@ export default {
       liquidityAlert: "",
       totalLiquidity: 0,
       currentPercent: 0,
-      removePercent: 0
+      removePercent: 0,
+      lpPrice:0
     };
   },
 
@@ -250,6 +251,17 @@ export default {
           this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
           this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
           this.totalLiquidity = (this.bnbReserve * 2).toFixed(5);
+          if(this.totalLiquidity == 0){
+            this.lpPrice = 0;
+          } else {
+            this.appState.diceContract.methods
+            .getTotalLiquidity()
+            .call()
+            .then((totalPool) => {
+              var totalPool = (totalPool / 100000000).toFixed(2)
+              this.lpPrice = this.totalLiquidity/ totalPool * 1e5;
+            });
+          }
         });
   },
 
