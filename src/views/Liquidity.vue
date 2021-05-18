@@ -149,18 +149,7 @@
                     <div>{{currentPercent}}%</div>
                 </div>
                 <div class="d-flex justify-space-between" v-if="currentPercent > 0">
-                  <div>
-                    <input
-                        style="width: 45px;height: 41px;"
-                        type="number"
-                        class="form-control"
-                        Placeholder="0.0"
-                        min="0.0"
-                        max="100.0"
-                        v-model="removePercent"
-                        @keyup="keyUpEvent('dice')"
-                    />
-                    <span style="line-height: 44px;">%</span>
+                  <div>                    
                   </div>
                   <div>
                     <v-btn
@@ -168,7 +157,7 @@
                       color="#01659c"
                       elevation="0"
                       block
-                      @click="removeLiquidity()"
+                      @click="dialog3 = true"
                       >Remove Liquidity
                     </v-btn>
                   </div>
@@ -209,6 +198,68 @@
         <v-card-text> Transaction history </v-card-text>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="dialog3" width="500">
+      <v-card class="rounded-xl card" color="background" flat>
+        <v-app-bar flat color="rgba(0, 0, 0, 0)">
+          <v-toolbar-title class="title white--text pl-0">
+            Remove Liquidity
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="dialog3 = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-app-bar>
+        <v-card-text> 
+          <div class="d-flex justify-space-between">
+              <div>Remove LP</div>
+              <div>Balance: {{myPool}}</div>
+          </div>
+          <div></div>
+          <div class="d-flex justify-space-between" v-if="currentPercent > 0">
+            <div>
+              <input
+                  style="min-width: 145px; height: 41px;"
+                  type="number"
+                  class="form-control"
+                  Placeholder="0.0"
+                  min="1"
+                  :max="myPool"
+                  v-model="removeLiquidityValue"
+                  @keyup="keyUpEvent('dice')"
+              />
+            </div>
+            <div>
+              <span style="display: flex">
+                <v-btn small color="#01659c" rounded  @click="insertMaxLiquity()">Max </v-btn>
+                DICE-FTM LP
+              </span>
+            </div>
+          </div>
+        </v-card-text>
+        <v-app-bar flat color="rgba(0, 0, 0, 0)">
+          <div style="width: 45%">
+             <v-btn
+              rounded
+              style="border: solid 1px grey !important;"
+              elevation="0"
+              block
+              @click="dialog3 = false"
+              >Cancel
+            </v-btn>
+          </div>
+          <div style="margin-left: 10%; width: 45%">
+            <v-btn
+              rounded
+              color="#01659c"
+              elevation="0"
+              block
+              @click="removeLiquidity()"
+              >Confirm
+            </v-btn>
+          </div>
+        </v-app-bar>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -224,6 +275,7 @@ export default {
       to: { id: 1, name: "user2" },
       dialog: false,
       dialog2: false,
+      dialog3: false,
       alertMsg: "",
       bnbAmount: 0.0,
       diceAmount: 0.0,
@@ -233,7 +285,9 @@ export default {
       totalLiquidity: 0,
       currentPercent: 0,
       removePercent: 0,
-      lpPrice:0
+      lpPrice: 0,
+      myPool: 0,
+      removeLiquidityValue: 0
     };
   },
 
@@ -262,6 +316,7 @@ export default {
         .getLiquidity(this.appState.walletAddress)
         .call()
         .then((myPool) => {
+          this.myPool = myPool;
           this.appState.diceContract.methods
             .getTotalLiquidity()
             .call()
@@ -474,34 +529,29 @@ export default {
       });
     },
     removeLiquidity() {
+      const removeValue = this.removeLiquidityValue;
+      console.log(removeValue);
       this.appState.diceContract.methods
-        .getLiquidity(this.appState.walletAddress)
-        .call()
-        .then((myPool) => {
-          const removeValue = myPool * this.removePercent / 100;
-          console.log(removeValue);
-          this.appState.diceContract.methods
-          .removeLiquidityETH(
-            removeValue.toString(),
-            1,
-            1,
-            this.appState.walletAddress
-          )
-          .send({
-            from: this.appState.walletAddress            
-          })
-          .then(() => {
-            this.getSharePercent();
-            this.appState.diceContract.methods
-              .getReserves()
-              .call()
-              .then((res) => {
-                this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-                this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
-                this.totalLiquidity = (this.bnbReserve * 2).toFixed(5);
-              });
+      .removeLiquidityETH(
+        removeValue.toString(),
+        1,
+        1,
+        this.appState.walletAddress
+      )
+      .send({
+        from: this.appState.walletAddress            
+      })
+      .then(() => {
+        this.getSharePercent();
+        this.appState.diceContract.methods
+          .getReserves()
+          .call()
+          .then((res) => {
+            this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
+            this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+            this.totalLiquidity = (this.bnbReserve * 2).toFixed(5);
           });
-        });      
+      });;      
     },
     insertMaxFTM() {
       this.getReserved();
@@ -517,6 +567,9 @@ export default {
         this.keyUpEvent("dice");
       }, 1000);
     },
+    insertMaxLiquity() {
+      this.removeLiquidityValue = this.myPool;
+    }
   },
 };
 </script>
