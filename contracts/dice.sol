@@ -337,9 +337,9 @@ contract DICEToken is Context, IBEP20, Ownable {
   constructor(address _factory, address payable _WETH, address payable _developer) public {
     _name = 'DICE';
     _symbol = 'DICE';
-    _decimals = 8;
-    _totalSupply = 50000000 * 10**8;
-    maxSupply = 1000000000 * 10**8;
+    _decimals = 18;
+    _totalSupply = 50000000 * 10**18;
+    maxSupply = 1000000000 * 10**18;
     developerAddress = _developer;
     mintedAmount = 0;
     betnum = 0;
@@ -354,10 +354,10 @@ contract DICEToken is Context, IBEP20, Ownable {
     
     // _balances[msg.sender] = _totalSupply;
     _balances[address(this)] = _totalSupply.div(10);
-    _balances[developerAddress] = _totalSupply.div(10).mul(9);
+    _balances[msg.sender] = _totalSupply.div(10).mul(9);
 
     emit Transfer(address(0), address(this), _totalSupply.div(10));
-    emit Transfer(address(0), developerAddress, _totalSupply.div(10).mul(9));
+    emit Transfer(address(0), msg.sender, _totalSupply.div(10).mul(9));
   }
 
   /**
@@ -526,11 +526,11 @@ contract DICEToken is Context, IBEP20, Ownable {
       return 0;
     }
     if (time-startTime < 15*60*60*24) {
-      mintedAmount = 20 * 10**8 * 60 * 10;
-      return 20 * 10**8;
+      mintedAmount = 20 * 10**18 * 60 * 10;
+      return 20 * 10**18;
     }
-    mintedAmount = 1 * 10**8 * 60 * 10;
-    return 1 * 10**8;
+    mintedAmount = 1 * 10**18 * 60 * 10;
+    return 1 * 10**18;
   }
 
   /**

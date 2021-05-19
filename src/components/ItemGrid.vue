@@ -126,6 +126,7 @@ export default {
     this.loading();
   },
   methods: {
+    ...mapMutations(["getBalance"]),
     loading() {
         if (this.appState.diceContract) {
         /*this.appState.diceContract.methods.checkReward().call().then((res) => {
@@ -156,7 +157,7 @@ export default {
                   if(this.totalLiquidity == 0){
                     this.lpPrice = 0;
                   } else {
-                    this.lpPrice = this.totalLiquidity/ this.totalPool * 1e5;
+                    this.lpPrice = this.totalLiquidity/ this.totalPool;
                   }
               });
       } else {
@@ -195,7 +196,7 @@ export default {
           if(this.totalPool == 0) {
             this.currentPercent = '~';
           } else {
-            this.currentPercent = (myPool * 100 ) / (1e8 * this.totalPool) + '%';
+            this.currentPercent = (myPool * 100 ) / (1e18 * this.totalPool) + '%';
           }
         });
     },
@@ -205,7 +206,7 @@ export default {
                 .totalSupply()
                 .call()
                 .then((res) => {
-                    this.totalDiceReward = res/1e8 - 5000000000000000/1e8;
+                    this.totalDiceReward = res/1e18 - 5000000000000000/1e8;
                 });
         }
     },
@@ -215,7 +216,7 @@ export default {
             .checkPlayReward(this.appState.walletAddress)
             .call()
             .then((res) => {
-                this.playReward = (res/1e8).toFixed();
+                this.playReward = (res/1e18).toFixed();
             });
       }
     },
@@ -226,7 +227,7 @@ export default {
             .call()
             .then((res) => {
                 //console.log(res)
-                this.farmReward = (res/1e8).toFixed();
+                this.farmReward = (res/1e18).toFixed();
             });
       }
     },
@@ -237,6 +238,7 @@ export default {
             .send({ from: this.appState.walletAddress })
             .then((res) => {
                 console.log(res)
+                this.getBalance();
             });
       }
     },
@@ -247,6 +249,7 @@ export default {
             .send({ from: this.appState.walletAddress })
             .then((res) => {
                 console.log(res)
+                this.getBalance();
             });
       }
     },
@@ -254,11 +257,12 @@ export default {
         if (this.appState.diceContract) {
             let timestamp = new Date().getTime();
             timestamp = (timestamp/1e3).toFixed(0);
+            console.log('totalpool'+this.totalPool);
             this.appState.diceContract.methods
                 .getMintAmount(timestamp)
                 .call()
                 .then((res) => {
-                    this.newDiceBlock = 60 * 10 * 0.4 * 6 * 24 * 365 * 100 * res / (1e8 * 2 * this.totalPool) ;
+                    this.newDiceBlock = 60 * 10 * 0.4 * 6 * 24 * 365 * 100 * res / (1e18 * 2 * this.totalPool) ;
                 });
         }
     },

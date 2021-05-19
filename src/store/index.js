@@ -76,7 +76,7 @@ export default new Vuex.Store({
       if (state.walletAddress !== "CONNECT") {
         state.diceContract.methods.balanceOf(state.walletAddress).call(
         ).then((res) => {
-          state.tokenBalance = (res / 100000000).toFixed(2) //decimal is 8
+          state.tokenBalance = (res / 1000000000000000000).toFixed(2) //decimal is 18
         }).catch(() => {
           state.tokenBalance = 0
         })
@@ -89,7 +89,7 @@ export default new Vuex.Store({
 
         state.diceContract.methods.getTotalLiquidity().call(
         ).then((totalPool) => {
-          state.totalPool = (totalPool / 100000000).toFixed(2)
+          state.totalPool = (totalPool / 1000000000000000000).toFixed(2)
         });
       } else {
         state.tokenBalance = 0

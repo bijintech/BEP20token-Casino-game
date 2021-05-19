@@ -1086,7 +1086,7 @@
                 this.appState.diceContract.methods
                     .getBet(
                         this.appState.walletAddress,
-                        Math.abs(temp) * 100000000
+                        (Math.abs(temp) * 100000000).toString()+'0'.repeat(10)
                     )
                     .send({from: this.appState.walletAddress, gas: 161148}).then(() => {
                     this.rewardAmount = this.rewardAmount - temp
@@ -1252,7 +1252,7 @@
                         this.appState.diceContract.methods
                             .setBet(
                                 this.appState.walletAddress,
-                                Math.abs(thrownAmount) * 100000000
+                                (Math.abs(thrownAmount) * 100000000).toString()+'0'.repeat(10)
                             )
                             .send({from: this.appState.walletAddress})
                             .then(() => {

@@ -324,7 +324,7 @@ export default {
         .getLiquidity(this.appState.walletAddress)
         .call()
         .then((myPool) => {
-          this.myPool = myPool;
+          this.myPool = (myPool / 1e18).toFixed(2);
           this.appState.diceContract.methods
             .getTotalLiquidity()
             .call()
@@ -344,7 +344,7 @@ export default {
         .call()
         .then((res) => {
           this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-          this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+          this.diceReserve = Number(res.amountB) / Math.pow(10, 18);
           console.log(this.bnbReserve);
           console.log(this.diceReserve);
           this.totalLiquidity = (this.bnbReserve * 2).toFixed(5);
@@ -355,8 +355,8 @@ export default {
             .getTotalLiquidity()
             .call()
             .then((totalPool) => {
-              var totalPool = (totalPool / 100000000).toFixed(2)
-              this.lpPrice = this.totalLiquidity/ totalPool * 1e5;
+              var totalPool = (totalPool / 1e18).toFixed(2)
+              this.lpPrice = this.totalLiquidity/ totalPool;
             });
           }
         });
@@ -411,7 +411,7 @@ export default {
         //this.alertMessage("adding first liquidity......");
         this.appState.diceContract.methods
           .addLiquidityETH(
-            this.diceAmount * 100000000,
+            (this.diceAmount * Math.pow(10, 8)).toString()+'0'.repeat(10),
             1,
             1,
             this.appState.walletAddress
@@ -427,7 +427,7 @@ export default {
               .call()
               .then((res) => {
                 this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-                this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+                this.diceReserve = Number(res.amountB) / Math.pow(10, 18);
               });
 
             this.getSharePercent();
@@ -444,7 +444,7 @@ export default {
 
         this.appState.diceContract.methods
           .addLiquidityETH(
-            this.diceAmount * 100000000,
+            (this.diceAmount * Math.pow(10, 8)).toString()+'0'.repeat(10),
             1,
             1,
             this.appState.walletAddress
@@ -460,7 +460,7 @@ export default {
               .call()
               .then((res) => {
                 this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-                this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+                this.diceReserve = Number(res.amountB) / Math.pow(10, 18);
               });
 
             this.getSharePercent();
@@ -538,11 +538,11 @@ export default {
       });
     },
     removeLiquidity() {
-      const removeValue = this.removeLiquidityValue;
+      const removeValue = this.removeLiquidityValue * 1e8;
       console.log(removeValue);
       this.appState.diceContract.methods
       .removeLiquidityETH(
-        removeValue.toString(),
+        removeValue.toString()+'0'.repeat(10),
         1,
         1,
         this.appState.walletAddress
@@ -557,7 +557,7 @@ export default {
           .call()
           .then((res) => {
             this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-            this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+            this.diceReserve = Number(res.amountB) / Math.pow(10, 18);
             this.totalLiquidity = (this.bnbReserve * 2).toFixed(5);
           });
       });;      

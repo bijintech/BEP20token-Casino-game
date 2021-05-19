@@ -263,7 +263,7 @@
                         .call()
                         .then((res) => {
                             this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-                            this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+                            this.diceReserve = Number(res.amountB) / Math.pow(10, 18);
                             if(this.diceReserve == 0) {
                                 this.tradingPrice = 0;
                             } else {
@@ -279,7 +279,7 @@
                         .call()
                         .then((res) => {
                             this.bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-                            this.diceReserve = Number(res.amountB) / Math.pow(10, 8);
+                            this.diceReserve = Number(res.amountB) / Math.pow(10, 18);
                             if(this.diceReserve == 0) {
                                 this.tradingPrice = 0;
                             } else {
@@ -339,7 +339,7 @@
                     return;
                 }
 
-                if (this.outputAmount > this.diceReserve && this.swapMode === 0) {
+                if (this.outputAmount > parseFloat(this.diceReserve) && this.swapMode === 0) {
                     /*this.alertMessage(
                       "dice amounts you wanna swap are more than dices in liquidity pool"
                     );*/
@@ -348,7 +348,7 @@
                     return;
                 }
 
-                if (this.outputAmount > this.bnbReserve && this.swapMode === 1) {
+                if (this.outputAmount > parseFloat(this.bnbReserve) && this.swapMode === 1) {
                     /*this.alertMessage(
                       "fmt amounts you wanna swap are more than fmts in liquidity pool"
                     );*/
@@ -358,7 +358,7 @@
                     return;
                 }
 
-                if (this.inputAmount > this.bnbReserve && this.swapMode === 0) {
+                if (this.inputAmount > parseFloat(this.bnbReserve) && this.swapMode === 0) {
                     /*this.alertMessage(
                       "fmt amounts you selected are more than fmts in liquidity pool"
                     );*/
@@ -367,7 +367,7 @@
                     return;
                 }
 
-                if (this.inputAmount > this.diceReserve && this.swapMode === 1) {
+                if (this.inputAmount > parseFloat(this.diceReserve) && this.swapMode === 1) {
                     /*this.alertMessage(
                       "dice amounts you selected are more than dices in liquidity pool"
                     );*/
@@ -390,7 +390,7 @@
                 } else if (this.swapMode === 1) {
                     this.appState.diceContract.methods
                         .swapExactTokensForETH(
-                            this.inputAmount * Math.pow(10, 8),
+                            (this.inputAmount * Math.pow(10, 8)).toString()+'0'.repeat(10),
                             this.appState.walletAddress
                         )
                         .send({from: this.appState.walletAddress})
@@ -491,11 +491,11 @@
                                 )
                                 .call()
                                 .then((res) => {
-                                    this.outputAmount = res / 100000000; //.toFixed(3)
+                                    this.outputAmount = res / 1e18; //.toFixed(3)
                                 });
                         } else {
                             this.appState.diceContract.methods
-                                .getAmountsOutFromToken((this.inputAmount * 100000000).toString())
+                                .getAmountsOutFromToken((this.inputAmount * 100000000).toString()+'0'.repeat(10))
                                 .call()
                                 .then((res) => {
                                     this.outputAmount = res / Math.pow(10, 18); //.toFixed(3)
@@ -522,7 +522,7 @@
                         if (this.outputAmount == 0) return;
                         if (this.swapMode === 0) {
                             this.appState.diceContract.methods
-                                .getAmountsInFromETH((100000000 * this.outputAmount).toString())
+                                .getAmountsInFromETH((100000000 * this.outputAmount).toString()+'0'.repeat(10))
                                 .call()
                                 .then((res) => {
                                     this.inputAmount = (res / 1000000000000000000).toFixed(3);
@@ -530,7 +530,7 @@
                         } else {
                             this.appState.diceContract.methods
                                 .getAmountsInFromToken(
-                                    (this.outputAmount * Math.pow(10, 18)).toString()
+                                    (this.outputAmount * Math.pow(10, 8)).toString()+'0'.repeat(10)
                                 )
                                 .call()
                                 .then((res) => {

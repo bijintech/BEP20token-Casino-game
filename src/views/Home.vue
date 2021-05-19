@@ -243,7 +243,7 @@ export default {
                 .totalSupply()
                 .call()
                 .then((res) => {
-                    this.circulateSupply = res / 1e8;
+                    this.circulateSupply = res / 1e18;
                     this.getMarketCap();
                 });
         }
@@ -257,7 +257,7 @@ export default {
                 .getMintAmount(timestamp)
                 .call()
                 .then((res) => {
-                    this.newDiceBlock = res/1e8;
+                    this.newDiceBlock = res/1e18;
                 });
         }
     },
@@ -270,7 +270,7 @@ export default {
             .then((res) => {
                 //console.log("called")
                 const bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-                const diceReserve = Number(res.amountB) / Math.pow(10, 8);    
+                const diceReserve = Number(res.amountB) / Math.pow(10, 18);    
                 //this.dicePrice = (bnbReserve / diceReserve).toFixed(8);
                 if(diceReserve == 0) {
                   this.marketCap = 0;
@@ -293,7 +293,7 @@ export default {
     async addDiceToMetaMask() {
       const tokenAddress = DICE_ADDRESS;
       const tokenSymbol = 'DICE';
-      const tokenDecimals = 8;
+      const tokenDecimals = 18;
       const tokenImage = 'http://placekitten.com/200/300';
 
       try {
