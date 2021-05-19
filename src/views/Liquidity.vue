@@ -137,16 +137,20 @@
                   <div>DICE-FTM LP</div>
                 </div>
                 <div class="d-flex justify-space-between">
+                  <div>Deposit Fee:</div>
+                  <div>1%</div>
+                </div>
+                <div class="d-flex justify-space-between">
                   <div>Total Liquidity:</div>
                   <div>{{totalLiquidity}} FTM</div>
                 </div>
                 <div class="d-flex justify-space-between">
                   <div>LP price:</div>
-                  <div>{{lpPrice}} FTM</div>
+                  <div>{{lpPrice.toFixed(2)}} FTM</div>
                 </div>
                 <div class="d-flex justify-space-between">
                     <div>YOUR LP SHARE:</div>
-                    <div>{{currentPercent}}%</div>
+                    <div>{{currentPercent.toFixed(2)}}%</div>
                 </div>
                 <div class="d-flex justify-space-between" v-if="currentPercent > 0">
                   <div>                    

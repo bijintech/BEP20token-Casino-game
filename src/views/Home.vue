@@ -103,7 +103,7 @@
                   "
                 >
                   <span>Circulating Supply</span>
-                  <span>{{circulateSupply}}</span>
+                  <span>{{circulateSupply.toFixed(2)}}</span>
                 </div>
               </v-list-item>
               <v-list-item style="width: 100%">
@@ -116,7 +116,7 @@
                   "
                 >
                   <span>Market Cap</span>
-                  <span>{{marketCap}}</span>
+                  <span>{{marketCap.toFixed(2)}}</span>
                 </div>
               </v-list-item>
               <v-list-item style="width: 100%">
@@ -129,7 +129,7 @@
                   "
                 >
                   <span>Total DICE</span>
-                  <span>{{circulateSupply}}</span>
+                  <span>{{circulateSupply.toFixed(2)}}</span>
                 </div>
               </v-list-item>
               <v-list-item style="width: 100%">
@@ -203,7 +203,7 @@ export default {
           .then((res) => {
               //console.log("called")
               const bnbReserve = Number(res.amountA) / Math.pow(10, 18);
-              this.totalLiquidity = (bnbReserve * 2).toFixed(5);
+              this.totalLiquidity = (bnbReserve * 2).toFixed(2);
           });
     }, 1500);
     

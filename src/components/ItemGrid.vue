@@ -14,11 +14,11 @@
     <div class="body">
        <div class="body__item">
           <div>APR %:</div>
-          <div>{{newDiceBlock}}%</div>
+          <div>{{(newDiceBlock).toFixed(2)}}%</div>
       </div>
       <div class="body__item">
           <div>Daily APR:</div>
-          <div>{{newDiceBlock/365}}%</div>
+          <div>{{(newDiceBlock/365).toFixed(2)}}%</div>
       </div>
       <div class="my-3">
         <div class="secondary--text subtitle-2">DICE EARNED FROM PLAYING</div>
@@ -59,7 +59,7 @@
         <v-expansion-panel-content>
           <div class="body__item">
             <div>Total DICE Rewards:</div>
-            <div>{{totalDiceReward}}</div>
+            <div>{{totalDiceReward.toFixed(2)}}</div>
           </div>
           <div class="body__item">
             <div>Total Liquidity:</div>
@@ -67,7 +67,7 @@
           </div>
           <div class="body__item">
             <div>LP price:</div>
-            <div>{{lpPrice}} FTM</div>
+            <div>{{lpPrice.toFixed(2)}} FTM</div>
           </div>
           <div class="body__item">
               <div>YOUR LP SHARE:</div>
@@ -196,7 +196,7 @@ export default {
           if(this.totalPool == 0) {
             this.currentPercent = '~';
           } else {
-            this.currentPercent = (myPool * 100 ) / (1e18 * this.totalPool) + '%';
+            this.currentPercent = ((myPool * 100 ) / (1e18 * this.totalPool)).toFixed(2) + '%';
           }
         });
     },
