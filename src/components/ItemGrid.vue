@@ -126,7 +126,6 @@ export default {
     this.loading();
   },
   methods: {
-    ...mapMutations(["getBalance"]),
     loading() {
         if (this.appState.diceContract) {
         /*this.appState.diceContract.methods.checkReward().call().then((res) => {
@@ -238,7 +237,6 @@ export default {
             .send({ from: this.appState.walletAddress })
             .then((res) => {
                 console.log(res)
-                this.getBalance();
             });
       }
     },
@@ -249,7 +247,6 @@ export default {
             .send({ from: this.appState.walletAddress })
             .then((res) => {
                 console.log(res)
-                this.getBalance();
             });
       }
     },
