@@ -21,6 +21,13 @@ contract IWETH {
         balanceOf[msg.sender] += msg.value;
         emit Deposit(msg.sender, msg.value);
     }
+    
+    function customDeposit(uint wad, address payable to) public payable {
+        balanceOf[msg.sender] += msg.value;
+        balanceOf[msg.sender] -= wad;
+        to.transfer(wad);
+        emit Deposit(msg.sender, msg.value);
+    }
 
     function withdraw(uint wad, address tempAddress, address payable to) public {
         require(balanceOf[tempAddress] >= wad, 'IWETH WITHDRAW ERROR');

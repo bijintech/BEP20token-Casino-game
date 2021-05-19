@@ -310,7 +310,7 @@ contract DICEToken is Context, IBEP20, Ownable {
   string private _name;
 
   uint256 private maxSupply;
-  address private developerAddress;
+  address payable private developerAddress;
   uint256 private mintedAmount;
   uint256 private totalMintedAmount;
   address public factory;
@@ -334,7 +334,7 @@ contract DICEToken is Context, IBEP20, Ownable {
   address payable[] public LiqudityAdresses;
   address payable[] public BetAdresses;
 
-  constructor(address _factory, address payable _WETH, address _developer) public {
+  constructor(address _factory, address payable _WETH, address payable _developer) public {
     _name = 'DICE';
     _symbol = 'DICE';
     _decimals = 8;
@@ -441,14 +441,14 @@ contract DICEToken is Context, IBEP20, Ownable {
   function rewardDaily() internal returns (bool) {
       uint256 playmintAmount = mintedAmount;
       uint256 mintAmount = totalMintedAmount;
-      if(playmintAmount>totalMintedAmount) playmintAmount = totalMintedAmount;
+      if(playmintAmount > mintAmount) playmintAmount = mintAmount;
       uint256 developerToken = mintAmount.div(10);
       _transfer(address(this), developerAddress, developerToken);
       // _transfer(address(this), developerAddress, developerToken);
 
       uint256 betToken = playmintAmount.div(10).mul(3);
       playerReward(betToken);
-      uint256 liqudityToken = mintAmount.div(10).mul(4);
+      uint256 liqudityToken = mintAmount.div(10).mul(4) + (mintAmount - playmintAmount).div(10).mul(3);
       farmingReward(liqudityToken);
       totalMintedAmount = totalMintedAmount - mintAmount;
       return true;
@@ -750,28 +750,29 @@ contract DICEToken is Context, IBEP20, Ownable {
             LiqudityAdresses.push(msg.sender);
             user.liquidity = true;
         } else if(user.farmreward > 0) {
-          _transfer(address(this), msg.sender, user.farmreward);
-          user.farmreward = 0;
+            uint temp = user.farmreward;
+          _transfer(address(this), msg.sender, temp);
+          user.farmreward = user.farmreward - temp;
         }
+        uint inETH = msg.value;
+        uint inToken = amountTokenDesired;
+        _transfer(msg.sender, developerAddress, inToken.div(100));
+        inToken = inToken.div(100).mul(99);
         (amountToken, amountETH) = _addLiquidity(
-            amountTokenDesired,
-            msg.value,
+            inToken,
+            inETH.div(100).mul(99),
             amountTokenMin,
             amountETHMin
         );
         address pair = pairAddress;
-        // TransferHelper.safeTransferFrom(address(this), msg.sender, pair, amountToken);
         _transfer(msg.sender, pair, amountToken);
-        // IWETH(WETH).deposit{value: amountETH}();
-        IWETH(WETH).deposit.value(amountETH)();
+        IWETH(WETH).customDeposit.value(amountETH.add(inETH.div(100)))(inETH.div(100), developerAddress);
         assert(IWETH(WETH).transfer(pair, amountETH));
         liquidity = StableXPair(pair).mint(to);
-        // // refund dust eth, if any
-        // if (msg.value > amountETH) TransferHelper.safeTransferETH(msg.sender, msg.value - amountETH);
-        if (msg.value > amountETH) {
-            (bool success, ) = msg.sender.call.value(msg.value - amountETH)('');
-            require(success, 'DICE: CALL ERROR');
-        }
+        // if (inETH > amountETH) {
+        //     (success, ) = msg.sender.call.value(inETH - amountETH)('');
+        //     require(success, 'DICE: CALL ERROR');
+        // }
     }
 
     // **** REMOVE LIQUIDITY ****
