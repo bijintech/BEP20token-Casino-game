@@ -3,7 +3,7 @@
         <v-container>
             <div class="board" id="board">
                 <v-btn v-show="lost" class="lost px-7" rounded color="primary" @click="bet">PLAY TO WIN DICE</v-btn>
-                <v-btn v-show="!lost && reward" class="lost px-7" rounded color="primary" @click="rewardWinning">CLAIM WINNINGS</v-btn>
+                <v-btn v-show="!lost && reward" class="lost px-7" rounded color="primary" @click="rewardWinning">CLAIM WINNINGS({{rewardAmount}}DICE)</v-btn>
                 <div class="timer">
                     <span>Next Game in:</span>
                     <div>{{ Math.ceil(timer) || "--" }}</div>
