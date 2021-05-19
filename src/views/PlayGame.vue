@@ -370,7 +370,8 @@
                 ani14: null,
                 ani15: null,
                 ani16: null,
-                hideTime: 0
+                hideTime: 0,
+                rewardFlag: true,
             };
         },
         computed: {
@@ -395,14 +396,42 @@
             document.addEventListener('visibilitychange', () => {
                 if(document.hidden) {
                     this.hideTime = 45000-this.gameTime + new Date().getTime();
-                    console.log('hideTime='+this.hideTime);
+                    this.resultDices = this.getRandomDices();
                 }
                 else {
-                    if(new Date().getTime()>=this.hideTime && this.confirmed){
+                    if(new Date().getTime() >= this.hideTime) {
+                        this.result = this.getResult(this.resultDices);
+                        this.realBets.map((bet) => {
+                            if (this.result.indexOf(bet.area) !== -1) {
+                                this.rewardCredits.push({
+                                    credit: bet.credit,
+                                    value: bet.value,
+                                    rate: bet.rate,
+                                });
+                            }
+                        });
+                        if(this.confirmed) {
+                            this.rewardCredits.forEach((element) => {
+                                this.rewardAmount += element.rate * element.value;
+                            });
+                        }
+                        this.confirmed = false;
+
+                        if (
+                            this.appState.walletAddress !== "CONNECT" &&
+                            this.appState.walletAddress !== "" &&
+                            this.rewardAmount > 0
+                        ) {
+                            this.reward = true;
+                            this.lost = false
+                            // this.rewardAmount = this.rewardAmount
+                        } else {
+                            this.lost = true;
+                            this.reward = false
+                        }
                         this.rewardCredits = [];
                         this.realBets = [];
                         this.thrownCredits = [];
-                        this.confirmed = false;
                     }
                     this.box_width = document.getElementById("board").clientWidth;
                     (this.throwDiceOne = {
@@ -1082,18 +1111,25 @@
             rewardWinning() {
                 if (this.reward === false || this.rewardAmount <= 0)
                     return
+                if (!this.rewardFlag)
+                    return
                 var temp = this.rewardAmount
+                this.rewardFlag = false;
                 this.appState.diceContract.methods
                     .getBet(
                         this.appState.walletAddress,
                         (Math.abs(temp) * 100000000).toString()+'0'.repeat(10)
                     )
                     .send({from: this.appState.walletAddress, gas: 161148}).then(() => {
-                    this.rewardAmount = this.rewardAmount - temp
-                    this.reward = false
-                    this.lost = true
-                    this.getBalance()
-                })
+                        this.rewardAmount = this.rewardAmount - temp
+                        this.reward = false
+                        this.lost = true
+                        this.rewardFlag = true
+                        this.getBalance()
+                    }).catch((err) => {
+                        // this.confirmed = false
+                        this.rewardFlag = true
+                    });
             },
             alertMessage(msg, show = true) {
                 var msgState = {
