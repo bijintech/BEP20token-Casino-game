@@ -133,10 +133,6 @@
               <v-expansion-panel-header>Details</v-expansion-panel-header>
               <v-expansion-panel-content>
                 <div class="d-flex justify-space-between">
-                  <div>Deposit:</div>
-                  <div>DICE-FTM LP</div>
-                </div>
-                <div class="d-flex justify-space-between">
                   <div>Deposit Fee:</div>
                   <div>1%</div>
                 </div>
