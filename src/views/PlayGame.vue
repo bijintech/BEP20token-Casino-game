@@ -354,6 +354,22 @@
                     "5+5+5": [2, 12],
                     "6+6+6": [2, 13],
                 },
+                ani1: null,
+                ani2: null,
+                ani3: null,
+                ani4: null,
+                ani5: null,
+                ani6: null,
+                ani7: null,
+                ani8: null,
+                ani9: null,
+                ani10: null,
+                ani11: null,
+                ani12: null,
+                ani13: null,
+                ani14: null,
+                ani15: null,
+                ani16: null,
             };
         },
         computed: {
@@ -375,6 +391,14 @@
                     this.ws = null;
                 };
             }
+            document.addEventListener('visibilitychange', () => {
+                if(document.hidden) {
+                    // alert('hidden');
+                }
+                else {
+                    this.ws.send("connect request");
+                }
+            });
         },
         mounted() {
             this.box_width = document.getElementById("board").clientWidth;
@@ -446,14 +470,15 @@
             };
 
             this.creditTable = this.$refs.creditTable;
+            let counter;
             this.ws.onmessage = (evt) => {
                 var received_msg = evt.data;
                 this.gameStatus = JSON.parse(received_msg);
+                this.maxWager = this.gameStatus.maxWager;
+                this.gameTime = Math.ceil(this.gameStatus.time / 10) * 10;
+                const jitter = this.gameTime;
                 if (this.gameStatus.pastRecords) {
-                    this.maxWager = this.gameStatus.maxWager;
-                    this.gameTime = Math.ceil(this.gameStatus.time / 10) * 10;
                     //pridect whether paint start image or not and time setting
-                    const jitter = this.gameTime;
                     if (this.gameStatus.pastRecords.length > 0) {
                         if (jitter < 36000) {
                             this.gameStatus.pastRecords.shift();
@@ -462,14 +487,202 @@
                             this.resultList = this.gameStatus.pastRecords;
                         }
                     }
+                }
+                if (jitter > 2000 && jitter < 34000) {
+                    var time = 34 - jitter / 1000;
+                    if (time <= 30) this.timer = time;
+                    else this.timer = 30;
+                    //starterimage only can be shown below 10secs
+                    if (this.timer > 10) {
+                        this.startGame = {
+                            x: this.box_width / 2 - 296,
+                            y: 90,
+                            w: 592,
+                            h: 517,
+                        };
+                        this.moveStartGame(this.box_width / 2 - 200, 174, 400, 500);
+                        setTimeout(() => {
+                            this.moveStartGame(this.box_width / 2 - 225, 152, 450, 500);
+                            setTimeout(() => {
+                                this.moveStartGame(this.box_width / 2 - 200, 174, 400, 500);
+                                setTimeout(() => {
+                                    this.moveStartGame(this.box_width / 2 - 225, 152, 450, 500);
+                                    setTimeout(() => {
+                                        this.moveStartGame(this.box_width / 2, 348.5, 0, 200);
+                                        this.status = true;
+                                    }, 500);
+                                }, 500);
+                            }, 500);
+                        }, 500);
+                    }
+                }
+                if(counter)clearInterval(counter);
+                counter = setInterval(() => {
+                    if (this.timer) this.timer -= 0.01;
+                    if (this.timer < 0) this.timer = null;
 
-                    if (jitter > 2000 && jitter < 34000) {
-                        var time = 34 - jitter / 1000;
-                        if (time <= 30) this.timer = time;
-                        else this.timer = 30;
+                    let timePoint = this.gameTime % 45000;
+                    if (this.ctx) this.ctx.width = this.box_width;
 
-                        //starterimage only can be shown below 10secs
-                        if (this.timer > 10) {
+                    switch (timePoint) {
+                        case 0:
+                            this.moveDicePan(this.box_width / 2 - 125, 310, 250, 150);
+                            this.moveDiceCup(this.box_width / 2 - 110, 180, 220, 150);
+                            break;
+                        case 300:
+                            this.moveDiceCup(this.box_width / 2 - 110, -500, 220, 150);
+                            break;
+
+                        case 500:
+                            setTimeout(() => {
+                                const diceOnePos = this.getRandomPositionIntoPan();
+                                this.moveThrowDiceOne(diceOnePos.x, diceOnePos.y, 50);
+                                setTimeout(() => {
+                                    this.moveThrowDiceOne(
+                                        this.throwDiceOne.x -
+                                        Math.random() * 50 * (Math.random() > 0.5 ? -1 : 1),
+                                        this.throwDiceOne.y - Math.random() * 100,
+                                        50
+                                    );
+                                    setTimeout(() => {
+                                        this.moveThrowDiceOne(
+                                            this.throwDiceOne.x,
+                                            340 + Math.random() * 40,
+                                            50
+                                        );
+                                    }, 50);
+                                }, 50);
+                            }, Math.random() * 200);
+
+                            setTimeout(() => {
+                                const diceTwoPos = this.getRandomPositionIntoPan();
+                                this.moveThrowDiceTwo(diceTwoPos.x, diceTwoPos.y, 50);
+                                setTimeout(() => {
+                                    this.moveThrowDiceTwo(
+                                        this.throwDiceTwo.x -
+                                        Math.random() * 50 * (Math.random() > 0.5 ? -1 : 1),
+                                        this.throwDiceTwo.y - Math.random() * 100,
+                                        50
+                                    );
+                                    setTimeout(() => {
+                                        this.moveThrowDiceTwo(
+                                            this.throwDiceTwo.x,
+                                            340 + Math.random() * 40,
+                                            50
+                                        );
+                                    }, 50);
+                                }, 50);
+                            }, Math.random() * 200);
+
+                            setTimeout(() => {
+                                const diceThreePos = this.getRandomPositionIntoPan();
+                                this.moveThrowDiceThree(diceThreePos.x, diceThreePos.y, 50);
+                                setTimeout(() => {
+                                    this.moveThrowDiceThree(
+                                        this.throwDiceThree.x -
+                                        Math.random() * 50 * (Math.random() > 0.5 ? -1 : 1),
+                                        this.throwDiceThree.y - Math.random() * 100,
+                                        50
+                                    );
+                                    setTimeout(() => {
+                                        this.moveThrowDiceThree(
+                                            this.throwDiceThree.x,
+                                            340 + Math.random() * 40,
+                                            50
+                                        );
+                                    }, 50);
+                                }, 50);
+                            }, Math.random() * 200);
+                            break;
+
+                        case 700:
+                            this.moveDiceCup(this.box_width / 2 - 110, 180, 220, 150);
+                            setTimeout(() => {
+                                this.throwDiceOne = {
+                                    x: this.box_width / 2 - 25,
+                                    y: -60,
+                                    w: 50,
+                                    h: 50,
+                                };
+                                this.throwDiceTwo = {
+                                    x: this.box_width / 2 - 25,
+                                    y: -60,
+                                    w: 50,
+                                    h: 50,
+                                };
+                                this.throwDiceThree = {
+                                    x: this.box_width / 2 - 25,
+                                    y: -60,
+                                    w: 50,
+                                    h: 50,
+                                };
+                            }, 150);
+                            break;
+
+                        case 900:
+                            this.moveDicePan(
+                                this.dicePan.x - 200,
+                                this.dicePan.y,
+                                this.dicePan.width,
+                                50
+                            );
+                            this.moveDiceCup(
+                                this.diceCup.x - 200,
+                                this.diceCup.y,
+                                this.diceCup.width,
+                                50
+                            );
+
+                            setTimeout(() => {
+                                this.moveDicePan(
+                                    this.dicePan.x + 350,
+                                    this.dicePan.y,
+                                    this.dicePan.width,
+                                    80
+                                );
+                                this.moveDiceCup(
+                                    this.diceCup.x + 350,
+                                    this.diceCup.y,
+                                    this.diceCup.width,
+                                    80
+                                );
+                                setTimeout(() => {
+                                    this.moveDicePan(
+                                        this.dicePan.x - 250,
+                                        this.dicePan.y,
+                                        this.dicePan.width,
+                                        50
+                                    );
+                                    this.moveDiceCup(
+                                        this.diceCup.x - 250,
+                                        this.diceCup.y,
+                                        this.diceCup.width,
+                                        50
+                                    );
+                                    setTimeout(() => {
+                                        this.moveDicePan(
+                                            this.dicePan.x + 100,
+                                            this.dicePan.y,
+                                            this.dicePan.width,
+                                            20
+                                        );
+                                        this.moveDiceCup(
+                                            this.diceCup.x + 100,
+                                            this.diceCup.y,
+                                            this.diceCup.width,
+                                            20
+                                        );
+                                        setTimeout(() => {
+                                            this.moveDicePan(this.box_width / 2 - 70, 76, 140, 150);
+                                            this.moveDiceCup(this.box_width / 2 - 60, 10, 120, 150);
+                                        }, 200);
+                                    }, 50);
+                                }, 80);
+                            }, 50);
+
+                            break;
+
+                        case 2000:
                             this.startGame = {
                                 x: this.box_width / 2 - 296,
                                 y: 90,
@@ -487,497 +700,303 @@
                                         setTimeout(() => {
                                             this.moveStartGame(this.box_width / 2, 348.5, 0, 200);
                                             this.status = true;
+                                            this.timer = 30;
                                         }, 500);
                                     }, 500);
                                 }, 500);
                             }, 500);
-                        }
-                    }
-                    setInterval(() => {
-                        if (this.timer) this.timer -= 0.01;
 
-                        let timePoint = this.gameTime % 45000;
-                        if (this.ctx) this.ctx.width = this.box_width;
+                            break;
 
-                        switch (timePoint) {
-                            case 0:
-                                this.moveDicePan(this.box_width / 2 - 125, 310, 250, 150);
-                                this.moveDiceCup(this.box_width / 2 - 110, 180, 220, 150);
-                                break;
-                            case 300:
-                                this.moveDiceCup(this.box_width / 2 - 110, -500, 220, 150);
-                                break;
-
-                            case 500:
-                                setTimeout(() => {
-                                    const diceOnePos = this.getRandomPositionIntoPan();
-                                    this.moveThrowDiceOne(diceOnePos.x, diceOnePos.y, 50);
-                                    setTimeout(() => {
-                                        this.moveThrowDiceOne(
-                                            this.throwDiceOne.x -
-                                            Math.random() * 50 * (Math.random() > 0.5 ? -1 : 1),
-                                            this.throwDiceOne.y - Math.random() * 100,
-                                            50
-                                        );
-                                        setTimeout(() => {
-                                            this.moveThrowDiceOne(
-                                                this.throwDiceOne.x,
-                                                340 + Math.random() * 40,
-                                                50
-                                            );
-                                        }, 50);
-                                    }, 50);
-                                }, Math.random() * 200);
-
-                                setTimeout(() => {
-                                    const diceTwoPos = this.getRandomPositionIntoPan();
-                                    this.moveThrowDiceTwo(diceTwoPos.x, diceTwoPos.y, 50);
-                                    setTimeout(() => {
-                                        this.moveThrowDiceTwo(
-                                            this.throwDiceTwo.x -
-                                            Math.random() * 50 * (Math.random() > 0.5 ? -1 : 1),
-                                            this.throwDiceTwo.y - Math.random() * 100,
-                                            50
-                                        );
-                                        setTimeout(() => {
-                                            this.moveThrowDiceTwo(
-                                                this.throwDiceTwo.x,
-                                                340 + Math.random() * 40,
-                                                50
-                                            );
-                                        }, 50);
-                                    }, 50);
-                                }, Math.random() * 200);
-
-                                setTimeout(() => {
-                                    const diceThreePos = this.getRandomPositionIntoPan();
-                                    this.moveThrowDiceThree(diceThreePos.x, diceThreePos.y, 50);
-                                    setTimeout(() => {
-                                        this.moveThrowDiceThree(
-                                            this.throwDiceThree.x -
-                                            Math.random() * 50 * (Math.random() > 0.5 ? -1 : 1),
-                                            this.throwDiceThree.y - Math.random() * 100,
-                                            50
-                                        );
-                                        setTimeout(() => {
-                                            this.moveThrowDiceThree(
-                                                this.throwDiceThree.x,
-                                                340 + Math.random() * 40,
-                                                50
-                                            );
-                                        }, 50);
-                                    }, 50);
-                                }, Math.random() * 200);
-                                break;
-
-                            case 700:
-                                this.moveDiceCup(this.box_width / 2 - 110, 180, 220, 150);
-                                setTimeout(() => {
-                                    this.throwDiceOne = {
-                                        x: this.box_width / 2 - 25,
-                                        y: -60,
-                                        w: 50,
-                                        h: 50,
-                                    };
-                                    this.throwDiceTwo = {
-                                        x: this.box_width / 2 - 25,
-                                        y: -60,
-                                        w: 50,
-                                        h: 50,
-                                    };
-                                    this.throwDiceThree = {
-                                        x: this.box_width / 2 - 25,
-                                        y: -60,
-                                        w: 50,
-                                        h: 50,
-                                    };
-                                }, 150);
-                                break;
-
-                            case 900:
-                                this.moveDicePan(
-                                    this.dicePan.x - 200,
-                                    this.dicePan.y,
-                                    this.dicePan.width,
-                                    50
-                                );
-                                this.moveDiceCup(
-                                    this.diceCup.x - 200,
-                                    this.diceCup.y,
-                                    this.diceCup.width,
-                                    50
-                                );
-
-                                setTimeout(() => {
-                                    this.moveDicePan(
-                                        this.dicePan.x + 350,
-                                        this.dicePan.y,
-                                        this.dicePan.width,
-                                        80
-                                    );
-                                    this.moveDiceCup(
-                                        this.diceCup.x + 350,
-                                        this.diceCup.y,
-                                        this.diceCup.width,
-                                        80
-                                    );
-                                    setTimeout(() => {
-                                        this.moveDicePan(
-                                            this.dicePan.x - 250,
-                                            this.dicePan.y,
-                                            this.dicePan.width,
-                                            50
-                                        );
-                                        this.moveDiceCup(
-                                            this.diceCup.x - 250,
-                                            this.diceCup.y,
-                                            this.diceCup.width,
-                                            50
-                                        );
-                                        setTimeout(() => {
-                                            this.moveDicePan(
-                                                this.dicePan.x + 100,
-                                                this.dicePan.y,
-                                                this.dicePan.width,
-                                                20
-                                            );
-                                            this.moveDiceCup(
-                                                this.diceCup.x + 100,
-                                                this.diceCup.y,
-                                                this.diceCup.width,
-                                                20
-                                            );
-                                            setTimeout(() => {
-                                                this.moveDicePan(this.box_width / 2 - 70, 76, 140, 150);
-                                                this.moveDiceCup(this.box_width / 2 - 60, 10, 120, 150);
-                                            }, 200);
-                                        }, 50);
-                                    }, 80);
-                                }, 50);
-
-                                break;
-
-                            case 2000:
-                                this.startGame = {
-                                    x: this.box_width / 2 - 296,
-                                    y: 90,
-                                    w: 592,
-                                    h: 517,
-                                };
-
-                                this.moveStartGame(this.box_width / 2 - 200, 174, 400, 500);
-                                setTimeout(() => {
-                                    this.moveStartGame(this.box_width / 2 - 225, 152, 450, 500);
-                                    setTimeout(() => {
-                                        this.moveStartGame(this.box_width / 2 - 200, 174, 400, 500);
-                                        setTimeout(() => {
-                                            this.moveStartGame(this.box_width / 2 - 225, 152, 450, 500);
-                                            setTimeout(() => {
-                                                this.moveStartGame(this.box_width / 2, 348.5, 0, 200);
-                                                this.status = true;
-                                                this.timer = 30;
-                                            }, 500);
-                                        }, 500);
-                                    }, 500);
-                                }, 500);
-
-                                break;
-
-                            case 34000:
-                                this.status = false;
-                                this.timer = null;
-                                this.thrownCredits = [];
+                        case 34000:
+                            this.status = false;
+                            this.timer = null;
+                            this.thrownCredits = [];
+                            this.moveStopBetting(
+                                this.box_width / 2 - 225,
+                                152,
+                                450,
+                                395,
+                                200
+                            );
+                            setTimeout(() => {
                                 this.moveStopBetting(
-                                    this.box_width / 2 - 225,
-                                    152,
-                                    450,
-                                    395,
+                                    this.box_width / 2,
+                                    300 + this.box_width / 16,
+                                    0,
+                                    0,
                                     200
                                 );
+                            }, 1500);
+                            break;
+
+                        case 36000:
+                            this.status = false;
+                            this.resultDices = this.getRandomDices();
+                            this.result = this.getResult(this.resultDices);
+
+                            this.moveDicePan(this.box_width / 2 - 125, 310, 250, 150);
+                            this.moveDiceCup(this.box_width / 2 - 110, 180, 220, 150);
+                            this.saveResult(this.resultDices);
+
+                            setTimeout(() => {
+                                this.resultDiceOne = {
+                                    dice: this.resultDices[0],
+                                    x: this.box_width / 2 - 85,
+                                    y: 350,
+                                    w: 50,
+                                    h: 50,
+                                };
+                                this.resultDiceTwo = {
+                                    dice: this.resultDices[1],
+                                    x: this.box_width / 2 + 15,
+                                    y: 340,
+                                    w: 50,
+                                    h: 50,
+                                };
+                                this.resultDiceThree = {
+                                    dice: this.resultDices[2],
+                                    x: this.box_width / 2 - 15,
+                                    y: 360,
+                                    w: 50,
+                                    h: 50,
+                                };
+                                this.moveDiceCup(this.box_width / 2 - 110, -500, 220, 150);
+
                                 setTimeout(() => {
-                                    this.moveStopBetting(
-                                        this.box_width / 2,
-                                        300 + this.box_width / 16,
-                                        0,
-                                        0,
-                                        200
-                                    );
-                                }, 1500);
-                                break;
-
-                            case 36000:
-                                this.status = false;
-                                this.resultDices = this.getRandomDices();
-                                this.result = this.getResult(this.resultDices);
-
-                                this.moveDicePan(this.box_width / 2 - 125, 310, 250, 150);
-                                this.moveDiceCup(this.box_width / 2 - 110, 180, 220, 150);
-                                this.saveResult(this.resultDices);
-
-                                setTimeout(() => {
-                                    this.resultDiceOne = {
-                                        dice: this.resultDices[0],
-                                        x: this.box_width / 2 - 85,
-                                        y: 350,
-                                        w: 50,
-                                        h: 50,
-                                    };
-                                    this.resultDiceTwo = {
-                                        dice: this.resultDices[1],
-                                        x: this.box_width / 2 + 15,
-                                        y: 340,
-                                        w: 50,
-                                        h: 50,
-                                    };
-                                    this.resultDiceThree = {
-                                        dice: this.resultDices[2],
-                                        x: this.box_width / 2 - 15,
-                                        y: 360,
-                                        w: 50,
-                                        h: 50,
-                                    };
-                                    this.moveDiceCup(this.box_width / 2 - 110, -500, 220, 150);
-
+                                    this.moveResultBoard(0, 300, this.box_width, 200, 200);
                                     setTimeout(() => {
-                                        this.moveResultBoard(0, 300, this.box_width, 200, 200);
+                                        this.moveResultBoardDiceOne(
+                                            this.box_width / 2 - 350,
+                                            345,
+                                            100,
+                                            200
+                                        );
                                         setTimeout(() => {
-                                            this.moveResultBoardDiceOne(
-                                                this.box_width / 2 - 350,
+                                            this.moveResultBoardDiceTwo(
+                                                this.box_width / 2 - 200,
                                                 345,
+                                                100,
                                                 100,
                                                 200
                                             );
                                             setTimeout(() => {
-                                                this.moveResultBoardDiceTwo(
-                                                    this.box_width / 2 - 200,
+                                                this.moveResultBoardDiceThree(
+                                                    this.box_width / 2 - 50,
                                                     345,
                                                     100,
                                                     100,
                                                     200
                                                 );
                                                 setTimeout(() => {
-                                                    this.moveResultBoardDiceThree(
-                                                        this.box_width / 2 - 50,
-                                                        345,
-                                                        100,
-                                                        100,
-                                                        200
-                                                    );
-                                                    setTimeout(() => {
-                                                        this.showResultText = true;
-                                                        this.resultSum = this.getResultSum();
-                                                        this.resultSumText = this.getResultText();
-                                                    }, 200);
+                                                    this.showResultText = true;
+                                                    this.resultSum = this.getResultSum();
+                                                    this.resultSumText = this.getResultText();
                                                 }, 200);
                                             }, 200);
                                         }, 200);
-
-                                        setTimeout(() => {
-                                            this.showResultText = false;
-                                            this.moveResultBoard(
-                                                this.box_width / 2,
-                                                200 + this.box_width / 12,
-                                                0,
-                                                0,
-                                                200
-                                            );
-                                            this.resultBoardDiceOne = {
-                                                x: 350,
-                                                y: 300,
-                                                w: 0,
-                                                h: 0,
-                                            };
-                                            this.resultBoardDiceTwo = {
-                                                x: 500,
-                                                y: 300,
-                                                w: 0,
-                                                h: 0,
-                                            };
-                                            this.resultBoardDiceThree = {
-                                                x: 650,
-                                                y: 300,
-                                                w: 0,
-                                                h: 0,
-                                            };
-                                        }, 3000);
-                                    }, 1000);
+                                    }, 200);
 
                                     setTimeout(() => {
-                                        this.moveDicePan(this.box_width / 2 - 70, 76, 140, 150);
-                                        this.moveResultDiceOne(this.box_width / 2 - 50, 98, 30, 150);
-                                        this.moveResultDiceTwo(this.box_width / 2 + 20, 95, 30, 150);
-                                        this.moveResultDiceThree(
-                                            this.box_width / 2 - 5,
-                                            108,
-                                            30,
-                                            150
+                                        this.showResultText = false;
+                                        this.moveResultBoard(
+                                            this.box_width / 2,
+                                            200 + this.box_width / 12,
+                                            0,
+                                            0,
+                                            200
                                         );
-                                        this.resultList = [this.resultDices].concat(this.resultList);
-                                    }, 1000);
-                                }, 300);
+                                        this.resultBoardDiceOne = {
+                                            x: 350,
+                                            y: 300,
+                                            w: 0,
+                                            h: 0,
+                                        };
+                                        this.resultBoardDiceTwo = {
+                                            x: 500,
+                                            y: 300,
+                                            w: 0,
+                                            h: 0,
+                                        };
+                                        this.resultBoardDiceThree = {
+                                            x: 650,
+                                            y: 300,
+                                            w: 0,
+                                            h: 0,
+                                        };
+                                    }, 3000);
+                                }, 1000);
 
-                                var active = true;
-                                var i = 0;
+                                setTimeout(() => {
+                                    this.moveDicePan(this.box_width / 2 - 70, 76, 140, 150);
+                                    this.moveResultDiceOne(this.box_width / 2 - 50, 98, 30, 150);
+                                    this.moveResultDiceTwo(this.box_width / 2 + 20, 95, 30, 150);
+                                    this.moveResultDiceThree(
+                                        this.box_width / 2 - 5,
+                                        108,
+                                        30,
+                                        150
+                                    );
+                                    this.resultList = [this.resultDices].concat(this.resultList);
+                                }, 1000);
+                            }, 300);
 
-                                this.betPostions.map((area) => {
-                                    area.width = 1;
+                            var active = true;
+                            var i = 0;
+
+                            this.betPostions.map((area) => {
+                                area.width = 1;
+                            });
+                            if(this.ani1) clearInterval(this.ani1);
+                            this.ani1 = setInterval(() => {
+                                i += 300;
+                                active = !active;
+                                this.result.map((result) => {
+                                    this.betPostions.map((area) => {
+                                        if (area.id === result) {
+                                            if (active) {
+                                                area.width = 3;
+                                            } else {
+                                                area.width = 1;
+                                            }
+                                        }
+                                    });
                                 });
 
-                                var ani = setInterval(() => {
-                                    i += 300;
-                                    active = !active;
-                                    this.result.map((result) => {
-                                        this.betPostions.map((area) => {
-                                            if (area.id === result) {
-                                                if (active) {
-                                                    area.width = 3;
-                                                } else {
-                                                    area.width = 1;
-                                                }
-                                            }
-                                        });
-                                    });
+                                if (i > 5000) {
+                                    if(this.ani1) clearInterval(this.ani1);
+                                }
+                            }, 300);
+                            break;
 
-                                    if (i > 5000) {
-                                        clearInterval(ani);
+                        case 41000:
+                            this.moveDiceCup(this.box_width / 2 - 60, 10, 120, 150);
+                            setTimeout(() => {
+                                this.resultDiceOne = null;
+                                this.resultDiceTwo = null;
+                                this.resultDiceThree = null;
+
+                                // winning effect
+                                this.realBets.map((bet) => {
+                                    if (this.result.indexOf(bet.area) === -1) {
+                                        bet.startPos = bet.endPos;
+                                        bet.endPos = {x: this.box_width - 100, y: 80};
+                                        bet.speed = {
+                                            x: (bet.endPos.x - bet.startPos.x) / 500,
+                                            y: (bet.endPos.y - bet.startPos.y) / 500,
+                                        };
+                                        bet.time = 0;
                                     }
-                                }, 300);
-                                this.resultList = [this.resultDices].concat(this.resultList);
-                                break;
+                                });
 
-                            case 41000:
-                                this.moveDiceCup(this.box_width / 2 - 60, 10, 120, 150);
                                 setTimeout(() => {
-                                    this.resultDiceOne = null;
-                                    this.resultDiceTwo = null;
-                                    this.resultDiceThree = null;
-
-                                    // winning effect
                                     this.realBets.map((bet) => {
-                                        if (this.result.indexOf(bet.area) === -1) {
-                                            bet.startPos = bet.endPos;
-                                            bet.endPos = {x: this.box_width - 100, y: 80};
-                                            bet.speed = {
-                                                x: (bet.endPos.x - bet.startPos.x) / 500,
-                                                y: (bet.endPos.y - bet.startPos.y) / 500,
+                                        if (this.result.indexOf(bet.area) !== -1) {
+                                            let endPos = {
+                                                x: bet.endPos.x + Math.floor(Math.random() * 20) - 10,
+                                                y: bet.endPos.y + Math.floor(Math.random() * 20) - 10,
                                             };
-                                            bet.time = 0;
+                                            this.rewardCredits.push({
+                                                credit: bet.credit,
+                                                value: bet.value,
+                                                rate: bet.rate,
+                                                avatar: bet.avatar,
+                                                area: bet.area,
+                                                name: bet.name,
+                                                time: 0,
+                                                startPos: {x: this.box_width - 100, y: 80},
+                                                endPos: endPos,
+                                                speed: {
+                                                    x: (endPos.x - this.box_width + 100) / 500,
+                                                    y: (endPos.y - 80) / 500,
+                                                },
+                                            });
                                         }
                                     });
 
                                     setTimeout(() => {
-                                        this.realBets.map((bet) => {
-                                            if (this.result.indexOf(bet.area) !== -1) {
-                                                let endPos = {
-                                                    x: bet.endPos.x + Math.floor(Math.random() * 20) - 10,
-                                                    y: bet.endPos.y + Math.floor(Math.random() * 20) - 10,
-                                                };
-                                                this.rewardCredits.push({
-                                                    credit: bet.credit,
-                                                    value: bet.value,
-                                                    rate: bet.rate,
-                                                    avatar: bet.avatar,
-                                                    area: bet.area,
-                                                    name: bet.name,
-                                                    time: 0,
-                                                    startPos: {x: this.box_width - 100, y: 80},
-                                                    endPos: endPos,
-                                                    speed: {
-                                                        x: (endPos.x - this.box_width + 100) / 500,
-                                                        y: (endPos.y - 80) / 500,
-                                                    },
-                                                });
-                                            }
+                                        this.rewardCredits.map((item) => {
+                                            item.startPos = item.endPos;
+                                            item.endPos = this.throwPosition;
+                                            item.speed = {
+                                                x: (item.endPos.x - item.startPos.x) / 500,
+                                                y: (item.endPos.y - item.startPos.y) / 500,
+                                            };
+                                            item.time = 0;
                                         });
 
+                                        this.realBets.map((item) => {
+                                            item.startPos = item.endPos;
+                                            item.endPos = this.throwPosition;
+                                            item.speed = {
+                                                x: (item.endPos.x - item.startPos.x) / 500,
+                                                y: (item.endPos.y - item.startPos.y) / 500,
+                                            };
+                                            item.time = 0;
+                                        });
+
+                                        var rewardAmount = 0;
+                                        this.rewardCredits.forEach((element) => {
+                                            rewardAmount += element.rate * element.value;
+                                        });
+
+                                        if (
+                                            this.appState.walletAddress !== "CONNECT" &&
+                                            this.appState.walletAddress !== "" &&
+                                            this.confirmed === true &&
+                                            rewardAmount > 0
+                                        ) {
+                                            this.confirmed = false;
+                                            this.reward = true;
+                                            this.lost = false
+                                            this.rewardAmount = this.rewardAmount + rewardAmount
+                                        } else {
+                                            this.lost = true;
+                                            this.reward = false
+                                        }
+
                                         setTimeout(() => {
-                                            this.rewardCredits.map((item) => {
-                                                item.startPos = item.endPos;
-                                                item.endPos = this.throwPosition;
-                                                item.speed = {
-                                                    x: (item.endPos.x - item.startPos.x) / 500,
-                                                    y: (item.endPos.y - item.startPos.y) / 500,
-                                                };
-                                                item.time = 0;
-                                            });
-
-                                            this.realBets.map((item) => {
-                                                item.startPos = item.endPos;
-                                                item.endPos = this.throwPosition;
-                                                item.speed = {
-                                                    x: (item.endPos.x - item.startPos.x) / 500,
-                                                    y: (item.endPos.y - item.startPos.y) / 500,
-                                                };
-                                                item.time = 0;
-                                            });
-
-                                            var rewardAmount = 0;
-                                            this.rewardCredits.forEach((element) => {
-                                                rewardAmount += element.rate * element.value;
-                                            });
-
-                                            if (
-                                                this.appState.walletAddress !== "CONNECT" &&
-                                                this.appState.walletAddress !== "" &&
-                                                this.confirmed === true &&
-                                                rewardAmount > 0
-                                            ) {
-                                                this.confirmed = false;
-                                                this.reward = true;
-                                                this.lost = false
-                                                this.rewardAmount = this.rewardAmount + rewardAmount
-                                            } else {
-                                                this.lost = true;
-                                                this.reward = false
-                                            }
-
-                                            setTimeout(() => {
-                                                this.rewardCredits = [];
-                                                this.realBets = [];
-                                            }, 500);
-                                        }, 800);
+                                            this.rewardCredits = [];
+                                            this.realBets = [];
+                                        }, 500);
                                     }, 800);
-                                }, 150);
-                                break;
+                                }, 800);
+                            }, 150);
+                            break;
 
-                            default:
-                                break;
-                        }
+                        default:
+                            break;
+                    }
 
-                        this.thrownCredits.map((item) => {
-                            if (item.time * item.speed.x + item.startPos.x !== item.endPos.x)
-                                item.time += 10;
-                        });
+                    this.thrownCredits.map((item) => {
+                        if (item.time * item.speed.x + item.startPos.x !== item.endPos.x)
+                            item.time += 10;
+                    });
 
-                        this.realBets.map((item) => {
-                            if (item.time * item.speed.x + item.startPos.x !== item.endPos.x)
-                                item.time += 10;
-                        });
+                    this.realBets.map((item) => {
+                        if (item.time * item.speed.x + item.startPos.x !== item.endPos.x)
+                            item.time += 10;
+                    });
 
-                        this.rewardCredits.map((item) => {
-                            if (item.time * item.speed.x + item.startPos.x !== item.endPos.x)
-                                item.time += 10;
-                        });
+                    this.rewardCredits.map((item) => {
+                        if (item.time * item.speed.x + item.startPos.x !== item.endPos.x)
+                            item.time += 10;
+                    });
 
-                        this.realBets = this.realBets.filter((bet) => {
-                            return (
-                                bet.startPos.x + bet.time * bet.speed.x !==
-                                this.box_width - 100 &&
-                                bet.startPos.y + bet.time * bet.speed.y !== 80 &&
-                                bet.startPos.x + bet.time * bet.speed.x !==
-                                this.throwPosition.x &&
-                                bet.startPos.y + bet.time * bet.speed.y !== this.throwPosition.y
-                            );
-                        });
+                    this.realBets = this.realBets.filter((bet) => {
+                        return (
+                            bet.startPos.x + bet.time * bet.speed.x !==
+                            this.box_width - 100 &&
+                            bet.startPos.y + bet.time * bet.speed.y !== 80 &&
+                            bet.startPos.x + bet.time * bet.speed.x !==
+                            this.throwPosition.x &&
+                            bet.startPos.y + bet.time * bet.speed.y !== this.throwPosition.y
+                        );
+                    });
 
-                        this.drawBoard(this.ctx);
-                        this.gameTime += 10;
-                    }, 10);
-                } else {
-                    //max wager for each client
-                    this.maxWager = this.gameStatus.maxWager;
-                    this.gameTime = Math.ceil(this.gameStatus.time / 10) * 10;
-                }
+                    this.drawBoard(this.ctx);
+                    this.gameTime += 10;
+                }, 10);
             };
         },
 
@@ -1025,8 +1044,8 @@
                     res.data.map((item) => {
                         arr.push(JSON.parse(item.dices));
                     });
+                    return arr;
                 });
-                return arr;
             },
             saveResult(result) {
                 let date = new Date();
@@ -1090,13 +1109,16 @@
                 let diffWidth = ((w - this.resultBoard.w) / time) * 10;
 
                 let i = 0;
-                let ani = setInterval(() => {
+                if(this.ani2) clearInterval(this.ani2);
+                this.ani2 = setInterval(() => {
                     i += 10;
                     this.resultBoard.x += speedX;
                     this.resultBoard.y += speedY;
                     this.resultBoard.w += diffWidth;
                     this.resultBoard.h = this.resultBoard.w * scale;
-                    if (i === time) clearInterval(ani);
+                    if (i === time) {
+                        if(this.ani2) clearInterval(this.ani2);
+                    }
                 }, 10);
             },
             moveStopBetting(x, y, w, h, time) {
@@ -1106,13 +1128,14 @@
                 let diffWidth = ((w - this.stopBetting.w) / time) * 10;
 
                 let i = 0;
-                let ani = setInterval(() => {
+                if(this.ani3) clearInterval(this.ani3);
+                this.ani3 = setInterval(() => {
                     i += 10;
                     this.stopBetting.x += speedX;
                     this.stopBetting.y += speedY;
                     this.stopBetting.w += diffWidth;
                     this.stopBetting.h = scale * this.stopBetting.w;
-                    if (i === time) clearInterval(ani);
+                    if (i === time && this.ani3) clearInterval(this.ani3);
                 }, 10);
             },
             drawResultBoard(ctx) {
@@ -1249,24 +1272,26 @@
                 let diffWidth = ((width - this.startGame.w) / time) * 10;
 
                 let i = 0;
-                let ani = setInterval(() => {
+                if(this.ani4)clearInterval(this.ani4);
+                this.ani4 = setInterval(() => {
                     i += 10;
                     this.startGame.x += speedX;
                     this.startGame.y += speedY;
                     this.startGame.w += diffWidth;
                     this.startGame.h = this.startGame.w * scale;
-                    if (i === time) clearInterval(ani);
+                    if (i === time && this.ani4) clearInterval(this.ani4);
                 }, 10);
             },
             moveThrowDiceOne(x, y, time) {
                 let speedX = ((x - this.throwDiceOne.x) / time) * 10;
                 let speedY = ((y - this.throwDiceOne.y) / time) * 10;
                 let i = 0;
-                let ani = setInterval(() => {
+                if(this.ani5) clearInterval(this.ani5);
+                this.ani5 = setInterval(() => {
                     i += 10;
                     this.throwDiceOne.x += speedX;
                     this.throwDiceOne.y += speedY;
-                    if (i === time) clearInterval(ani);
+                    if (i === time && this.ani5) clearInterval(this.ani5);
                 }, 10);
             },
             moveResultDiceOne(x, y, w, time) {
@@ -1276,13 +1301,14 @@
                 let diffWidth = ((w - this.resultDiceOne.w) / time) * 10;
 
                 let i = 0;
-                let ani = setInterval(() => {
+                if(this.ani6) clearInterval(this.ani6);
+                this.ani6 = setInterval(() => {
                     i += 10;
                     this.resultDiceOne.x += speedX;
                     this.resultDiceOne.y += speedY;
                     this.resultDiceOne.w += diffWidth;
                     this.resultDiceOne.h = this.resultDiceOne.w * scale;
-                    if (i === time) clearInterval(ani);
+                    if (i === time && this.ani6) clearInterval(this.ani6);
                 }, 10);
             },
             moveResultDiceTwo(x, y, w, time) {
@@ -1292,13 +1318,14 @@
                 let diffWidth = ((w - this.resultDiceTwo.w) / time) * 10;
 
                 let i = 0;
-                let ani = setInterval(() => {
+                if(this.ani7) clearInterval(this.ani7);
+                this.ani7 = setInterval(() => {
                     i += 10;
                     this.resultDiceTwo.x += speedX;
                     this.resultDiceTwo.y += speedY;
                     this.resultDiceTwo.w += diffWidth;
                     this.resultDiceTwo.h = this.resultDiceTwo.w * scale;
-                    if (i === time) clearInterval(ani);
+                    if (i === time && this.ani7) clearInterval(this.ani7);
                 }, 10);
             },
             moveResultDiceThree(x, y, w, time) {
@@ -1308,13 +1335,14 @@
                 let diffWidth = ((w - this.resultDiceThree.w) / time) * 10;
 
                 let i = 0;
-                let ani = setInterval(() => {
+                if(this.ani8) clearInterval(this.ani8);
+                this.ani8 = setInterval(() => {
                     i += 10;
                     this.resultDiceThree.x += speedX;
                     this.resultDiceThree.y += speedY;
                     this.resultDiceThree.w += diffWidth;
                     this.resultDiceThree.h = this.resultDiceThree.w * scale;
-                    if (i === time) clearInterval(ani);
+                    if (i === time && this.ani8) clearInterval(this.ani8);
                 }, 10);
             },
             moveResultBoardDiceOne(x, y, w, time) {
@@ -1323,13 +1351,14 @@
                 let diffWidth = ((w - this.resultBoardDiceOne.w) / time) * 10;
 
                 let i = 0;
-                let ani = setInterval(() => {
+                if(this.ani9) clearInterval(this.ani9);
+                this.ani9 = setInterval(() => {
                     i += 10;
                     this.resultBoardDiceOne.x += speedX;
                     this.resultBoardDiceOne.y += speedY;
                     this.resultBoardDiceOne.w += diffWidth;
                     this.resultBoardDiceOne.h = this.resultBoardDiceOne.w;
-                    if (i === time) clearInterval(ani);
+                    if (i === time && this.ani9) clearInterval(this.ani9);
                 }, 10);
             },
             moveResultBoardDiceTwo(x, y, w, time) {
@@ -1338,13 +1367,14 @@
                 let diffWidth = ((w - this.resultBoardDiceTwo.w) / time) * 10;
 
                 let i = 0;
-                let ani = setInterval(() => {
+                if(this.ani10) clearInterval(this.ani10);
+                this.ani10 = setInterval(() => {
                     i += 10;
                     this.resultBoardDiceTwo.x += speedX;
                     this.resultBoardDiceTwo.y += speedY;
                     this.resultBoardDiceTwo.w += diffWidth;
                     this.resultBoardDiceTwo.h = this.resultBoardDiceTwo.w;
-                    if (i === time) clearInterval(ani);
+                    if (i === time && this.ani10) clearInterval(this.ani10);
                 }, 10);
             },
             moveResultBoardDiceThree(x, y, w, time) {
@@ -1353,13 +1383,14 @@
                 let diffWidth = ((w - this.resultBoardDiceThree.w) / time) * 10;
 
                 let i = 0;
-                let ani = setInterval(() => {
+                if(this.ani11) clearInterval(this.ani11);
+                this.ani11 = setInterval(() => {
                     i += 10;
                     this.resultBoardDiceThree.x += speedX;
                     this.resultBoardDiceThree.y += speedY;
                     this.resultBoardDiceThree.w += diffWidth;
                     this.resultBoardDiceThree.h = this.resultBoardDiceThree.w;
-                    if (i === time) clearInterval(ani);
+                    if (i === time && this.ani11) clearInterval(this.ani11);
                 }, 10);
             },
             drawResultBoardDices(ctx) {
@@ -1434,22 +1465,24 @@
                 let speedX = ((x - this.throwDiceTwo.x) / time) * 10;
                 let speedY = ((y - this.throwDiceTwo.y) / time) * 10;
                 let i = 0;
-                let ani = setInterval(() => {
+                if(this.ani12) clearInterval(this.ani12);
+                this.ani12 = setInterval(() => {
                     i += 10;
                     this.throwDiceTwo.x += speedX;
                     this.throwDiceTwo.y += speedY;
-                    if (i === time) clearInterval(ani);
+                    if (i === time && this.ani12) clearInterval(this.ani12);
                 }, 10);
             },
             moveThrowDiceThree(x, y, time) {
                 let speedX = ((x - this.throwDiceThree.x) / time) * 10;
                 let speedY = ((y - this.throwDiceThree.y) / time) * 10;
                 let i = 0;
-                let ani = setInterval(() => {
+                if(this.ani13) clearInterval(this.ani13);
+                this.ani13 = setInterval(() => {
                     i += 10;
                     this.throwDiceThree.x += speedX;
                     this.throwDiceThree.y += speedY;
-                    if (i === time) clearInterval(ani);
+                    if (i === time && this.ani13) clearInterval(this.ani13);
                 }, 10);
             },
             moveDicePan(x, y, width, time) {
@@ -1459,13 +1492,14 @@
                 let diffWidth = ((width - this.dicePan.width) / time) * 10;
 
                 let i = 0;
-                let ani = setInterval(() => {
+                if(this.ani14) clearInterval(this.ani14);
+                this.ani14 = setInterval(() => {
                     i += 10;
                     this.dicePan.x += speedX;
                     this.dicePan.y += speedY;
                     this.dicePan.width += diffWidth;
                     this.dicePan.height = this.dicePan.width * scale;
-                    if (i === time) clearInterval(ani);
+                    if (i === time && this.ani14) clearInterval(this.ani14);
                 }, 10);
             },
             moveDiceCup(x, y, width, time) {
@@ -1475,13 +1509,14 @@
                 let diffWidth = ((width - this.diceCup.width) / time) * 10;
 
                 let i = 0;
-                let ani = setInterval(() => {
+                if(this.ani15) clearInterval(this.ani15);
+                this.ani15 = setInterval(() => {
                     i += 10;
                     this.diceCup.x += speedX;
                     this.diceCup.y += speedY;
                     this.diceCup.width += diffWidth;
                     this.diceCup.height = this.diceCup.width * scale;
-                    if (i === time) clearInterval(ani);
+                    if (i === time && this.ani15) clearInterval(this.ani15);
                 }, 10);
             },
             onMouseDown(e) {
@@ -1612,7 +1647,8 @@
                             if (diffAngle !== 0) {
                                 const time = Math.abs(diffAngle);
                                 let i = 0;
-                                let ani = setInterval(() => {
+                                if(this.ani16) clearInterval(this.ani16);
+                                this.ani16 = setInterval(() => {
                                     i += 1;
                                     Object.keys(this.betCredits).map((item) => {
                                         this.betCredits[item].angle += diffAngle > 0 ? 1 : -1;
@@ -1624,7 +1660,7 @@
                                         }
                                     });
 
-                                    if (i >= time) clearInterval(ani);
+                                    if (i >= time && this.ani16) clearInterval(this.ani16);
                                 }, 10);
                             }
                         }
@@ -2071,6 +2107,7 @@
             },
         },
     };
+    
 </script>
 
 <style lang="scss">

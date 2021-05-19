@@ -215,7 +215,6 @@ export default {
             .checkPlayReward(this.appState.walletAddress)
             .call()
             .then((res) => {
-                console.log(res)
                 this.playReward = (res/1e8).toFixed();
             });
       }
