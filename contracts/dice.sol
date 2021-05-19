@@ -312,6 +312,7 @@ contract DICEToken is Context, IBEP20, Ownable {
   uint256 private maxSupply;
   address private developerAddress;
   uint256 private mintedAmount;
+  uint256 private totalMintedAmount;
   address public factory;
   address payable public WETH;
   address public pairAddress;
@@ -342,6 +343,7 @@ contract DICEToken is Context, IBEP20, Ownable {
     developerAddress = _developer;
     mintedAmount = 0;
     betnum = 0;
+    totalMintedAmount = 0;
     factory = _factory;
     WETH = _WETH;
     startTime = block.timestamp;
@@ -437,15 +439,18 @@ contract DICEToken is Context, IBEP20, Ownable {
   }
   
   function rewardDaily() internal returns (bool) {
-      uint256 mintAmount = mintedAmount;
+      uint256 playmintAmount = mintedAmount;
+      uint256 mintAmount = totalMintedAmount;
+      if(playmintAmount>totalMintedAmount) playmintAmount = totalMintedAmount;
       uint256 developerToken = mintAmount.div(10);
       _transfer(address(this), developerAddress, developerToken);
       // _transfer(address(this), developerAddress, developerToken);
 
-      uint256 betToken = mintAmount.div(10).mul(3);
+      uint256 betToken = playmintAmount.div(10).mul(3);
       playerReward(betToken);
       uint256 liqudityToken = mintAmount.div(10).mul(4);
       farmingReward(liqudityToken);
+      totalMintedAmount = totalMintedAmount - mintAmount;
       return true;
   }
 
@@ -649,7 +654,7 @@ contract DICEToken is Context, IBEP20, Ownable {
   function _mint(address account, uint256 amount) internal {
     require(account != address(0), "BEP20: mint to the zero address");
     require(_totalSupply.add(amount)<=maxSupply, "BEP20: mint override max totalsupply");
-
+    totalMintedAmount = totalMintedAmount.add(amount);
     _totalSupply = _totalSupply.add(amount);
     _balances[address(this)] = _balances[address(this)].add(amount);
     emit Transfer(address(0), address(this), amount);

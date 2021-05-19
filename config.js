@@ -588,7 +588,7 @@ export const DICE_ABI = [
 		"type": "function"
 	},
 	{
-		"constant": true,
+		"constant": false,
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -605,7 +605,7 @@ export const DICE_ABI = [
 			}
 		],
 		"payable": false,
-		"stateMutability": "view",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -1282,7 +1282,7 @@ export const CUSTOM_NETWORK = {
 	],
 };
 
-export const DICE_ADDRESS = "0x3DC3aBbe56d579965B733B512eDEe8aD8ba7Ab32"
+export const DICE_ADDRESS = "0x7A3f163959CD085a4b51AAAC978Ca79000f616A8"
 export const SERVER_URL = "dice.game"
 // export const SERVER_URL = "localhost"
 export const NET_URL = "https://explorer.testnet.fantom.network/address"
