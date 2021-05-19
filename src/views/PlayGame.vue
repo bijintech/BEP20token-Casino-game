@@ -370,6 +370,7 @@
                 ani14: null,
                 ani15: null,
                 ani16: null,
+                hideTime: 0
             };
         },
         computed: {
@@ -393,9 +394,16 @@
             }
             document.addEventListener('visibilitychange', () => {
                 if(document.hidden) {
-                    // alert('hidden');
+                    this.hideTime = 45000-this.gameTime + new Date().getTime();
+                    console.log('hideTime='+this.hideTime);
                 }
                 else {
+                    if(new Date().getTime()>=this.hideTime && this.confirmed){
+                        this.rewardCredits = [];
+                        this.realBets = [];
+                        this.thrownCredits = [];
+                        this.confirmed = false;
+                    }
                     this.box_width = document.getElementById("board").clientWidth;
                     (this.throwDiceOne = {
                         dice: 1,
@@ -457,6 +465,7 @@
                         30,
                         150
                     );
+                    this.drawBoard(this.ctx);
                     this.ws.send("connect request");
                 }
             });
