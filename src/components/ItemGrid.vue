@@ -192,6 +192,7 @@ export default {
         .then((myPool) => {
           console.log(myPool);
           console.log(this.totalPool);
+          this.myPool = myPool / 1e18;
           if(this.totalPool == 0) {
             this.currentPercent = '~';
           } else {
@@ -258,8 +259,30 @@ export default {
             this.appState.diceContract.methods
                 .getMintAmount(timestamp)
                 .call()
-                .then((res) => {
-                    this.newDiceBlock = 60 * 10 * 0.4 * 6 * 24 * 365 * 100 * res / (1e18 * 2 * this.totalPool) ;
+                .then((res1) => {
+                    if(this.totalPool==0){
+                      this.newDiceBlock = 0;
+                    } else {
+                      this.appState.diceContract.methods
+                      .getLiquidity(this.appState.walletAddress)
+                      .call()
+                      .then((myPool) => {
+                        var currentPercent = (myPool * 100 ) / (1e18 * this.totalPool)
+                        this.appState.diceContract.methods
+                        .getReserves()
+                        .call()
+                        .then((res) => {
+                            const diceReserve = Number(res.amountB) / Math.pow(10, 18);
+                            const mystake = diceReserve * 2 * currentPercent / 100;
+                            if(mystake == 0)
+                            {
+                              this.newDiceBlock = 0;
+                            } else {
+                              this.newDiceBlock = (res1 / 1e18) * 60 * 10 * 0.4 * (currentPercent / 100) * 6 * 24 * 365 / mystake * 100
+                            }
+                        });
+                      });
+                    }
                 });
         }
     },
