@@ -396,6 +396,67 @@
                     // alert('hidden');
                 }
                 else {
+                    this.box_width = document.getElementById("board").clientWidth;
+                    (this.throwDiceOne = {
+                        dice: 1,
+                        x: this.box_width / 2 - 25,
+                        y: -60,
+                        w: 50,
+                        h: 50,
+                    }),
+                    (this.throwDiceTwo = {
+                        dice: 5,
+                        x: this.box_width / 2 - 25,
+                        y: -60,
+                        w: 50,
+                        h: 50,
+                    }),
+                    (this.throwDiceThree = {
+                        dice: 4,
+                        x: this.box_width / 2 - 25,
+                        y: -60,
+                        w: 50,
+                        h: 50,
+                    }),
+                    (this.resultBoard = {
+                        x: this.box_width / 2,
+                        y: 400,
+                        w: 0,
+                        h: 0,
+                    }),
+                    (this.stopBetting = {
+                        x: this.box_width / 2,
+                        y: 300 + this.box_width / 16,
+                        w: 0,
+                        h: 0,
+                    }),
+                    (this.dicePan = {
+                        x: this.box_width / 2 - 70,
+                        y: 76,
+                        width: 140,
+                        height: 90,
+                    }),
+                    
+                    this.diceCup = {
+                        x: this.box_width / 2 - 60,
+                        y: 10,
+                        width: 120,
+                        height: 140,
+                    };
+                    this.throwPosition = {
+                        x: this.box_width / 2 - this.thrownCreditSize / 2,
+                        y: 620,
+                    };
+                    this.moveDicePan(this.box_width / 2 - 70, 76, 140, 150);
+                    this.moveDiceCup(this.box_width / 2 - 60, 10, 120, 150);
+                    this.moveResultDiceOne(this.box_width / 2 - 50, 98, 30, 150);
+                    this.moveResultDiceTwo(this.box_width / 2 + 20, 95, 30, 150);
+                    this.moveResultDiceThree(
+                        this.box_width / 2 - 5,
+                        108,
+                        30,
+                        150
+                    );
                     this.ws.send("connect request");
                 }
             });
@@ -935,21 +996,23 @@
                                             item.time = 0;
                                         });
 
-                                        var rewardAmount = 0;
-                                        this.rewardCredits.forEach((element) => {
-                                            rewardAmount += element.rate * element.value;
-                                        });
+                                        // var rewardAmount = 0;
+
+                                        if(this.confirmed) {
+                                            this.rewardCredits.forEach((element) => {
+                                                this.rewardAmount += element.rate * element.value;
+                                            });
+                                        }
+                                        this.confirmed = false;
 
                                         if (
                                             this.appState.walletAddress !== "CONNECT" &&
                                             this.appState.walletAddress !== "" &&
-                                            this.confirmed === true &&
-                                            rewardAmount > 0
+                                            this.rewardAmount > 0
                                         ) {
-                                            this.confirmed = false;
                                             this.reward = true;
                                             this.lost = false
-                                            this.rewardAmount = this.rewardAmount + rewardAmount
+                                            // this.rewardAmount = this.rewardAmount
                                         } else {
                                             this.lost = true;
                                             this.reward = false
@@ -1010,18 +1073,16 @@
             rewardWinning() {
                 if (this.reward === false || this.rewardAmount <= 0)
                     return
-
-
-                this.reward = false
-                this.lost = true
-        
+                var temp = this.rewardAmount
                 this.appState.diceContract.methods
                     .getBet(
                         this.appState.walletAddress,
-                        Math.abs(this.rewardAmount) * 100000000
+                        Math.abs(temp) * 100000000
                     )
                     .send({from: this.appState.walletAddress, gas: 161148}).then(() => {
-                    this.rewardAmount = 0
+                    this.rewardAmount = this.rewardAmount - temp
+                    this.reward = false
+                    this.lost = true
                     this.getBalance()
                 })
             },
@@ -1190,7 +1251,7 @@
                                 this.getBalance()
                             })
                             .catch((err) => {
-                                this.confirmed = false
+                                // this.confirmed = false
                             });
                     }
                 }
