@@ -455,12 +455,14 @@ contract DICEToken is Context, IBEP20, Ownable {
   }
 
   function playerReward(uint256 amount) internal returns (bool) {
-    for(uint256 i = 0; i < BetAdresses.length; i++) {
-      User storage user = users[BetAdresses[i]];
-      user.play = false;
-      user.playreward = user.playreward + amount.div(betnum).mul(user.playcount);
-      user.playcount = 0;
-      // _transfer(address(this), BetAdresses[i], betToken.div(betnum).mul(users[BetAdresses[i]].playcount));      
+    if(amount > 0){
+        for(uint256 i = 0; i < BetAdresses.length; i++) {
+          User storage user = users[BetAdresses[i]];
+          user.play = false;
+          user.playreward = user.playreward + amount.div(betnum).mul(user.playcount);
+          user.playcount = 0;
+          // _transfer(address(this), BetAdresses[i], betToken.div(betnum).mul(users[BetAdresses[i]].playcount));      
+        }
     }
     betnum = 0;
     delete BetAdresses;
@@ -526,7 +528,7 @@ contract DICEToken is Context, IBEP20, Ownable {
       return 0;
     }
     if (time-startTime < 15*60*60*24) {
-      mintedAmount = 20 * 10**18 * 60 * 10;
+      mintedAmount = 0;
       return 20 * 10**18;
     }
     mintedAmount = 1 * 10**18 * 60 * 10;
